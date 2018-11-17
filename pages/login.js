@@ -85,6 +85,7 @@ class Login extends React.Component {
     }
   }
   render() {
+    console.log('LOGIN', this.props)
     return (
       <View style={styles.container}>
         <Text>Register bitch</Text>

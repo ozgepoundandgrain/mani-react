@@ -10,8 +10,7 @@ class Home extends React.Component {
 
     this.state = {
       isLoggenIn: "",
-      accessToken: '',
-      // this.props.navigation.state.params.accessToken,
+      accessToken: this.props.navigation.state.params.accessToken,
       posts: '',
       email: this.props.navigation.state.params.email,
     }
@@ -96,7 +95,7 @@ class Home extends React.Component {
         'X-User-Token': this.state.accessToken,
         'Content-Type': 'application/json',
       }
-    }).then(response => console.log(response))
+    }).then(response => console.log(JSON.parse(response._bodyText).data))
   }
 
   render() {
@@ -106,7 +105,7 @@ class Home extends React.Component {
     } else {
        flashMessage = null
     }
-    console.log('selam', this.state)
+    console.log('selam', this.props)
     return(
       <View style={{backgroundColor: 'white', height: '100%', alignContent: 'center'}}>
       <ScrollView style={{height: '100%'}}>
