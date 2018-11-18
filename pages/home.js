@@ -11,7 +11,7 @@ class Home extends React.Component {
     this.state = {
       isLoggenIn: "",
       accessToken: this.props.navigation.state.params.accessToken,
-      posts: '',
+      posts: [],
       email: this.props.navigation.state.params.email,
     }
   }
@@ -95,7 +95,7 @@ class Home extends React.Component {
         'X-User-Token': this.state.accessToken,
         'Content-Type': 'application/json',
       }
-    }).then(response => console.log(JSON.parse(response._bodyText).data))
+    }).then(response => this.setState({posts: JSON.parse(response._bodyText).data}))
   }
 
   render() {
@@ -128,8 +128,8 @@ class Home extends React.Component {
 
         {/* <ActivityIndicatorIOS animating={this.state.showProgress} size="large" style={styles.loader} /> */}
         
-        {/* {
-           Object.values(this.state.posts).map(mant => {
+        {
+           (this.state.posts).map(mant => {
              return (
               <View style={styles.viewBox} key={mant.id}>
                 <View style={{flex: 1}}>
@@ -146,7 +146,7 @@ class Home extends React.Component {
               </View>
              )
           })
-        } */}
+        }
       </ScrollView>
       <TouchableHighlight onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} >
         <Image source={require('./images/add-button.png')} style={styles.imageStyle}/>
