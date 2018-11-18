@@ -9,11 +9,46 @@ class Login extends React.Component {
     this.state = {
         email: '',
         password: '',
-        error: ''
+        error: '',
+        accessToken: ''
     }
+    this.clearData = this.clearData.bind(this)
+    this.persistData = this.persistData.bind(this)
   }
 
+persistData(TOKEN) {
+  let email = this.state.email
+  let accessToken = this.state.accessToken
+  AsyncStorage.setItem('email', email)
+  AsyncStorage.setItem('accessToken', accessToken)
+  this.setState({
+    name: name,
+    email: email,
+    persistedEmail: email,
+    persistedToken: TOKEN
+  })
+}
 
+check() {
+  AsyncStorage.getItem('email').then((email) => {
+    this.setState({ email: email, persistedEmail: email})
+  })
+
+  AsyncStorage.getItem('accessToken').then((accessToken) => {
+    this.setState({ accessToken: accessToken, persistedToken: accessToken})
+  })
+}
+
+componentWillMount() {
+  this.check()
+}
+
+
+
+clearData() {
+  AsyncStorage.clear()
+  this.setState({ persistedToken: '', persistedEmail: ''})
+}
 
   redirect(accessToken, email) {
     this.props.navigation.navigate(
@@ -28,6 +63,8 @@ class Login extends React.Component {
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken)
       this.getToken()
+      this.setState({accessToken: accessToken})
+      this.persistData(accessToken)
     } catch(error) {
       console.log('something went wronsdfg:')
     }
@@ -85,10 +122,21 @@ class Login extends React.Component {
     }
   }
   render() {
-    console.log('LOGIN', this.props)
+    console.log('LOGIN', this.state)
     return (
       <View style={styles.container}>
-        <Text>Register bitch</Text>
+      <TouchableHighlight onPress={this.clearData}>
+      <Text>CLEAR</Text>
+      </TouchableHighlight>
+        
+
+              <TouchableHighlight onPress={this.persistData}>
+      <Text>SAVE</Text>
+      </TouchableHighlight>
+
+
+      <Text>{this.state.persistedEmail}</Text>
+      <Text>{this.state.persistedToken}</Text>
         <TextInput 
           placeholder="email"
           onChangeText={(val) => this.setState({ email: val})}
