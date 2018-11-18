@@ -46,7 +46,8 @@ class Home extends React.Component {
   async deleteToken() {
     try {
         await AsyncStorage.removeItem(ACCESS_TOKEN)
-        this.redirect('root');
+        this.redirect('login')
+        this.props.navigation.state.params.onLogout()
     } catch(error) {
         console.log("Something went wrong");
     }
@@ -54,7 +55,9 @@ class Home extends React.Component {
   redirect(routName, accessToken) {
     this.props.navigation.navigate(
       routName,
-      { accessToken: accessToken }
+      { accessToken: accessToken,
+        loggedOut: true
+      }
   )
     }
   onLogout(){

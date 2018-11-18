@@ -10,7 +10,8 @@ class Login extends React.Component {
         email: '',
         password: '',
         error: '',
-        accessToken: ''
+        accessToken: '',
+        loggedOut: false
     }
     this.clearData = this.clearData.bind(this)
     this.persistData = this.persistData.bind(this)
@@ -22,8 +23,6 @@ persistData(TOKEN) {
   AsyncStorage.setItem('email', email)
   AsyncStorage.setItem('accessToken', accessToken)
   this.setState({
-    name: name,
-    email: email,
     persistedEmail: email,
     persistedToken: TOKEN
   })
@@ -31,11 +30,11 @@ persistData(TOKEN) {
 
 check() {
   AsyncStorage.getItem('email').then((email) => {
-    this.setState({ email: email, persistedEmail: email})
+    this.setState({ persistedEmail: email})
   })
 
   AsyncStorage.getItem('accessToken').then((accessToken) => {
-    this.setState({ accessToken: accessToken, persistedToken: accessToken})
+    this.setState({ persistedToken: accessToken})
   })
 }
 
@@ -43,21 +42,27 @@ componentWillMount() {
   this.check()
 }
 
+redirect(accessToken, email) {
+  this.props.navigation.navigate(
+    'home',
+    { accessToken: accessToken,
+      email: email,
+      onLogout: () => this.clearData()
+    }
+  )
+}
 
+componentDidUpdate() {
+  // !!this.props.navigation.state.params.loggedOut ? this.setState({ loggedOut: true }) : undefined
+  // !!this.state.loggedOut ? this.clearData() : undefined
+  this.state.persistedToken && this.redirect(this.state.persistedToken, this.state.persistedEmail)
+}
 
 clearData() {
   AsyncStorage.clear()
   this.setState({ persistedToken: '', persistedEmail: ''})
 }
 
-  redirect(accessToken, email) {
-    this.props.navigation.navigate(
-      'home',
-      { accessToken: accessToken,
-        email: email
-      }
-    )
-  }
 
   async storeToken(accessToken) {
     try {
@@ -107,7 +112,6 @@ clearData() {
         // this.setState({error: ''})
         let accessToken = JSON.parse(res).data.user.authentication_token
         this.storeToken(accessToken)
-        //this.props.navigation.navigate('home')
         this.redirect(accessToken, this.state.email)
         console.log('access token:', accessToken)
       } else {
@@ -122,7 +126,7 @@ clearData() {
     }
   }
   render() {
-    console.log('LOGIN', this.state)
+    console.log('LOGIN', this.props)
     return (
       <View style={styles.container}>
       <TouchableHighlight onPress={this.clearData}>
@@ -154,6 +158,13 @@ clearData() {
           <Text>Login</Text>
         </TouchableHighlight>
         {/* <Text>{this.state.error}</Text> */}
+
+      <TouchableHighlight 
+        onPress={() => {this.props.navigation.navigate('register')}}
+        underlayColor="transparent" activeOpacity={0}
+      >
+        <Text>Don't have an account? Register</Text>
+      </TouchableHighlight>
       </View>
     );
   }

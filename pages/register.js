@@ -108,6 +108,13 @@ class Register extends React.Component {
           <Text style={styles.button}>Register</Text>
         </TouchableHighlight>
         {/* <Errors errors={this.state.errors} /> */}
+
+      <TouchableHighlight 
+        onPress={() => {this.props.navigation.navigate('login')}}
+        underlayColor="transparent" activeOpacity={0}
+      >
+        <Text>Already have an account? Login</Text>
+      </TouchableHighlight>
       </View>
     );
   }

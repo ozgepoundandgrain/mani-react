@@ -9,6 +9,14 @@ import Post from './pages/post'
 
 
 const AppNavigator = createStackNavigator({
+  login: {
+    screen: props=> <Login {...props} />,
+    navigationOptions: {
+      title: "",
+      header: null
+    },
+    
+  },
   root: {
     screen: props=> <Root {...props} />,
     navigationOptions: {
@@ -28,17 +36,9 @@ const AppNavigator = createStackNavigator({
     screen: props=> <Register {...props} />,
     navigationOptions: {
       title: "",
-      headerLeft: null
+      header: null
     },
  },
-  login: {
-    screen: props=> <Login {...props} />,
-    navigationOptions: {
-      title: "",
-      headerLeft: null
-    },
-    
-  },
   post: {
     screen: props=> <Post {...props} />,
     navigationOptions: ({navigation})=>({
@@ -52,7 +52,7 @@ export default class App extends React.Component {
   render() {
     return (
       <AppNavigator 
-        initialRouteName="root"
+        initialRouteName="login"
       />
     );
   }
