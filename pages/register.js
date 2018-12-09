@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight, AsyncStorage, Image } from 'react-native';
 import { LinearGradient } from 'expo'
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -16,20 +16,60 @@ class Register extends React.Component {
       password: "",
       password_confirmation: "",
       errors: [],
-      thing: {}
+      thing: {},
+      accessToken: '',
+      loggedOut: false
     }
+    this.clearData = this.clearData.bind(this)
+    this.persistData = this.persistData.bind(this)
+  }
+
+  componentDidUpdate() {
+    this.state.persistedToken && this.redirect(this.state.persistedToken, this.state.persistedEmail)
+  }
+
+  persistData(TOKEN) {
+    let email = this.state.email
+    let accessToken = this.state.accessToken
+    AsyncStorage.setItem('email', email)
+    AsyncStorage.setItem('accessToken', accessToken)
+    this.setState({
+      persistedEmail: email,
+      persistedToken: TOKEN
+    })
+  }
+  
+  check() {
+    AsyncStorage.getItem('email').then((email) => {
+      this.setState({ persistedEmail: email})
+    })
+  
+    AsyncStorage.getItem('accessToken').then((accessToken) => {
+      this.setState({ persistedToken: accessToken})
+    })
+  }
+  
+  componentWillMount() {
+    this.check()
   }
 
     redirect(accessToken, email) {
     this.props.navigation.navigate(
       'home',
       { accessToken: accessToken, 
-        email: email }
+        email: email,
+        onLogout: () => this.clearData()
+      }
     )
   }
 
   componentDidMount() {
 
+  }
+
+  clearData() {
+    AsyncStorage.clear()
+    this.setState({ persistedToken: '', persistedEmail: ''})
   }
 
   async removeToken() {
@@ -45,6 +85,8 @@ class Register extends React.Component {
   async storeToken(accessToken) {
     try {
         await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
+        this.setState({accessToken: accessToken})
+        this.persistData(accessToken)
         console.log("Token was stored successfull ", accessToken);
     } catch(error) {
         console.log("Something went wrong");
@@ -82,7 +124,9 @@ class Register extends React.Component {
   
   render() {
     return (
-      <View colors={['#6C02A1', '#00EDFE']} style={styles.container}>
+      <LinearGradient colors={['#523CB8', '#08DAF6']} style={styles.container}>
+       <Image source={require('./images/logo.png')} style={{marginBottom: '10%'}}/>
+       <Text style={{fontWeight: '200', color: 'white', marginBottom: '10%'}}>Create your profile now to start manifesting</Text>
         <TextInput 
           placeholderTextColor="white"
           placeholder="Email"
@@ -112,10 +156,11 @@ class Register extends React.Component {
       <TouchableHighlight 
         onPress={() => {this.props.navigation.navigate('login')}}
         underlayColor="transparent" activeOpacity={0}
+        style={styles.btn}
       >
         <Text>Already have an account? Login</Text>
       </TouchableHighlight>
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -149,6 +194,12 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     fontSize: 20,
     color: 'white'
+  },
+  btn: {
+    alignSelf: 'center', 
+    margin: 100, 
+    position: 'absolute', 
+    bottom: 0, 
   }
 });
 

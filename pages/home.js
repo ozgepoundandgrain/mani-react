@@ -1,8 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, AsyncStorage, TextInput, ScrollView, Image } from 'react-native';
+import arrow from './images/arrow.png'
+import * as Animatable from 'react-native-animatable'
+import {
+    StyleSheet, 
+    Text,
+    View,
+    TouchableHighlight,
+    AsyncStorage,
+    TouchableOpacity,
+    TextInput,
+    ScrollView,
+    Image,
+    PanResponder,
+    Animated,
+    Switch } from 'react-native';
 import { LinearGradient } from 'expo'
 
 const ACCESS_TOKEN = 'authentication_token';
+
 
 class Home extends React.Component {
   constructor(props){
@@ -13,8 +28,11 @@ class Home extends React.Component {
       accessToken: this.props.navigation.state.params.accessToken,
       posts: [],
       email: this.props.navigation.state.params.email,
+      animation: null
     }
+    this.deleteShit = this.deleteShit.bind(this)
   }
+
   componentWillMount() {
     this.getToken();
   }
@@ -28,7 +46,6 @@ class Home extends React.Component {
   componentWillUpdate() {
     // this.fetchData();
   }
-
 
   async getToken() {
     try {
@@ -98,9 +115,22 @@ class Home extends React.Component {
         'X-User-Token': this.state.accessToken,
         'Content-Type': 'application/json',
       }
-    }).then(response => this.setState({posts: JSON.parse(response._bodyText).data}))
+    }).then(response => 
+      this.setState({posts: JSON.parse(response._bodyText).data})
+    )
   }
 
+  deleteShit(id) {
+    fetch('http://localhost:3000/v1/posts/'+id, {
+      method: 'DELETE',
+      headers: {
+        'X-User-Email': this.state.email,
+        'X-User-Token': this.state.accessToken,
+        'Content-Type': 'application/json',
+      }
+    })
+  }
+  
   render() {
     let flashMessage;
     if (this.props.flash) {
@@ -108,36 +138,41 @@ class Home extends React.Component {
     } else {
        flashMessage = null
     }
-    console.log('selam', this.props)
     return(
-      <View style={{backgroundColor: 'white', height: '100%', alignContent: 'center'}}>
-      <ScrollView style={{height: '100%'}}>
-      <LinearGradient colors={['#6C02A1', '#00EDFE']} style={styles.container}>
-        <Text style={{color: 'white', textAlign: 'center'}}>
+      <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
+     
+      {/* <View style={styles.container}>
+        <Text style={{color: 'black', textAlign: 'center'}}>
           Your life is the physical manfestation of the thoughts in your head. Make them worthy.
         </Text>
-      </LinearGradient>
-      <View style={styles.label}><Text style={{ alignSelf: 'center', marginTop: 15}}> ongoing manfestations</Text></View>
+      </View>
+      <View style={styles.label}><Text style={{ alignSelf: 'center', marginTop: 15}}>{this.state.posts.length} ongoing manfestations</Text></View> */}
+
         {/* {flashMessage} */}
         {/* <Text> Welcome User </Text>
         <Text> Your new token is {this.state.accessToken} </Text> */}
+   
+          <View style={{alignSelf: "center", marginTop: 50, paddingBottom: 15}}>
+            <Switch onValueChange={() => {}}/>
+          </View>
+           <View style={styles.logout}>
+            <TouchableHighlight onPress={this.onLogout.bind(this)} underlayColor="transparent" activeOpacity={0}>
+              <Text>Logout</Text>
+            </TouchableHighlight> 
+          </View>
 
-        <TouchableHighlight onPress={this.onLogout.bind(this)}>
-           <Text>
-             Logout
-           </Text>
-          </TouchableHighlight> 
+
+      <ScrollView>
          {/* 
 
         {/* <ActivityIndicatorIOS animating={this.state.showProgress} size="large" style={styles.loader} /> */}
         
-        {
-           (this.state.posts).map(mant => {
+        { (this.state.posts).map(mant => {
              return (
               <View style={styles.viewBox} key={mant.id}>
                 <View style={{flex: 1}}>
                   <Text style={styles.title}>{mant.title}</Text>
-                  <Text style={styles.description}>{mant.mantra}</Text>
+                  <Text style={styles.description}>{mant.description}</Text>
                 </View>
                 <View style={{flex: 1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center', paddingRight: 10, paddingTop: 10, position: 'absolute', top: 0, right: 0}}>
                 <View onPress={() => {}}>
@@ -146,22 +181,67 @@ class Home extends React.Component {
                   <View style={styles.dot}/>
                 </View>
                 </View>
+                <TouchableHighlight onPress={() => this.deleteShit(mant.id)}><Text>DEETE</Text></TouchableHighlight>
               </View>
              )
           })
         }
       </ScrollView>
-      <TouchableHighlight onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} >
-        <Image source={require('./images/add-button.png')} style={styles.imageStyle}/>
-      </TouchableHighlight>
+
+
+{
+//   this.state.posts.length === 0 ? 
+//   <View>
+//   <Animatable.View animation="slideInDown" iterationCount="infinite" direction="alternate" style={styles.pointer}>
+//   <Text style={{color: '#D8D8D8', fontSize: 25}}>Get Started</Text>
+//   <Image source={require('./images/arrow.png')} style={{alignSelf: 'center', marginTop: 15}}/>
+// </Animatable.View>
+//   <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
+//     <TouchableHighlight 
+//     onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
+//     style={styles.imageStyle}
+//     underlayColor="transparent" activeOpacity={0}
+//     >
+//     <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: 70, width: 70}}>
+//       <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15}}/>
+//       </LinearGradient>
+//     </TouchableHighlight>
+//   </Animatable.View>
+//   </View>
+//   :
+  <TouchableHighlight 
+    onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
+    style={styles.imageStyle}
+    underlayColor="transparent" activeOpacity={0}
+  >
+    <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: 70, width: 70}}>
+    <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15}}/>
+    </LinearGradient>
+  </TouchableHighlight>
+
+}
       </View>
     );
   }
 }
 
+const Metrics = {
+  containerWidth: 100 - 30,
+  switchWidth: 30
+}
 const styles = StyleSheet.create({
+  cont: {
+    width: 300,
+    height: 55,
+    flexDirection: 'row',
+    backgroundColor: 'grey',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'grey',
+    borderRadius: 27.5
+  },
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -176,6 +256,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center', 
      shadowOffset:{  width: 5,  height: 5,  },
      shadowColor: 'grey', shadowOpacity: 0.5
+  },
+  buttonStyle: {
+    flex: 1,
+    width: 100 / 3,
+    height: 54,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   inputStyle: {
     color: '#5631B3',
@@ -205,11 +292,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderRightWidth: 1,
     borderLeftWidth: 1,
-    borderColor: '#5631B3',
+    // borderColor: '#5631B3',
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderRadius: 10,
     minHeight: 100,
     width: '90%',
     alignSelf: 'center',
-    margin: 10
+    margin: 10,
+    shadowOffset:{  width: 5,  height: 5,  },
+    shadowColor: 'grey', shadowOpacity: 0.1
   },
   title: {
     fontSize: 20,
@@ -228,13 +320,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#5631B3',
     margin: 3
   },
+  pointer: {
+    alignSelf: 'center', 
+    marginBottom: 140, 
+    position: 'absolute', 
+    bottom: 0, 
+  },
   imageStyle: {
-    height: 70, 
-    width: 70, 
     alignSelf: 'center', 
     margin: 40, 
     position: 'absolute', 
     bottom: 0, 
+  },
+  logout: {
+    alignSelf: 'center', 
+    marginTop: 60, 
+    paddingRight: 25,
+    position: 'absolute', 
+    top: 0, 
+    right: 0
   }
 });
 

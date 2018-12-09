@@ -6,6 +6,7 @@ import Home from './pages/home'
 import Login from './pages/login'
 import Register from './pages/register'
 import Post from './pages/post'
+import InitialScreen from './pages/initial-screen'
 
 
 const AppNavigator = createStackNavigator({
@@ -28,6 +29,7 @@ const AppNavigator = createStackNavigator({
      screen: props=> <Home {...props} />,
      navigationOptions: {
       title: '',
+      header: null,
       headerLeft: null,
       gesturesEnabled: false
     },
@@ -49,8 +51,27 @@ const AppNavigator = createStackNavigator({
 })
 
 export default class App extends React.Component {
+
+  constructor(){
+    super();
+
+    this.state = {
+      loadApp: false
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ loadApp: true })
+    }, 3000);
+  }
+  
   render() {
+    console.log(this.state)
     return (
+      this.state.loadApp === false ? 
+      <InitialScreen />
+      :
       <AppNavigator 
         initialRouteName="login"
       />

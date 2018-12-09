@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, AsyncStorage, TextInput } from 'react-native';
 import { LinearGradient } from 'expo'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ACCESS_TOKEN = 'authentication_token';
 
@@ -11,7 +12,6 @@ class Post extends React.Component {
     this.state = {
       isLoggenIn: "",
       accessToken: '',
-      // this.props.navigation.state.params.accessToken,
       posts: []
     }
   }
@@ -70,12 +70,8 @@ class Post extends React.Component {
   render() {
       console.log('YOOOO', this.state)
     return(
-      <View style={{backgroundColor: 'white', height: '100%', alignContent: 'center', display: 'flex'}}>
-        {/* <TouchableHighlight onPress={this.confirmDelete.bind(this)}>
-          <Text>
-            Delete Account
-          </Text>
-        </TouchableHighlight>  */}
+      <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center', display: 'flex'}}>
+      <ScrollView>
         <View>
         <TextInput
           placeholderTextColor="grey"
@@ -93,24 +89,25 @@ class Post extends React.Component {
           onChangeText={(description) => {this.setState({description})}}
           value={this.state.description}
           multiline = {true}
-          numberOfLines = {100}
-          style={[styles.inputStyle, {height: 400, textAlign: 'left', marginTop: 20, marginBottom: 20}]}
+          numberOfLines = {60}
+          style={[styles.inputStyle, {height: 300, textAlign: 'left', marginTop: 20, marginBottom: 20}]}
           placeholder={
-            "I am so happy and grateful that.... \n\n\nDescribe your desired circumstance, with conviction and in as much detail as possible."
+            "I am so happy and grateful that.... \n\n\nDescribe your desired circumstance, with conviction and in as much detail as possible. \n\n\nSwitching 'I want' with 'I have' and 'I am' will assist you in your manifestation endeavors as this will perpetuate the reality that you already have whatever it is that you desire. "
           }
-          // placeholder={"Imagine a desired scenario or a circumstance and write about it below, assuming that it has already happened."}
         />
         <TouchableHighlight
           onPress={this.submitEntry.bind(this)}
+          disabled={!this.state.title || !this.state.description}
           underlayColor="transparent" activeOpacity={0}
         >
-        <LinearGradient start={[0.1, 0.1]} colors={['#00EDFE', '#6C02A1']} style={styles.button}>
+        <LinearGradient start={[0.1, 0.1]} colors={['#523CB8', '#08DAF6']} style={styles.button}>
           <Text style={{color: 'white', fontSize: 20, flexDirection: 'column', marginTop: 15}}>
             Manifest
           </Text>
           </LinearGradient>
         </TouchableHighlight>
       </View>
+      </ScrollView>
       </View>
     );
   }
@@ -119,7 +116,7 @@ class Post extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F9FB',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -129,11 +126,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderRightWidth: 1,
     borderLeftWidth: 1,
-    borderColor: '#5631B3',
+    borderColor: '#FBFBFD',
     width: '80%',
     fontSize: 15,
     alignSelf: 'center',
-    padding: 10
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'white'
   },
   button: {
     alignItems: 'center',
