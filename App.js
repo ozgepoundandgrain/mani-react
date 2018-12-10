@@ -7,6 +7,7 @@ import Login from './pages/login'
 import Register from './pages/register'
 import Post from './pages/post'
 import InitialScreen from './pages/initial-screen'
+import ViewPost from './pages/view-post'
 
 
 const AppNavigator = createStackNavigator({
@@ -39,16 +40,29 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       title: "",
       header: null
-    },
+    }
  },
   post: {
     screen: props=> <Post {...props} />,
     navigationOptions: ({navigation})=>({
-      title:'',
-      headerBackTitle:'Back'
+      header: null
+      // headerBackTitle:'Close',
+      // headerTintColor: 'white',
+      // headerStyle: { backgroundColor: 'grey' },
     })
-  }
+  },
+  viewPost: {
+    screen: props => <ViewPost {...props} />,
+    navigationOptions: ({navigation})=>({
+      header: null
+      // headerBackTitle:'Close',
+      // headerTintColor: 'white',
+      // headerStyle: { backgroundColor: 'grey' },
+    })
+  },
 })
+
+
 
 export default class App extends React.Component {
 

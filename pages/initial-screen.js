@@ -29,7 +29,6 @@ class InitialScreen extends React.Component {
   };
   
   render() {
-    console.log(this.state)
     return(
       <LinearGradient start={[0.1, 0.1]} colors={['#523CB8', '#08DAF6']} style={styles.container}>
         <Text style={{ color: 'white', fontSize: 25, fontWeight: '200', textAlign: 'center', padding: 20 }}>Your mind must arrive at the destination before your life does</Text>

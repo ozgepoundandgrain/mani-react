@@ -5,52 +5,33 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const ACCESS_TOKEN = 'authentication_token';
 
-class Post extends React.Component {
+class ViewPost extends React.Component {
   constructor(props){
     super(props);
-
     this.state = {
-      isLoggenIn: "",
-      accessToken: '',
-      posts: []
+      title: this.props.navigation.state.params.postTitle,
+      description: this.props.navigation.state.params.postDescription,
+      id: this.props.navigation.state.params.postId,
+      email: this.props.navigation.state.params.userEmail,
+      accessToken: this.props.navigation.state.params.accessToken
     }
-  }
-  componentWillMount() {
-    this.getToken();
+
+    this.submitEdit = this.submitEdit.bind(this)
+    this.deleteShit = this.deleteShit.bind(this)
   }
 
-  componentDidMount(){
-    this.getToken();
-  }
-  async getToken() {
+  async submitEdit(id) {
     try {
-      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-      if(!accessToken) {
-          this.redirect('login');
-      } else {
-          this.setState({accessToken: accessToken})
-      }
-    } catch(error) {
-        console.log("Something went wrong");
-        this.redirect('login');
-    }
-  }
-  async submitEntry() {
-    let access_token = this.state.accessToken
-    try {
-        let response = await fetch('http://localhost:3000/v1/posts/', {
-            method: 'POST',
+        let response = await fetch('http://localhost:3000/v1/posts/'+id, {
+            method: 'PATCH',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-User-Email': this.props.navigation.state.params.email,
+                'X-User-Email': this.state.email,
                 'X-User-Token': this.state.accessToken
             },
             body: JSON.stringify({
-              post: {
                 title: this.state.title,
                 description: this.state.description
-              }
             })
         });
 
@@ -67,22 +48,30 @@ class Post extends React.Component {
     }
   }
 
+
+  deleteShit(id) {
+    fetch('http://localhost:3000/v1/posts/'+id, {
+      method: 'DELETE',
+      headers: {
+        'X-User-Email': this.state.email,
+        'X-User-Token': this.state.accessToken,
+        'Content-Type': 'application/json',
+      }
+    })
+  }
+
   render() {
-      console.log('YOOOO', this.state)
+    console.log(this.state)
     return(
       <View style={styles.page}>
-        <View style={styles.navStyle}>
-          <TouchableHighlight
-              onPress={this.submitEntry.bind(this)}
-              disabled={!this.state.title || !this.state.description}
-              underlayColor="transparent" activeOpacity={0}
-              style={styles.button}
-            >
-              <Text style={{color: 'blue'}}>
-                Manifest!
-              </Text>
-            </TouchableHighlight>
-        </View>
+      <View style={{ height: 100, width: '100%'}}>
+        <TouchableHighlight onPress={() => this.submitEdit(this.state.id)} style={styles.save}>
+          <Text>Save</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.deleteShit(this.state.id)} style={styles.delete}>
+          <Text>Delete</Text>
+        </TouchableHighlight>
+      </View>
 
         <ScrollView>
           <TextInput
@@ -108,20 +97,15 @@ class Post extends React.Component {
             }
           />
         </ScrollView>
-      </View>
+
+      </View> 
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F9FB',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   inputStyle: {
-    color: '#5631B3',
+    color: 'grey',
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderRightWidth: 1,
@@ -134,19 +118,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white'
   },
-  button: {
+  page: {backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center', display: 'flex'},
+  save: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    paddingBottom: 10,
-    paddingRight: 10,
-    fontSize: 20,
+    paddingRight: 20
   },
-  navStyle: {
-    height: 100, width: '100%', backgroundColor: 'white'
-  },
-  page: {backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center', display: 'flex'},
-
+  delete: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    paddingLeft: 20
+  }
 });
 
-export default Post
+export default ViewPost

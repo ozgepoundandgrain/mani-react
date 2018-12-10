@@ -1,6 +1,7 @@
 import React from 'react';
 import arrow from './images/arrow.png'
 import * as Animatable from 'react-native-animatable'
+import Drawer from 'react-native-drawer'
 import {
     StyleSheet, 
     Text,
@@ -8,15 +9,16 @@ import {
     TouchableHighlight,
     AsyncStorage,
     TouchableOpacity,
-    TextInput,
     ScrollView,
     Image,
-    PanResponder,
     Animated,
     Switch } from 'react-native';
 import { LinearGradient } from 'expo'
+import Accordion from 'react-native-collapsible/Accordion';
+
 
 const ACCESS_TOKEN = 'authentication_token';
+
 
 
 class Home extends React.Component {
@@ -28,9 +30,11 @@ class Home extends React.Component {
       accessToken: this.props.navigation.state.params.accessToken,
       posts: [],
       email: this.props.navigation.state.params.email,
-      animation: null
+      animation: null,
+
+      isDrawerClosed: true
     }
-    this.deleteShit = this.deleteShit.bind(this)
+    this.goToView = this.goToView.bind(this)
   }
 
   componentWillMount() {
@@ -75,8 +79,19 @@ class Home extends React.Component {
       { accessToken: accessToken,
         loggedOut: true
       }
-  )
+    )
+  }
+  goToView(routeName, id, description, title) {
+    this.props.navigation.navigate(
+      routeName,
+      { postId: id,
+      postDescription: description,
+      postTitle: title,
+      accessToken: this.state.accessToken,
+      userEmail: this.state.email
     }
+    )
+  }
   onLogout(){
     this.setState({showProgress: true})
     this.deleteToken();
@@ -119,16 +134,11 @@ class Home extends React.Component {
       this.setState({posts: JSON.parse(response._bodyText).data})
     )
   }
-
-  deleteShit(id) {
-    fetch('http://localhost:3000/v1/posts/'+id, {
-      method: 'DELETE',
-      headers: {
-        'X-User-Email': this.state.email,
-        'X-User-Token': this.state.accessToken,
-        'Content-Type': 'application/json',
-      }
-    })
+  handleDrawer() {
+    this.state.isDrawerClosed ?
+    this.setState({isDrawerClosed: false })
+    :
+    this.setState({isDrawerClosed: true })
   }
   
   render() {
@@ -140,150 +150,70 @@ class Home extends React.Component {
     }
     return(
       <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
-     
-      {/* <View style={styles.container}>
-        <Text style={{color: 'black', textAlign: 'center'}}>
-          Your life is the physical manfestation of the thoughts in your head. Make them worthy.
-        </Text>
-      </View>
-      <View style={styles.label}><Text style={{ alignSelf: 'center', marginTop: 15}}>{this.state.posts.length} ongoing manfestations</Text></View> */}
+      <Drawer
+        openDrawerOffset={0.5}
+        closedDrawerOffset={0}
+        type={"static"}
+        content={<View style={{height: '100%' }}>
+          <TouchableHighlight style={{position: 'absolute', bottom: 0, left: 0, marginBottom: 40, marginLeft: 20}}>
+            <Text onPress={this.onLogout.bind(this)} style={{shadowColor: 'white'}}>Logout</Text>
+          </TouchableHighlight>
+        </View>}
+        styles={drawerStyles}
+        onClose={() => this.setState({ isDrawerClosed: true })}
+        tapToClose={true}
+        open={!this.state.isDrawerClosed}
+        >
+           <View style={{ paddingBottom: 15, height: 100, width: '100%'}}>
+            <View style={styles.logout}>
+              <TouchableHighlight 
+                
+                onPress={this.handleDrawer.bind(this)}
+                underlayColor="transparent" activeOpacity={0}
+              >
+                <Image source={require('./images/more.png')} style={{height: 30, width: 30}}/>
+              </TouchableHighlight> 
+            </View>
+          </View> 
 
-        {/* {flashMessage} */}
-        {/* <Text> Welcome User </Text>
-        <Text> Your new token is {this.state.accessToken} </Text> */}
-   
-          <View style={{alignSelf: "center", marginTop: 50, paddingBottom: 15}}>
-            <Switch onValueChange={() => {}}/>
-          </View>
-           <View style={styles.logout}>
-            <TouchableHighlight onPress={this.onLogout.bind(this)} underlayColor="transparent" activeOpacity={0}>
-              <Text>Logout</Text>
-            </TouchableHighlight> 
-          </View>
+        <ScrollView style={{ backgroundColor: '#F5F9FB' }}>
+          { (this.state.posts).map(mant => {
+              return (
+  
+                <TouchableOpacity style={styles.viewBox} key={mant.id} onPress={() => this.goToView('viewPost', mant.id, mant.description, mant.title)}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.title}>{mant.title}</Text>
+                      <Text style={styles.description}>{mant.description}</Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            })
+          }
 
+        </ScrollView>
 
-      <ScrollView>
-         {/* 
-
-        {/* <ActivityIndicatorIOS animating={this.state.showProgress} size="large" style={styles.loader} /> */}
-        
-        { (this.state.posts).map(mant => {
-             return (
-              <View style={styles.viewBox} key={mant.id}>
-                <View style={{flex: 1}}>
-                  <Text style={styles.title}>{mant.title}</Text>
-                  <Text style={styles.description}>{mant.description}</Text>
-                </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center', paddingRight: 10, paddingTop: 10, position: 'absolute', top: 0, right: 0}}>
-                <View onPress={() => {}}>
-                  <View style={styles.dot}/>
-                  <View style={styles.dot}/>
-                  <View style={styles.dot}/>
-                </View>
-                </View>
-                <TouchableHighlight onPress={() => this.deleteShit(mant.id)}><Text>DEETE</Text></TouchableHighlight>
-              </View>
-             )
-          })
-        }
-      </ScrollView>
-
-
-{
-//   this.state.posts.length === 0 ? 
-//   <View>
-//   <Animatable.View animation="slideInDown" iterationCount="infinite" direction="alternate" style={styles.pointer}>
-//   <Text style={{color: '#D8D8D8', fontSize: 25}}>Get Started</Text>
-//   <Image source={require('./images/arrow.png')} style={{alignSelf: 'center', marginTop: 15}}/>
-// </Animatable.View>
-//   <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
-//     <TouchableHighlight 
-//     onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
-//     style={styles.imageStyle}
-//     underlayColor="transparent" activeOpacity={0}
-//     >
-//     <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: 70, width: 70}}>
-//       <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15}}/>
-//       </LinearGradient>
-//     </TouchableHighlight>
-//   </Animatable.View>
-//   </View>
-//   :
-  <TouchableHighlight 
-    onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
-    style={styles.imageStyle}
-    underlayColor="transparent" activeOpacity={0}
-  >
-    <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: 70, width: 70}}>
-    <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15}}/>
-    </LinearGradient>
-  </TouchableHighlight>
-
-}
+        <TouchableHighlight 
+          onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
+          style={styles.imageStyle}
+          underlayColor="transparent" activeOpacity={0}
+        >
+          <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: '100%', width: '100%'}}>
+          <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15, height: 15, width: 15}}/>
+          </LinearGradient>
+        </TouchableHighlight>
+        </Drawer>
       </View>
     );
   }
 }
 
-const Metrics = {
-  containerWidth: 100 - 30,
-  switchWidth: 30
+
+const drawerStyles = {
+  drawer: {},
+  main: {},
 }
+
 const styles = StyleSheet.create({
-  cont: {
-    width: 300,
-    height: 55,
-    flexDirection: 'row',
-    backgroundColor: 'grey',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 27.5
-  },
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 150
-  },
-  label: {
-    width: 200, 
-    height: 50,
-    backgroundColor: 'white',
-    borderRadius: 10, 
-    marginTop: -30, 
-    alignSelf: 'center', 
-     shadowOffset:{  width: 5,  height: 5,  },
-     shadowColor: 'grey', shadowOpacity: 0.5
-  },
-  buttonStyle: {
-    flex: 1,
-    width: 100 / 3,
-    height: 54,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  inputStyle: {
-    color: '#5631B3',
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderColor: '#5631B3',
-    width: '80%',
-    fontSize: 15,
-    alignSelf: 'center',
-    padding: 10
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    width: '80%',
-    height: 60,
-    display: 'flex',
-    alignSelf: 'center'
-  },
   viewBox: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -313,32 +243,27 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#494949'
   },
-  dot: {
-    height: 5,
-    width: 5,
-    borderRadius: 100,
-    backgroundColor: '#5631B3',
-    margin: 3
-  },
-  pointer: {
+  logout: {
     alignSelf: 'center', 
-    marginBottom: 140, 
+    marginTop: 60, 
+    paddingLeft: 25,
     position: 'absolute', 
-    bottom: 0, 
+    top: 0, 
+    left: 0
   },
   imageStyle: {
     alignSelf: 'center', 
     margin: 40, 
     position: 'absolute', 
     bottom: 0, 
+    height: 45,
+    width: 45
   },
-  logout: {
-    alignSelf: 'center', 
-    marginTop: 60, 
-    paddingRight: 25,
-    position: 'absolute', 
-    top: 0, 
-    right: 0
+  container: {
+    flex: 1,
+  },
+  drawer: {
+    backgroundColor: 'red'
   }
 });
 
