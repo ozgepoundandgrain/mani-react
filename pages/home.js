@@ -39,6 +39,8 @@ class Home extends React.Component {
 
   componentWillMount() {
     this.getToken();
+    // this.fetchData();
+
   }
 
   componentDidMount(){
@@ -47,8 +49,8 @@ class Home extends React.Component {
     this.setState({ email: this.props.navigation.state.params.email })
   }
 
-  componentWillUpdate() {
-    // this.fetchData();
+  componentDidUpdate() {  
+
   }
 
   async getToken() {
@@ -106,7 +108,7 @@ class Home extends React.Component {
   async onDelete(){
     let access_token = this.state.accessToken
     try {
-      let response = await fetch('http://localhost:3000/v1/users'+access_token,{
+      let response = await fetch('https://prana-app.herokuapp.com/v1/users'+access_token,{
                               method: 'DELETE',
                             });
         let res = await response.text();
@@ -122,17 +124,25 @@ class Home extends React.Component {
     }
   }
 
-  fetchData(){
-    fetch('http://localhost:3000/v1/posts', {
-      method: 'GET',
-      headers: {
-        'X-User-Email': this.state.email,
-        'X-User-Token': this.state.accessToken,
-        'Content-Type': 'application/json',
-      }
-    }).then(response => 
-      this.setState({posts: JSON.parse(response._bodyText).data})
-    )
+  async fetchData(){
+    try {
+      let response = await fetch('https://prana-app.herokuapp.com/v1/posts',{
+                              method: 'GET',
+                              headers: {
+                                'X-User-Email': this.state.email,
+                                'X-User-Token': this.state.accessToken,
+                                'Content-Type': 'application/json',
+                              }
+                            });
+        if (response.status >= 200 && response.status < 300) {
+          this.setState({posts: JSON.parse(response._bodyText).data})
+        } else {
+          let error = res;
+          throw error;
+        }
+    } catch(error) {
+        console.log("error: " + error)
+    }
   }
   handleDrawer() {
     this.state.isDrawerClosed ?
@@ -148,6 +158,7 @@ class Home extends React.Component {
     } else {
        flashMessage = null
     }
+    console.log(this.props, this.state)
     return(
       <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
       <Drawer

@@ -95,7 +95,7 @@ clearData() {
 
   async onLoginPressed() {
     try {
-      let response = await fetch('http://localhost:3000/v1/sessions/', {
+      let response = await fetch('https://prana-app.herokuapp.com/v1/sessions/', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -109,11 +109,9 @@ clearData() {
       console.log(await response)
       let res = await response._bodyText;
       if (response.status >= 200 && response.status < 300) {
-        // this.setState({error: ''})
         let accessToken = JSON.parse(res).data.user.authentication_token
         this.storeToken(accessToken)
         this.redirect(accessToken, this.state.email)
-        console.log('access token:', accessToken)
       } else {
         let error =  res
         throw error
@@ -121,7 +119,6 @@ clearData() {
       } 
     } catch(error) {
     this.removeToken()
-    //   this.setState({error: error})
       console.log('yooohelo', res)
     }
   }

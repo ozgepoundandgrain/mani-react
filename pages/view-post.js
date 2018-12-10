@@ -22,7 +22,7 @@ class ViewPost extends React.Component {
 
   async submitEdit(id) {
     try {
-        let response = await fetch('http://localhost:3000/v1/posts/'+id, {
+        let response = await fetch('https://prana-app.herokuapp.com/v1/posts/'+id, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ class ViewPost extends React.Component {
 
 
   deleteShit(id) {
-    fetch('http://localhost:3000/v1/posts/'+id, {
+    fetch('https://prana-app.herokuapp.com/v1/posts/'+id, {
       method: 'DELETE',
       headers: {
         'X-User-Email': this.state.email,

@@ -22,6 +22,7 @@ class Post extends React.Component {
   componentDidMount(){
     this.getToken();
   }
+
   async getToken() {
     try {
       let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
@@ -38,7 +39,7 @@ class Post extends React.Component {
   async submitEntry() {
     let access_token = this.state.accessToken
     try {
-        let response = await fetch('http://localhost:3000/v1/posts/', {
+        let response = await fetch('https://prana-app.herokuapp.com/v1/posts/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -68,7 +69,6 @@ class Post extends React.Component {
   }
 
   render() {
-      console.log('YOOOO', this.state)
     return(
       <View style={styles.page}>
         <View style={styles.navStyle}>
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     right: 0,
     paddingBottom: 10,
     paddingRight: 10,
-    fontSize: 20,
   },
   navStyle: {
     height: 100, width: '100%', backgroundColor: 'white'

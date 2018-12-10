@@ -94,7 +94,7 @@ class Register extends React.Component {
   }
   async onRegisterPressed() {
     try {
-      let response = await fetch('http://localhost:3000/v1/users', {
+      let response = await fetch('https://prana-app.herokuapp.com/v1/users', {
                               method: 'POST',
                               headers: {
                                 'Accept': 'application/json',

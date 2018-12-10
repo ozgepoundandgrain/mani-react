@@ -46,18 +46,12 @@ const AppNavigator = createStackNavigator({
     screen: props=> <Post {...props} />,
     navigationOptions: ({navigation})=>({
       header: null
-      // headerBackTitle:'Close',
-      // headerTintColor: 'white',
-      // headerStyle: { backgroundColor: 'grey' },
     })
   },
   viewPost: {
     screen: props => <ViewPost {...props} />,
     navigationOptions: ({navigation})=>({
       header: null
-      // headerBackTitle:'Close',
-      // headerTintColor: 'white',
-      // headerStyle: { backgroundColor: 'grey' },
     })
   },
 })
@@ -81,7 +75,7 @@ export default class App extends React.Component {
   }
   
   render() {
-    console.log(this.state)
+    console.log('PROPS', this.props)
     return (
       this.state.loadApp === false ? 
       <InitialScreen />
