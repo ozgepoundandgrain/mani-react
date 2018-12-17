@@ -18,6 +18,7 @@ class ViewPost extends React.Component {
 
     this.submitEdit = this.submitEdit.bind(this)
     this.deleteShit = this.deleteShit.bind(this)
+    this.deleteAction = this.deleteAction.bind(this)
   }
 
   async submitEdit(id) {
@@ -48,6 +49,10 @@ class ViewPost extends React.Component {
     }
   }
 
+  deleteAction(id){
+    this.deleteShit(id)
+    this.props.navigation.navigate('home')
+  }
 
   deleteShit(id) {
     fetch('https://prana-app.herokuapp.com/v1/posts/'+id, {
@@ -60,16 +65,30 @@ class ViewPost extends React.Component {
     })
   }
 
+  completeAction(id) {
+    fetch('https://prana-app.herokuapp.com/v1/completions?id='+id, {
+      method: 'POST',
+      headers: {
+        'X-User-Email': this.state.email,
+        'X-User-Token': this.state.accessToken,
+        'Content-Type': 'application/json',
+      }
+    })
+  }
+
   render() {
-    console.log(this.state)
+    console.log(this.props)
     return(
       <View style={styles.page}>
       <View style={{ height: 100, width: '100%'}}>
         <TouchableHighlight onPress={() => this.submitEdit(this.state.id)} style={styles.save}>
           <Text>Save</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.deleteShit(this.state.id)} style={styles.delete}>
+        <TouchableHighlight onPress={() => this.deleteAction(this.state.id)} style={styles.delete}>
           <Text>Delete</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.completeAction(this.state.id)} style={{padding: 30}}>
+          <Text>Complete!</Text>
         </TouchableHighlight>
       </View>
 
