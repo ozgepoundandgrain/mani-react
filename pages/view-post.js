@@ -84,12 +84,6 @@ class ViewPost extends React.Component {
         <TouchableHighlight onPress={() => this.submitEdit(this.state.id)} style={styles.save}>
           <Text>Save</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.deleteAction(this.state.id)} style={styles.delete}>
-          <Text>Delete</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.completeAction(this.state.id)} style={{padding: 30}}>
-          <Text>Complete!</Text>
-        </TouchableHighlight>
       </View>
 
         <ScrollView>
