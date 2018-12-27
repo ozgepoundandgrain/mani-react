@@ -21,7 +21,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 const ACCESS_TOKEN = 'authentication_token';
 
-const swipeContainerStyle = translateX => (
+const swipeContainerStyle = (translateX) => (
   { transform: [{ translateX }]}
 )
 
@@ -35,8 +35,10 @@ class Home extends React.Component {
       posts: [],
       email: this.props.navigation.state.params.email,
       animation: null,
+      viewOptions: false,
 
-      isDrawerClosed: true
+      isDrawerClosed: true,
+      index: null
     }
     this.goToView = this.goToView.bind(this)
     this.reset = this.reset.bind(this)
@@ -68,8 +70,8 @@ class Home extends React.Component {
 
   }
 
-  panResponder = PanResponder.create({
-    onMoveShouldSetResponderCapture: () => true,
+  panResponder = (id) => PanResponder.create({
+    onMoveShouldSetResponderCapture: (id) => true,
     onMoveShouldSetPanResponderCapture: (e, gestureState) => (
       Math.abs(gestureState.dx) > 1 || Math.abs(gestureState.dx) > 1
     ),
@@ -83,6 +85,12 @@ class Home extends React.Component {
         Animated.timing(this.translateX, {
           useNativeDriver: true,
           toValue: -85,
+          duration: 200,
+        }).start()
+      } else {
+        Animated.timing(this.translateX, {
+          useNativeDriver: true,
+          toValue: 0,
           duration: 200,
         }).start()
       }
@@ -104,6 +112,12 @@ class Home extends React.Component {
     })
   }
 
+  viewOptions() {
+    !!this.state.viewOptions ?
+    this.setState({viewOptions: false}) 
+    :
+    this.setState({viewOptions: true}) 
+  }
   async getToken() {
     try {
       let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
@@ -224,7 +238,7 @@ class Home extends React.Component {
     return(
       <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
       <Drawer
-        openDrawerOffset={0.5}
+        openDrawerOffset={0.4}
         closedDrawerOffset={0}
         type={"static"}
         content={<View style={{height: '100%' }}>
@@ -255,14 +269,14 @@ class Home extends React.Component {
           </View> 
 
         <ScrollView style={{ backgroundColor: '#F5F9FB' }}>
-          { (this.state.posts).map(mant => {
+          { (this.state.posts).map((mant, index) => {
               return (
-                <View style={{position: 'relative'}}>
+                <View style={{position: 'relative'}} key={mant.id}>
                   <Animated.View
                     style={swipeContainerStyle(this.translateX)}
-                    {...this.panResponder.panHandlers}
+                    {...this.panResponder(mant.id).panHandlers}
                   >
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.viewBox} key={mant.id}
                     underlayColor="transparent" activeOpacity={1}
                   >
@@ -273,9 +287,9 @@ class Home extends React.Component {
                   </TouchableOpacity>
                   </Animated.View>
                   <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.deleteButton} onPress={() => this.deleteAction(mant.id)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Delete</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.EditButton} onPress={() => this.goToView('viewPost', mant.id, mant.description, mant.title)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Edit</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.completeButton} onPress={() => this.completeAction(mant.id)} ><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Complete!</Text></TouchableOpacity>
+                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.deleteButton} onPress={() => this.deleteAction(mant.id)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Delete</Text></TouchableOpacity>
+                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.EditButton} onPress={() => this.goToView('viewPost', mant.id, mant.description, mant.title)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Edit</Text></TouchableOpacity>
+                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.completeButton} onPress={() => this.completeAction(mant.id)} ><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Complete!</Text></TouchableOpacity>
                   </View>
                 </View>
               )
@@ -284,15 +298,28 @@ class Home extends React.Component {
 
         </ScrollView>
 
-        <TouchableHighlight 
-          onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })} 
-          style={styles.imageStyle}
+
+        <View 
           underlayColor="transparent" activeOpacity={0}
         >
-          <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: '100%', width: '100%'}}>
-          <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15, height: 15, width: 15}}/>
-          </LinearGradient>
-        </TouchableHighlight>
+        <View>
+          {!!this.state.viewOptions &&
+            <View style={styles.booboo}>
+              <TouchableHighlight underlayColor="transparent" activeOpacity={1} style={{flexGrow: 1, alignItems: 'center', transform: [{ rotate: '-25deg'}], width: 15, margin: 5}} onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })}><Text>Post</Text></TouchableHighlight>
+              <TouchableHighlight underlayColor="transparent" activeOpacity={1} disabled style={{flexGrow: 1, alignItems: 'center', transform: [{ rotate: '25deg'}], width: 15, margin: 5}}><Text style={{fontSize: 10}}>Vision board (coming soon)</Text></TouchableHighlight>
+            </View>
+          }
+            <TouchableOpacity
+              underlayColor="transparent" activeOpacity={1}
+              onPress={() => this.viewOptions()}
+              style={styles.imageStyle}
+            >
+              <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: '100%', width: '100%'}}>
+              <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15, height: 15, width: 15}}/>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
         </Drawer>
       </View>
     );
@@ -301,20 +328,20 @@ class Home extends React.Component {
 
 
 const drawerStyles = {
-  drawer: {},
-  main: {},
+  drawer: { backgroundColor: 'white'},
+  main: {backgroundColor: '#F5F9FB'},
 }
 
 const styles = StyleSheet.create({
   deleteButton: {
     height: 20,
-    backgroundColor: '#E65232',
+    backgroundColor: '#523CB8',
     flexGrow: 3,
     borderTopRightRadius: 10
   },
   EditButton: {
     height: 20,
-    backgroundColor: '#EBA3C3',
+    backgroundColor: '#08DAF6',
     flexGrow: 3,
   },
   completeButton: {
@@ -379,6 +406,14 @@ const styles = StyleSheet.create({
     bottom: 0, 
     height: 45,
     width: 45
+  },
+  booboo: {
+    alignSelf: 'center', 
+    marginBottom: 80, 
+    position: 'absolute', 
+    bottom: 0,
+    flexDirection: 'row',
+    width: '50%',
   },
   container: {
     flex: 1,
