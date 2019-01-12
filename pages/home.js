@@ -4,6 +4,7 @@ import * as Animatable from 'react-native-animatable'
 import Drawer from 'react-native-drawer'
 import {
     StyleSheet, 
+    Button,
     Text,
     View,
     TouchableHighlight,
@@ -15,7 +16,7 @@ import {
     PanResponder,
     Dimensions,
     Switch } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient, ImagePicker, Permissions } from 'expo'
 import Accordion from 'react-native-collapsible/Accordion';
 
 
@@ -33,9 +34,12 @@ class Home extends React.Component {
       isLoggenIn: "",
       accessToken: this.props.navigation.state.params.accessToken,
       posts: [],
+      visions: [],
       email: this.props.navigation.state.params.email,
       animation: null,
       viewOptions: false,
+      image: null,
+      uploadFile: '',
 
       isDrawerClosed: true,
       index: null
@@ -55,9 +59,19 @@ class Home extends React.Component {
     this.translateX.setValue(-105)
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (permission.status !== 'granted') {
+      const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (newPermission.status === 'granted') {
+        console.log('just granted')
+      }
+  } else {
+    console.log('GRANTED ALREADY')
+  }
     this.getToken();
     this.fetchData()
+    this.fetchVisions()
     this.setState({ email: this.props.navigation.state.params.email })
     Animated.timing(this.translateX, {
       useNativeDriver: true,
@@ -189,6 +203,52 @@ class Home extends React.Component {
     }
   }
 
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+    this.setState({ uploadFile: result.uri })
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  async submitPhoto() {
+    let access_token = this.state.accessToken
+    try {
+        let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-User-Email': this.state.email,
+                'X-User-Token': this.state.accessToken
+            },
+            body: JSON.stringify({
+              vision: {
+                description: 'dsfsfdsfdsfsd',
+                image: this.state.uploadFile
+              }
+            })
+        });
+
+        let res = await response.text();
+        if (response.status >= 200 && response.status < 300) {
+            console.log('res success is: ', res);
+            this.props.navigation.navigate('home');
+        } else {
+            let errors = res;
+            throw errors;
+        }
+      
+    } catch(errors) {
+    }
+  }
+
   async fetchData(){
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/posts',{
@@ -201,6 +261,27 @@ class Home extends React.Component {
                             });
         if (response.status >= 200 && response.status < 300) {
           this.setState({posts: JSON.parse(response._bodyText).data})
+        } else {
+          let error = res;
+          throw error;
+        }
+    } catch(error) {
+        console.log("error: " + error)
+    }
+  }
+
+  async fetchVisions(){
+    try {
+      let response = await fetch('https://prana-app.herokuapp.com/v1/visions',{
+                              method: 'GET',
+                              headers: {
+                                'X-User-Email': this.state.email,
+                                'X-User-Token': this.state.accessToken,
+                                'Content-Type': 'application/json',
+                              }
+                            });
+        if (response.status >= 200 && response.status < 300) {
+          this.setState({visions: JSON.parse(response._bodyText).data})
         } else {
           let error = res;
           throw error;
@@ -234,7 +315,8 @@ class Home extends React.Component {
     } else {
        flashMessage = null
     }
-    console.log(this.props, this.state)
+
+    console.log('EXCUSEEEEEEEEE ME', this.state.uploadFile)
     return(
       <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
       <Drawer
@@ -249,6 +331,7 @@ class Home extends React.Component {
           <TouchableHighlight>
             <Text style={{shadowColor: 'white'}}>Contact: info@prana.com</Text>
           </TouchableHighlight>
+          <TouchableHighlight onPress={this.submitPhoto.bind(this)}><Text>DUBMIT PHOTO</Text></TouchableHighlight>
           </View>
         </View>}
         styles={drawerStyles}
@@ -256,6 +339,8 @@ class Home extends React.Component {
         tapToClose={true}
         open={!this.state.isDrawerClosed}
         >
+
+
            <View style={{ paddingBottom: 15, height: 100, width: '100%'}}>
             <View style={styles.logout}>
               <TouchableHighlight 
@@ -269,6 +354,7 @@ class Home extends React.Component {
           </View> 
 
         <ScrollView style={{ backgroundColor: '#F5F9FB' }}>
+        <View>
           { (this.state.posts).map((mant, index) => {
               return (
                 <View style={{position: 'relative'}} key={mant.id}>
@@ -295,6 +381,30 @@ class Home extends React.Component {
               )
             })
           }
+
+<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Button
+              title="Pick an image from camera roll"
+              onPress={this._pickImage}
+            />
+            {this.state.image &&
+              <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
+          </View>
+
+          {
+            (this.state.visions).map((vis, index) => {
+              console.log(vis)
+              return (
+                <View  style={{flex: 1}} key={vis.id}>
+                  <Text style={styles.title}>{vis.description}</Text>
+                 { vis.image.url !== null && 
+                    <Image source={{uri: vis.image.url}} style={{ width: 200, height: 200 }}/> }
+                  {/* <Text style={styles.title}>{vis.image}</Text> */}
+                </View>
+              )
+            })
+          }
+        </View>
 
         </ScrollView>
 
