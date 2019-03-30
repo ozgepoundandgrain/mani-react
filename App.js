@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { createStackNavigator } from 'react-navigation'
 import Root from './pages/root'
 import Home from './pages/home'
@@ -8,7 +8,8 @@ import Register from './pages/register'
 import Post from './pages/post'
 import InitialScreen from './pages/initial-screen'
 import ViewPost from './pages/view-post'
-
+import ViewVision from './pages/view-vision'
+import EditVision from './pages/edit-vision'
 
 const AppNavigator = createStackNavigator({
   login: {
@@ -16,8 +17,7 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       title: "",
       header: null
-    },
-    
+    }
   },
   root: {
     screen: props=> <Root {...props} />,
@@ -54,6 +54,18 @@ const AppNavigator = createStackNavigator({
       header: null
     })
   },
+  ViewVision: {
+    screen: props=> <ViewVision {...props} />,
+    navigationOptions: {
+      title: ''
+    }
+  },
+  editVision: {
+    screen: props=> <EditVision {...props} />,
+    navigationOptions: {
+      title: ''
+    }
+  }
 })
 
 
@@ -75,7 +87,6 @@ export default class App extends React.Component {
   }
   
   render() {
-    console.log('PROPS', this.props)
     return (
       this.state.loadApp === false ? 
       <InitialScreen />

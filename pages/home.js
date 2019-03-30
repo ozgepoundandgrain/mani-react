@@ -9,17 +9,15 @@ import {
     View,
     TouchableHighlight,
     AsyncStorage,
-    TouchableOpacity,
     ScrollView,
     Image,
     Animated,
     PanResponder,
     Dimensions,
-    Switch } from 'react-native';
-import { LinearGradient, ImagePicker, Permissions } from 'expo'
-import Accordion from 'react-native-collapsible/Accordion';
+    } from 'react-native';
+import { Permissions, ImagePicker } from 'expo'
 
-
+const WIDTH = Dimensions.get('window').width
 const ACCESS_TOKEN = 'authentication_token';
 
 const swipeContainerStyle = (translateX) => (
@@ -40,11 +38,14 @@ class Home extends React.Component {
       viewOptions: false,
       image: null,
       uploadFile: '',
+      displayEntries: true,
+      displayVisions: false,
 
       isDrawerClosed: true,
       index: null
     }
     this.goToView = this.goToView.bind(this)
+    this.goToVisionView = this.goToVisionView.bind(this)
     this.reset = this.reset.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
   }
@@ -173,6 +174,18 @@ class Home extends React.Component {
     }
     )
   }
+  goToVisionView(routeName, id, description, url) {
+    this.props.navigation.navigate(
+      routeName,
+      { 
+      visionId: id,
+      visionURL: url,
+      visionDescription: description,
+      accessToken: this.state.accessToken,
+      userEmail: this.state.email
+    }
+    )
+  }
   onLogout(){
     this.setState({showProgress: true})
     this.deleteToken();
@@ -203,6 +216,40 @@ class Home extends React.Component {
     }
   }
 
+  // async submitPhoto() {
+  //   let access_token = this.state.accessToken
+  //   try {
+  //       let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
+  //           method: 'POST',
+  //           headers: {
+  //               'Accept': 'application/json',
+  //               'Content-Type': 'application/json',
+  //               'X-User-Email': this.state.email,
+  //               'X-User-Token': this.state.accessToken
+  //           },
+  //           body: JSON.stringify({
+  //             vision: {
+  //               description: 'YOYOYOYOYO',
+  //               image: this.state.uploadFile
+  //             }
+  //           })
+  //       });
+
+  //       let res = await response.text();
+  //       if (response.status >= 200 && response.status < 300) {
+  //           console.log('res success is: ', res);
+  //           this.props.navigation.navigate('home');
+  //       } else {
+  //         console.log('RESSS ERROR:', res)
+  //         console.log(this.state.accessToken, this.state.email)
+  //           let errors = res;
+  //           throw errors;
+  //       }
+      
+  //   } catch(errors) {
+  //   }
+  // }
+
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -210,86 +257,85 @@ class Home extends React.Component {
     });
 
     console.log(result);
-    this.setState({ uploadFile: result.uri })
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
+
+
+    let localUri = result.uri;
+  let filename = localUri.split('/').pop();
+
+  const stringdata = {
+    description: "this is the description yooooo"
   };
 
-  async submitPhoto() {
-    let access_token = this.state.accessToken
-    try {
-        let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-User-Email': this.state.email,
-                'X-User-Token': this.state.accessToken
-            },
-            body: JSON.stringify({
-              vision: {
-                description: 'dsfsfdsfdsfsd',
-                image: this.state.uploadFile
-              }
-            })
-        });
 
-        let res = await response.text();
-        if (response.status >= 200 && response.status < 300) {
-            console.log('res success is: ', res);
-            this.props.navigation.navigate('home');
-        } else {
-            let errors = res;
-            throw errors;
-        }
-      
-    } catch(errors) {
-    }
-  }
+  // Infer the type of the image
+  let match = /\.(\w+)$/.exec(filename);
+  let type = match ? `image/${match[1]}` : `image`;
 
-  async fetchData(){
-    try {
-      let response = await fetch('https://prana-app.herokuapp.com/v1/posts',{
-                              method: 'GET',
-                              headers: {
-                                'X-User-Email': this.state.email,
-                                'X-User-Token': this.state.accessToken,
-                                'Content-Type': 'application/json',
-                              }
-                            });
-        if (response.status >= 200 && response.status < 300) {
-          this.setState({posts: JSON.parse(response._bodyText).data})
-        } else {
-          let error = res;
-          throw error;
-        }
-    } catch(error) {
-        console.log("error: " + error)
-    }
+  // Upload the image using the fetch and FormData APIs
+  let formData = new FormData();
+  for (var k in stringdata) {
+    formData.append(k, stringdata[k]);
   }
+  formData.append('image', { uri: localUri, name: filename, type });
 
-  async fetchVisions(){
-    try {
-      let response = await fetch('https://prana-app.herokuapp.com/v1/visions',{
-                              method: 'GET',
-                              headers: {
-                                'X-User-Email': this.state.email,
-                                'X-User-Token': this.state.accessToken,
-                                'Content-Type': 'application/json',
-                              }
-                            });
-        if (response.status >= 200 && response.status < 300) {
-          this.setState({visions: JSON.parse(response._bodyText).data})
-        } else {
-          let error = res;
-          throw error;
-        }
-    } catch(error) {
-        console.log("error: " + error)
-    }
-  }
+  return await fetch('https://prana-app.herokuapp.com/v1/visions/', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+      'X-User-Email': this.state.email,
+      'X-User-Token': this.state.accessToken
+    },
+  });
+  };
+    
+  // async fetchData(){
+  //   try {
+  //     let response = await fetch('https://prana-app.herokuapp.com/v1/posts',{
+  //                             method: 'GET',
+  //                             headers: {
+  //                               'X-User-Email': this.state.email,
+  //                               'X-User-Token': this.state.accessToken,
+  //                               'Content-Type': 'application/json',
+  //                             }
+  //                           });
+  //       if (response.status >= 200 && response.status < 300) {
+  //         this.setState({posts: JSON.parse(response._bodyText).data})
+  //       } else {
+  //         let error = res;
+  //         throw error;
+  //       }
+  //   } catch(error) {
+  //       console.log("error: " + error)
+  //   }
+  // }
+
+  // async fetchVisions(){
+  //   try {
+  //     let response = await fetch('https://prana-app.herokuapp.com/v1/visions',{
+  //                             method: 'GET',
+  //                             headers: {
+  //                               'X-User-Email': this.state.email,
+  //                               'X-User-Token': this.state.accessToken,
+  //                               'Content-Type': 'application/json',
+  //                             }
+  //                           });
+  //       if (response.status >= 200 && response.status < 300) {
+  //         this.setState({visions: JSON.parse(response._bodyText).data})
+  //       } else {
+  //         let error = res;
+  //         throw error;
+  //       }
+  //   } catch(error) {
+  //       console.log("error: " + error)
+  //   }
+  // }
+
   handleDrawer() {
     this.state.isDrawerClosed ?
     this.setState({isDrawerClosed: false })
@@ -307,16 +353,15 @@ class Home extends React.Component {
       }
     })
   }
+  
 
   render() {
-    let flashMessage;
     if (this.props.flash) {
        flashMessage = <Text style={styles.flash}>{this.props.flash}</Text>
     } else {
        flashMessage = null
     }
 
-    console.log('EXCUSEEEEEEEEE ME', this.state.uploadFile)
     return(
       <View style={{backgroundColor: '#F5F9FB', height: '100%', alignContent: 'center'}}>
       <Drawer
@@ -331,7 +376,9 @@ class Home extends React.Component {
           <TouchableHighlight>
             <Text style={{shadowColor: 'white'}}>Contact: info@prana.com</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={this.submitPhoto.bind(this)}><Text>DUBMIT PHOTO</Text></TouchableHighlight>
+          {/* <TouchableHighlight onPress={this.submitPhoto.bind(this)}><Text>DUBMIT PHOTO</Text></TouchableHighlight> */}
+          {/* <TouchableHighlight onPress={this.selectPhotoTapped.bind(this)}><Text>UPLOAD BIH</Text></TouchableHighlight> */}
+          {/* <Text>{this.state.uploadFile}t</Text> */}
           </View>
         </View>}
         styles={drawerStyles}
@@ -339,7 +386,6 @@ class Home extends React.Component {
         tapToClose={true}
         open={!this.state.isDrawerClosed}
         >
-
 
            <View style={{ paddingBottom: 15, height: 100, width: '100%'}}>
             <View style={styles.logout}>
@@ -352,68 +398,83 @@ class Home extends React.Component {
               </TouchableHighlight> 
             </View>
           </View> 
+        <ScrollView style={{ position: 'relative', backgroundColor: '#F5F9FB' }}>
+        <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 150, width: '100%', flexDirection: 'row', paddingLeft: 50, paddingRight: 50}}>
+          <TouchableHighlight 
+            onPress={() => this.setState({displayEntries: true, displayVisions: false})}
+            underlayColor="transparent" activeOpacity={0}
+          >
+            <View style={this.state.displayEntries ? styles.border : styles.noborder}>
+              <Text>{this.state.posts.length}</Text>
+              <Text>Entries</Text>
+            </View>
+          </TouchableHighlight>
+          
+          <TouchableHighlight 
+            onPress={() => this.setState({displayEntries: false, displayVisions: true})}
+            underlayColor="transparent" activeOpacity={0}
+          >
+            <View style={this.state.displayVisions ? styles.border : styles.noborder}>
+              <Text>{this.state.visions.length}</Text>
+              <Text>Vision Board</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
 
-        <ScrollView style={{ backgroundColor: '#F5F9FB' }}>
-        <View>
-          { (this.state.posts).map((mant, index) => {
-              return (
-                <View style={{position: 'relative'}} key={mant.id}>
-                  <Animated.View
-                    style={swipeContainerStyle(this.translateX)}
-                    {...this.panResponder(mant.id).panHandlers}
-                  >
-                  <TouchableOpacity
-                    style={styles.viewBox} key={mant.id}
-                    underlayColor="transparent" activeOpacity={1}
-                  >
-                    <View style={{flex: 1}}>
-                      <Text style={styles.title}>{mant.title}</Text>
-                        <Text style={styles.description}>{mant.description}</Text>
-                    </View>
-                  </TouchableOpacity>
-                  </Animated.View>
-                  <View style={styles.buttons}>
-                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.deleteButton} onPress={() => this.deleteAction(mant.id)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Delete</Text></TouchableOpacity>
-                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.EditButton} onPress={() => this.goToView('viewPost', mant.id, mant.description, mant.title)}><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Edit</Text></TouchableOpacity>
-                    <TouchableOpacity underlayColor="transparent" activeOpacity={1} style={styles.completeButton} onPress={() => this.completeAction(mant.id)} ><Text style={{color: 'white', textAlign: 'right', paddingRight: 20}}>Complete!</Text></TouchableOpacity>
-                  </View>
-                </View>
-              )
-            })
-          }
+{
+  this.state.posts.map(post => {
+    return (
+    <Text>{post.title}</Text>
+    )
+  })
+}
+        {/* <View>
+          <View style={styles.container}>
+            <FlatList
+              data={this.state.posts}
+              renderItem={({post, index}) => <AnimatedPostCards accessToken={this.state.accessToken} email={this.state.email} key={index} values={post} />}
+            />
+          </View>
+        </View> */}
 
-<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        {this.state.displayVisions &&
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button
               title="Pick an image from camera roll"
               onPress={this._pickImage}
             />
             {this.state.image &&
               <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
-          </View>
+          </View>}
 
-          {
-            (this.state.visions).map((vis, index) => {
-              console.log(vis)
+          <View  style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+            {this.state.displayVisions &&
+              (this.state.visions).map((vis, index) => {
               return (
-                <View  style={{flex: 1}} key={vis.id}>
-                  <Text style={styles.title}>{vis.description}</Text>
-                 { vis.image.url !== null && 
-                    <Image source={{uri: vis.image.url}} style={{ width: 200, height: 200 }}/> }
-                  {/* <Text style={styles.title}>{vis.image}</Text> */}
-                </View>
+                 vis.image.url !== null && 
+                 <TouchableHighlight 
+                  onPress={() => this.goToVisionView('ViewVision', vis.id, vis.description, vis.image.url)}
+                >
+                  <Image 
+                    source={{uri: vis.image.url}} 
+                    style={{ width: (WIDTH/3), height: (WIDTH/3) }}
+                  />
+                </TouchableHighlight>
               )
             })
           }
-        </View>
-
+          </View>
         </ScrollView>
 
 
-        <View 
-          underlayColor="transparent" activeOpacity={0}
-        >
-        <View>
-          {!!this.state.viewOptions &&
+        <View style={{width: '100%', height: 70, backgroundColor: 'white'}}>
+          <TouchableHighlight
+            underlayColor="transparent" activeOpacity={1}
+            onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })}
+          >
+            <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15, height: 15, width: 15}}/>
+          </TouchableHighlight>
+          {/* {!!this.state.viewOptions &&
             <View style={styles.booboo}>
               <TouchableHighlight underlayColor="transparent" activeOpacity={1} style={{flexGrow: 1, alignItems: 'center', transform: [{ rotate: '-25deg'}], width: 15, margin: 5}} onPress={() => this.props.navigation.navigate('post', { email: this.props.navigation.state.params.email })}><Text>Post</Text></TouchableHighlight>
               <TouchableHighlight underlayColor="transparent" activeOpacity={1} disabled style={{flexGrow: 1, alignItems: 'center', transform: [{ rotate: '25deg'}], width: 15, margin: 5}}><Text style={{fontSize: 10}}>Vision board (coming soon)</Text></TouchableHighlight>
@@ -427,9 +488,9 @@ class Home extends React.Component {
               <LinearGradient colors={['#08DAF6', '#523CB8']} style={{borderRadius: 50, height: '100%', width: '100%'}}>
               <Image source={require('./images/plus.png')} style={{alignSelf: 'center', marginTop: 15, height: 15, width: 15}}/>
               </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-        </View>
+
         </Drawer>
       </View>
     );
@@ -471,6 +532,22 @@ const styles = StyleSheet.create({
     width: '90%',
     margin: 10,
     alignSelf: 'center',
+  },
+  noborder: {
+    width: 140,
+    justifyContent: 'center',
+    alignItems: 'center', 
+  },
+  border: {
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    backgroundColor: 'transparent',
+    borderColor: 'black',
+    width: 140,
+    justifyContent: 'center',
+    alignItems: 'center', 
   },
   viewBox: {
     display: 'flex',

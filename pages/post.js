@@ -39,7 +39,7 @@ class Post extends React.Component {
   async submitEntry() {
     let access_token = this.state.accessToken
     try {
-        let response = await fetch('https://prana-app.herokuapp.com/v1/posts/', {
+        let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -48,7 +48,7 @@ class Post extends React.Component {
                 'X-User-Token': this.state.accessToken
             },
             body: JSON.stringify({
-              post: {
+              mantra: {
                 title: this.state.title,
                 description: this.state.description
               }
