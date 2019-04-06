@@ -34,6 +34,28 @@ class Home extends React.Component {
     )
   }
 
+  componentWillMount() {
+    this.getToken();
+  }
+
+  componentDidMount(){
+    this.getToken();
+  }
+
+  async getToken() {
+    try {
+      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
+      if(!accessToken) {
+          this.redirect('login');
+      } else {
+          this.setState({accessToken: accessToken})
+      }
+    } catch(error) {
+        console.log("Something went wrong");
+        this.redirect('login');
+    }
+  }
+
   async deleteToken() {
     console.log('deleetteeee')
     try {

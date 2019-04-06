@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
   StyleSheet,
+  ImageBackground,
   View } from 'react-native';
 import LoginForm from './components/login-form'
 import RegisterForm from './components/register-form'
@@ -13,23 +14,35 @@ class Authentication extends React.Component {
       password: '',
       error: '',
       accessToken: '',
+      showLogin: true
     }
+    this.changeForm = this.changeForm.bind(this)
+  }
+
+  changeForm = () => {
+    this.state.showLogin ?
+    this.setState({ showLogin: false })
+    :
+    this.setState({ showLogin: true })
   }
 
 
   render() {
     return (
+      <ImageBackground source={require('./images/eye.jpg')} style={{width: '100%', height: '100%'}}>
       <View style={styles.OuterContainer}>
+      {this.state.showLogin ?
         <LoginForm
           {...this.props}
+          onPressRedirect={this.changeForm}
         />
-
+        :
         <RegisterForm 
           {...this.props}
-        />
-
-
+          onPressRedirect={this.changeForm}
+        />}
       </View>
+      </ImageBackground>
     
     )
   }
@@ -38,9 +51,10 @@ class Authentication extends React.Component {
 const styles = StyleSheet.create({
   OuterContainer: {
     flex: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: '30%'
   }
 });
 

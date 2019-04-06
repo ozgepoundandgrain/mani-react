@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation'
-import Home from './pages/Home'
+import Home from './pages/home'
 import Authentication from './pages/Authentication'
 import VisionFeed from './pages/Vision-feed'
 import MantraFeed from './pages/Mantra-feed'
@@ -74,7 +74,7 @@ export default class App extends React.Component {
   }
   
   render() {
-    console.log('this are athe stuff', this.props)
+    console.log('this are athe stuff', this.state)
     return (
       // this.state.loadApp === false ? 
       // <Initial />
