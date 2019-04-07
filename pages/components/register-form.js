@@ -183,8 +183,8 @@ class RegisterForm extends React.Component {
       </View>,
       <TouchableHighlight
         key={2}
-        underlayColor="white"
-        activeOpacity={0.5}
+        underlayColor="transparent"
+        activeOpacity={0}
         style={styles.redirectButton}
         onPress={this.props.onPressRedirect}
       >
