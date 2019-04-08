@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TouchableHighlight, StyleSheet, View } from 'react-native';
+import { Permissions, ImagePicker } from 'expo'
 
 class Footer extends React.Component {
   constructor(props){
@@ -11,13 +12,41 @@ class Footer extends React.Component {
     this.redirect = this.redirect.bind(this)
   }
 
+  async componentDidMount(){
+    const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (permission.status !== 'granted') {
+      const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (newPermission.status === 'granted') {
+        console.log('just granted')
+      }
+  } else {
+      console.log('GRANTED ALREADY')
+  }
+  }
+
+
   redirect(routeName) {
     this.props.navigation.navigate(
       routeName,
       { accessToken: this.props.accessToken, 
-        email: this.props.email
+        email: this.props.email,
+        imageURI: this.state.image,
       }
     )
+  }
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+      this.redirect('PostVision')
+    }
   }
 
   render() {
@@ -27,7 +56,7 @@ class Footer extends React.Component {
           <Text>mantra</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight onPress={() => this.redirect('PostVision')} style={styles.addButton}>
+        <TouchableHighlight onPress={this._pickImage} style={styles.addButton}>
           <Text>vision</Text>
         </TouchableHighlight>
       </View>

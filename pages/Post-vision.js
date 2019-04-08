@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableHighlight, Image } from 'react-native';
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -8,41 +8,44 @@ class PostVision extends React.Component {
       title: '',
       description: ''
     }
-    this.submitMantra = this.submitMantra.bind(this)
+    this.uploadImage = this.uploadImage.bind(this)
   }
 
-  async submitMantra() {
-    try {
-        let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-User-Email': this.props.navigation.state.params.email,
-                'X-User-Token': this.props.navigation.state.params.accessToken
-            },
-            body: JSON.stringify({
-              mantra: {
-                title: this.state.title,
-                description: this.state.description
-              }
-            })
-        });
+  uploadImage = async () => {
 
-        let res = await response.text();
-        if (response.status >= 200 && response.status < 300) {
-            this.props.navigation.navigate('Home');
-            console.log(respose)
-        } else {
-            let errors = res;
-            throw errors;
-        }
-    } catch(errors) {
-    }
+  let localUri = this.props.navigation.state.params.imageURI;
+  let filename = localUri.split('/').pop();
+
+  const stringdata = {
+    description: this.state.description
+  };
+
+  // Infer the type of the image
+  let match = /\.(\w+)$/.exec(filename);
+  let type = match ? `image/${match[1]}` : `image`;
+
+  // Upload the image using the fetch and FormData APIs
+  let formData = new FormData();
+  for (var k in stringdata) {
+    formData.append(k, stringdata[k]);
   }
+  formData.append('image', { uri: localUri, name: filename, type });
+
+  return await fetch('https://prana-app.herokuapp.com/v1/visions/', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+      'X-User-Email': this.state.email,
+      'X-User-Token': this.state.accessToken
+    },
+  });
+  };
+
 
   render() {
-    console.log(this.props)
+    console.log('YO EXUSE ME ', this.props)
     return (
       <View style={styles.pageContainer}>
         <ImageBackground 
@@ -53,25 +56,19 @@ class PostVision extends React.Component {
           underlayColor="transparent"
           activeOpacity={0}
           style={{padding: 50}}
-          onPress={this.submitMantra}
+          onPress={this.uploadImage}
         >
           <Text>Post</Text>
         </TouchableHighlight>
-        <TextInput 
-          placeholder="Title for your manifestation"
-          onChangeText={(val) => this.setState({ title: val})}
-          placeholderTextColor="white"
-          style={styles.textInputTitle}
-          multiline={true}
-          maxLength={30}
-        />
+        <View style={styles.imageUploader}>
+          <Image style={{height: 50, width: 50}} source={{uri: this.props.navigation.state.params.imageURI}}/>
+        </View>
         <TextInput 
           placeholder="Description"
           onChangeText={(val) => this.setState({ description: val})}
           placeholderTextColor="white"
-          style={styles.textInputDescription}
+          style={styles.textInput}
           multiline={true}
-          numberOfLines={60}
         />
         </ImageBackground>
       </View>  
@@ -90,22 +87,18 @@ const styles = StyleSheet.create({
     width: '100%', 
     height: '100%'
   },
-  textInputTitle: {
-    padding: 20,
-    marginTop: '25%',
-    marginBottom: 20,
-    color: 'white',
-    fontSize: 20,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-  },
-  textInputDescription: {
+  textInput: {
     padding: 20,
     color: 'white',
     fontSize: 20,
-    alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: 300,
+    width: '100%',
+  },
+  imageUploader: {
+    backgroundColor: 'lightgrey',
+    height: 50,
+    width: 50
   }
 })
 

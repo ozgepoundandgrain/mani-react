@@ -50,7 +50,6 @@ class EntryCard extends React.Component {
                 <View style={styles.mantraCard} key={mant.id}>
                   <Text style={styles.title}>{mant.title}</Text>
                   <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
-                  <Text style={styles.view}>View</Text>
                 </View>
             )
           })}
