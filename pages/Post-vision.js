@@ -5,7 +5,6 @@ class PostVision extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
       description: ''
     }
     this.uploadImage = this.uploadImage.bind(this)
@@ -37,8 +36,8 @@ class PostVision extends React.Component {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data',
-      'X-User-Email': this.state.email,
-      'X-User-Token': this.state.accessToken
+      'X-User-Email': this.props.navigation.state.params.email,
+      'X-User-Token': this.props.navigation.state.params.accessToken
     },
   });
   };
