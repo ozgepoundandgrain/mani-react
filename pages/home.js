@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import Tabs from './components/tabs.js'
-import EntryCard from './components/entry-card.js'
+import EntryFeed from './components/entry-feed.js'
+import VisionFeed from './components/vision-feed.js'
 import Footer from './components/footer.js'
 
 class Home extends React.Component {
@@ -35,7 +36,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log('home', this.props)
     return (
       <DrawerComponent {...this.props}>
         <Tabs 
@@ -45,10 +45,16 @@ class Home extends React.Component {
           journalTabStyle={!this.state.showVision ? styles.tab : null}
         />
 
-        <EntryCard
+        {this.state.showVision ? 
+         <VisionFeed
           email={this.state.email}
           accessToken={this.state.accessToken}
         />
+        :
+        <EntryFeed
+          email={this.state.email}
+          accessToken={this.state.accessToken}
+        />}
 
         <Footer 
           email={this.state.email}

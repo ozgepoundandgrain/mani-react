@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
 
-class EntryCard extends React.Component {
+class EntryFeed extends React.Component {
   constructor(props){
     super(props);
 
@@ -47,10 +47,10 @@ class EntryCard extends React.Component {
         <View style={styles.innerScroll}>
           {Object.values(this.state.mantras).map(mant => {
             return (
-                <View style={styles.mantraCard} key={mant.id}>
-                  <Text style={styles.title}>{mant.title}</Text>
-                  <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
-                </View>
+              <View style={styles.mantraCard} key={mant.id}>
+                <Text style={styles.title}>{mant.title}</Text>
+                <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
+              </View>
             )
           })}
         </View>
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default EntryCard
+export default EntryFeed

@@ -58,7 +58,6 @@ export default class App extends React.Component {
   }
   
   render() {
-    console.log('this are athe stuff', this.state)
     return (
       // this.state.loadApp === false ? 
       // <Initial />

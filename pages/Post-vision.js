@@ -10,7 +10,7 @@ class PostVision extends React.Component {
     this.uploadImage = this.uploadImage.bind(this)
   }
 
-  uploadImage = async () => {
+  async uploadImage() {
 
   let localUri = this.props.navigation.state.params.imageURI;
   let filename = localUri.split('/').pop();
@@ -30,7 +30,8 @@ class PostVision extends React.Component {
   }
   formData.append('image', { uri: localUri, name: filename, type });
 
-  return await fetch('https://prana-app.herokuapp.com/v1/visions/', {
+  try {
+    let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
     method: 'POST',
     body: formData,
     headers: {
@@ -40,11 +41,25 @@ class PostVision extends React.Component {
       'X-User-Token': this.props.navigation.state.params.accessToken
     },
   });
+
+  let res = await response.text();
+  console.log(response)
+  if (response.status >= 200 && response.status < 300) {
+      this.props.navigation.navigate('Home');
+      console.log(res)
+  } else {
+      let errors = res;
+      throw errors;
+  }
+
+  } catch(errors) {
+
+  }
+
   };
 
 
   render() {
-    console.log('YO EXUSE ME ', this.props)
     return (
       <View style={styles.pageContainer}>
         <ImageBackground 
@@ -60,7 +75,7 @@ class PostVision extends React.Component {
           <Text>Post</Text>
         </TouchableHighlight>
         <View style={styles.imageUploader}>
-          <Image style={{height: 50, width: 50}} source={{uri: this.props.navigation.state.params.imageURI}}/>
+          <Image style={styles.image} source={{uri: this.props.navigation.state.params.imageURI}}/>
         </View>
         <TextInput 
           placeholder="Description"
@@ -97,6 +112,10 @@ const styles = StyleSheet.create({
   imageUploader: {
     backgroundColor: 'lightgrey',
     height: 50,
+    width: 50
+  },
+  image: {
+    height: 50, 
     width: 50
   }
 })
