@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableHighlight, AsyncStorage, ImageBackground, StyleSheet, Image } from 'react-native';
 import Drawer from 'react-native-drawer'
+import { Asset } from 'expo'
 
 const ACCESS_TOKEN = 'authentication_token';
 
@@ -42,13 +43,23 @@ class DrawerComponent extends React.Component {
     )
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.getToken();
+
+    await Asset.loadAsync([
+      require('../images/ocean.jpg'),
+    ]);
   }
 
   componentDidMount(){
     this.getToken();
   }
+
+  handleViewRef = ref => this.view = ref;
+  
+  bounce = () => 
+    this.view.bounce(800).then(endState => 
+      console.log(endState.finished ? 'bounce finished' : 'bounce cancelled'));
 
   async getToken() {
     try {
@@ -103,17 +114,17 @@ class DrawerComponent extends React.Component {
               source={require('../images/ocean.jpg')} 
               style={styles.background}
             >
-            <TouchableHighlight
-              underlayColor="transparent"
-              activeOpacity={0}
-              style={{paddingTop: 50}}
-              onPress={this.handleDrawer}
-            >
-              <Image source={require('../images/hamburger.png')}/>
-            </TouchableHighlight>
-              <View style={styles.background}>
-                {this.props.children}
-              </View> 
+            <View style={styles.overlay}>
+              <TouchableHighlight
+                underlayColor="transparent"
+                activeOpacity={0}
+                style={this.state.isDrawerClosed ? styles.hamburger : styles.hamburgerRotated}
+                onPress={this.handleDrawer}
+              >
+                <Image source={require('../images/hamburger.png')}/>
+              </TouchableHighlight>
+                  {this.props.children}
+              </View>
             </ImageBackground>
         </Drawer> 
       </View>   
@@ -126,6 +137,14 @@ const drawerStyles = {
 }
 
 const styles = StyleSheet.create({
+  hamburger: {
+    paddingTop: 50, 
+    paddingLeft: 30
+  },
+  hamburgerRotated: {
+    paddingTop: 50, 
+    paddingLeft: 30,
+  },
   logoutText: {
     shadowColor: 'white',
     paddingBottom: 20
@@ -148,6 +167,11 @@ const styles = StyleSheet.create({
     height: '100%', 
     alignContent: 'center',
   },
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    height: '100%',
+    width: '100%'
+  }
 })
 
 

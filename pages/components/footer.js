@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableHighlight, StyleSheet, View } from 'react-native';
+import { Text, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
 import { Permissions, ImagePicker } from 'expo'
 
 class Footer extends React.Component {
@@ -52,12 +52,22 @@ class Footer extends React.Component {
   render() {
     return (
       <View style={styles.FooterContainer}> 
-        <TouchableHighlight onPress={() => this.redirect('PostMantra')} style={styles.addButton}>
-          <Text>mantra</Text>
-        </TouchableHighlight>
+        <TouchableHighlight 
+            onPress={() => this.redirect('PostMantra')} 
+            style={styles.addButton}
+            underlayColor="white"
+            activeOpacity={0}
+          >
+            <Image style={{height: 30, width: 30}} source={require('../images/feather-btn.png')}/>
+          </TouchableHighlight>
 
-        <TouchableHighlight onPress={this._pickImage} style={styles.addButton}>
-          <Text>vision</Text>
+        <TouchableHighlight 
+          onPress={this._pickImage} 
+          style={styles.addButton}
+          underlayColor="white"
+          activeOpacity={0}
+        >
+          <Image style={{ width: 29, height: 18}} source={require('../images/eye-btn.png')}/>
         </TouchableHighlight>
       </View>
     )
@@ -74,8 +84,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    marginBottom: 60,
+    marginLeft: 20,
+    marginRight: 20,
     zIndex: 2,
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    elevation: 24,
    },
    FooterContainer: {
      width: '100%',
@@ -86,6 +105,12 @@ const styles = StyleSheet.create({
      flexDirection:'row',
      justifyContent: 'space-between',
      alignItems: 'center',
+     height: 90,
+     marginBottom: 20,
+   },
+   image: {
+     height: 30,
+     width: 30
    }
 })
 

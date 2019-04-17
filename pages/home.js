@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import DrawerComponent from './components/drawer.js'
-import Tabs from './components/tabs.js'
-import EntryFeed from './components/entry-feed.js'
+import MantraFeed from './components/mantra-feed.js'
 import VisionFeed from './components/vision-feed.js'
 import Footer from './components/footer.js'
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 class Home extends React.Component {
   constructor(props){
@@ -14,19 +14,16 @@ class Home extends React.Component {
       showVision: true,
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
+      mantras: this.props.navigation.state.params.persistedMantras,
+      visions: this.props.navigation.state.params.persistedVisions,
+      index: 0,
+      routes: [
+        { key: 'first', title: 'Vision Board' },
+        { key: 'second', title: 'Manifestation Journal' },
+      ],
     }
 
     this.pressTab = this.pressTab.bind(this)
-    this.redirect = this.redirect.bind(this)
-  }
-
-  redirect(routeName) {
-    this.props.navigation.navigate(
-      routeName,
-      { accessToken: this.state.accessToken, 
-        email: this.state.email
-      }
-    )
   }
 
   pressTab(){
@@ -35,26 +32,43 @@ class Home extends React.Component {
     this.setState({ showVision: true})
   }
 
+  FirstRoute = () => (
+    <VisionFeed
+    email={this.state.email}
+    accessToken={this.state.accessToken}
+    data={this.state.visions}
+    {...this.props}
+  />
+);
+SecondRoute = () => (
+  <MantraFeed
+    email={this.state.email}
+    accessToken={this.state.accessToken}
+    data={this.state.mantras}
+    {...this.props}
+  />
+);
+
+
   render() {
     return (
       <DrawerComponent {...this.props}>
-        <Tabs 
-          onPressJournalTab={this.pressTab}
-          onPressVisionTab={this.pressTab}
-          visionTabStyle={this.state.showVision ? styles.tab : null}
-          journalTabStyle={!this.state.showVision ? styles.tab : null}
-        />
-
-        {this.state.showVision ? 
-         <VisionFeed
-          email={this.state.email}
-          accessToken={this.state.accessToken}
-        />
-        :
-        <EntryFeed
-          email={this.state.email}
-          accessToken={this.state.accessToken}
-        />}
+      <TabView
+        renderTabBar={props =>
+          <TabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: 'transparent', marginTop: 30 }}
+          />
+        }
+        navigationState={this.state}
+        renderScene={SceneMap({
+          first: this.FirstRoute,
+          second: this.SecondRoute,
+        })}
+        onIndexChange={index => this.setState({ index })}
+        initialLayout={{ width: Dimensions.get('window').width }}
+      />
 
         <Footer 
           email={this.state.email}
@@ -70,7 +84,16 @@ const styles = StyleSheet.create({
   tab: {
     borderBottomWidth: 1,
     borderBottomColor: 'white',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    shadowColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.46,
+    shadowRadius: 11.14,
+
+    elevation: 17,
   },
    mantraCard: {
     zIndex: 1,
@@ -78,7 +101,10 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 30,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-  }
+  },
+  scene: {
+    flex: 1,
+  },
 })
 
 export default Home

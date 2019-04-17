@@ -9,6 +9,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/blur": "^3.3.1",
     "expo": "^31.0.6",
     "lottie-react-native": "^2.5.10",
     "react": "16.5.0",
@@ -17,6 +18,7 @@
     "react-native-collapsible": "^1.4.0",
     "react-native-drawer": "^2.5.1",
     "react-native-image-picker": "^0.28.1",
+    "react-native-tab-view": "^2.1.0",
     "react-navigation": "^2.18.2"
   },
   "devDependencies": {

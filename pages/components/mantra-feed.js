@@ -1,23 +1,30 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
 
-
-class EntryFeed extends React.Component {
+class MantraFeed extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      mantras: []
     }
 
+    this.redirect = this.redirect.bind(this)
   }
 
-  async componentDidUpdate(){
+  componentWillMount() {
     this.fetchData()
   }
 
-  async componentDidMount(){
-    this.fetchData()
+  redirect(routeName, mantraId, title, description) {
+    this.props.navigation.navigate(
+      routeName,
+      { accessToken: this.props.accessToken, 
+        email: this.props.email,
+        mantraId: mantraId,
+        title: title,
+        description: description
+      }
+    )
   }
 
   async fetchData(){
@@ -43,18 +50,28 @@ class EntryFeed extends React.Component {
 
   render() {
     return (
+      this.state.mantras ?
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>
           {Object.values(this.state.mantras).map(mant => {
             return (
-              <View style={styles.mantraCard} key={mant.id}>
-                <Text style={styles.title}>{mant.title}</Text>
-                <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
-              </View>
+              <TouchableHighlight
+                key={mant.id}
+                onPress={() => this.redirect('EditMantra', mant.id, mant.title, mant.description)}
+                underlayColor="transparent"
+                activeOpacity={0}
+              >
+                <View style={styles.mantraCard} key={mant.id}>
+                  <Text style={styles.title}>{mant.title}</Text>
+                  <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
+                </View>
+              </TouchableHighlight>
             )
           })}
         </View>
       </ScrollView>
+      :
+      <Text>nothing</Text>
     )
   }
 }
@@ -68,7 +85,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.30)',
   }, 
   scrollView: {
-    paddingTop: 40
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    marginTop: 40
   },
   innerScroll: {     
     marginBottom: 200
@@ -89,4 +111,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default EntryFeed
+export default MantraFeed

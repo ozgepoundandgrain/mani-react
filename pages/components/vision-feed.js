@@ -1,5 +1,12 @@
 import React from 'react';
-import { Text, Image, View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { 
+  Image, 
+  Text, 
+  View, 
+  StyleSheet, 
+  ScrollView, 
+  Dimensions, 
+  TouchableHighlight } from 'react-native';
 
 var {height, width} = Dimensions.get('window')
 
@@ -8,16 +15,11 @@ class VisionFeed extends React.Component {
     super(props);
 
     this.state = {
-      visions: []
+      image: ''
     }
-
   }
-
-  // async componentDidUpdate(){
-  //   this.fetchVision()
-  // }
-
-  async componentDidMount(){
+  
+  componentWillMount() {
     this.fetchVision()
   }
 
@@ -32,8 +34,6 @@ class VisionFeed extends React.Component {
                               }
                             });
 
-        let res = await response;
-        
         if (response.status >= 200 && response.status < 300) {
           this.setState({visions: JSON.parse(response._bodyText).data})
         } else {
@@ -41,39 +41,71 @@ class VisionFeed extends React.Component {
           throw error;
         }
     } catch(error) {
-        console.log("error: " + JSON.stringify(error))
     }
   }
 
+  redirect(routeName, visionId, image_url, description) {
+    this.props.navigation.navigate(
+      routeName,
+      { accessToken: this.props.accessToken, 
+        email: this.props.email,
+        visionId: visionId,
+        image_url: image_url,
+        description: description
+      }
+    )
+  }
+
+
   render() {
-    console.log(this.state)
     return (
+      this.state.visions ?
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>
           {Object.values(this.state.visions).map(vis => {
             return (
-              <Image key={vis.id} style={styles.image} source={{uri: vis.image_url}}/>
+              <TouchableHighlight
+                key={vis.id}
+                onPress={() => this.redirect('ShowVision', vis.id, vis.image_url, vis.description)}
+                underlayColor="transparent"
+                activeOpacity={0}
+              >
+                <Image 
+                  key={vis.id} 
+                  style={{height: width/3, width: width/3}} 
+                  source={{uri: vis.image_url}}
+                />
+              </TouchableHighlight>
             )
           })}
         </View>
       </ScrollView>
+      :
+      <Text>nothing</Text>
     )
   }
 }
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingTop: 40
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    marginTop: 40
+  },
+  scrollViewNoContent: {
+    paddingTop: 40,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   innerScroll: {     
     marginBottom: 200,
     flex: 1, 
     flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  image: {
-    height: width/3,
-    width: width/3
+    flexWrap: 'wrap',
   }
 })
 
