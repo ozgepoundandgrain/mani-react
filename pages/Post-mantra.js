@@ -1,5 +1,6 @@
 import React from 'react';
-import { AsyncStorage, Keyboard, StyleSheet, Text, View, ImageBackground, TextInput, TouchableHighlight } from 'react-native';
+import { AsyncStorage, StyleSheet, View, ImageBackground, TextInput } from 'react-native';
+import Header from './components/header'
 
 class PostMantra extends React.Component {
   constructor(props) {
@@ -93,24 +94,18 @@ class PostMantra extends React.Component {
 
   render() {
     return (
-      <TouchableHighlight
-      onPress={() => Keyboard.dismiss()}
-      underlayColor="transparent"
-      activeOpacity={0}
-    >
         <ImageBackground 
           source={require('./images/ocean.jpg')} 
           style={styles.background}
         >
         <View style={styles.overlay}>
-          <TouchableHighlight
-            underlayColor="transparent"
-            activeOpacity={0}
-            style={{padding: 50}}
-            onPress={this.submitMantra}
-          >
-            <Text>Post</Text>
-          </TouchableHighlight>
+        <ScrollView>
+        <Header
+          leftTitle=""
+          rightTitle="Post"
+          rightTitleAction={this.submitMantra} 
+          leftTitleAction={() => {}}
+        />
           <TextInput 
             placeholder="Title for your manifestation"
             onChangeText={(val) => this.setState({ title: val})}
@@ -127,9 +122,9 @@ class PostMantra extends React.Component {
             multiline={true}
             numberOfLines={60}
           />
+          </ScrollView>
         </View>
         </ImageBackground>
-        </TouchableHighlight>
     );
   }
 }

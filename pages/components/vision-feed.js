@@ -2,11 +2,12 @@ import React from 'react';
 import { 
   Image, 
   Text, 
-  View, 
   StyleSheet, 
-  ScrollView, 
-  Dimensions, 
+  ScrollView,
+  Dimensions,
+  FlatList,
   TouchableHighlight } from 'react-native';
+  
 
 var {height, width} = Dimensions.get('window')
 
@@ -58,31 +59,32 @@ class VisionFeed extends React.Component {
 
 
   render() {
-    return (
+    return ([
       this.state.visions ?
       <ScrollView style={styles.scrollView}>
-        <View style={styles.innerScroll}>
-          {Object.values(this.state.visions).map(vis => {
-            return (
-              <TouchableHighlight
-                key={vis.id}
-                onPress={() => this.redirect('ShowVision', vis.id, vis.image_url, vis.description)}
-                underlayColor="transparent"
-                activeOpacity={0}
-              >
-                <Image 
-                  key={vis.id} 
-                  style={{height: width/3, width: width/3}} 
-                  source={{uri: vis.image_url}}
-                />
-              </TouchableHighlight>
-            )
-          })}
-        </View>
+        <FlatList
+          keyExtractor={(index) => index.toString()}
+          numColumns={3}
+          data={(this.state.visions).reverse()}
+          renderItem={({item, index}) => 
+          <TouchableHighlight
+            key={index}
+            onPress={() => this.redirect('ShowVision', item.id, item.image_url, item.description)}
+            underlayColor="transparent"
+            activeOpacity={0}
+          >
+            <Image 
+              key={item.id} 
+              style={{height: width/3, width: width/3}} 
+              source={{uri: item.image_url}}
+            />
+          </TouchableHighlight>
+        }
+        />
       </ScrollView>
       :
       <Text>nothing</Text>
-    )
+      ])
   }
 }
 
@@ -94,18 +96,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     marginTop: 40
-  },
-  scrollViewNoContent: {
-    paddingTop: 40,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  innerScroll: {     
-    marginBottom: 200,
-    flex: 1, 
-    flexDirection: 'row',
-    flexWrap: 'wrap',
   }
 })
 

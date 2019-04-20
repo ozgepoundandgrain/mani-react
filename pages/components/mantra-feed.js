@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableHighlight, FlatList } from 'react-native';
+import ViewMoreText from 'react-native-view-more-text';
 
 class MantraFeed extends React.Component {
   constructor(props){
@@ -48,26 +49,47 @@ class MantraFeed extends React.Component {
     }
   }
 
+  renderViewMore(onPress){
+    return(
+      <Text onPress={onPress}>View more</Text>
+    )
+  }
+
+  renderViewLess(onPress){
+    return(
+      <Text onPress={onPress}>View less</Text>
+    )
+  }
+
   render() {
     return (
       this.state.mantras ?
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>
-          {Object.values(this.state.mantras).map(mant => {
-            return (
+        <FlatList
+          keyExtractor={(index) => index.toString()}
+          numColumns={1}
+          data={(this.state.mantras).reverse()}
+          renderItem={({item, index}) => 
               <TouchableHighlight
-                key={mant.id}
-                onPress={() => this.redirect('EditMantra', mant.id, mant.title, mant.description)}
+                key={index}
+                onPress={() => this.redirect('EditMantra', item.id, item.title, item.description)}
                 underlayColor="transparent"
                 activeOpacity={0}
               >
-                <View style={styles.mantraCard} key={mant.id}>
-                  <Text style={styles.title}>{mant.title}</Text>
-                  <Text numberOfLines={5} style={styles.description}>{mant.description}</Text>
+                <View style={styles.mantraCard} key={item.id}>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <ViewMoreText
+                    numberOfLines={5}
+                    renderViewMore={this.renderViewMore}
+                    renderViewLess={this.renderViewLess}
+                  >
+                    <Text style={styles.description}>{item.description}</Text>
+                  </ViewMoreText>
                 </View>
               </TouchableHighlight>
-            )
-          })}
+          }
+          />
         </View>
       </ScrollView>
       :

@@ -1,14 +1,19 @@
 import React from 'react';
 import { 
   StyleSheet, 
-  Text, 
   View, 
   ImageBackground, 
   TextInput, 
-  TouchableHighlight, 
   AsyncStorage,
-  Keyboard,
+  Dimensions,
+  TouchableHighlight,
+  Text,
+  ScrollView,
   Image } from 'react-native';
+  import Header from './components/header'
+import { ImagePicker } from 'expo'
+
+var {height, width} = Dimensions.get('window')
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -133,42 +138,49 @@ class PostVision extends React.Component {
 
   };
 
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (!result.cancelled) {
+      this.setState({ imageURI: result.uri });
+    }
+  }
+
   render() {
-    console.log(this.state)
     return (
-      <View style={styles.pageContainer}>
-        <TouchableHighlight
-          onPress={() => Keyboard.dismiss()}
-          underlayColor="transparent"
-          activeOpacity={0}
-        >
-          <ImageBackground 
-            source={require('./images/ocean.jpg')} 
-            style={styles.background}
-          >
-            <View style={styles.overlay}>
-              <TouchableHighlight
-                underlayColor="transparent"
-                activeOpacity={0}
-                style={{padding: 50}}
-                onPress={this.uploadImage}
-              >
-                <Text>Post</Text>
-              </TouchableHighlight>
-              <View style={styles.imageUploader}>
-                <Image style={styles.image} source={{uri: this.props.navigation.state.params.imageURI}}/>
-              </View>
-              <TextInput 
-                placeholder="Description"
-                onChangeText={(val) => this.setState({ description: val})}
-                placeholderTextColor="white"
-                style={styles.textInput}
-                multiline={true}
-              />
-            </View>
-          </ImageBackground>
-        </TouchableHighlight>
-      </View>  
+      <ImageBackground 
+        source={require('./images/ocean.jpg')} 
+        style={styles.background}
+      >
+        <View style={styles.overlay}>
+          <ScrollView style={styles.pageContainer}>
+        <Header
+          leftTitle=""
+          rightTitle="Post"
+          rightTitleAction={this.uploadImage} 
+          leftTitleAction={() => {}}
+        />
+        <View style={styles.form}>
+          <View style={styles.imageUploader}>
+            <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
+            <TouchableHighlight onPress={this._pickImage}>
+              <Text style={styles.editButton}>Edit</Text>
+            </TouchableHighlight>
+          </View>
+          <TextInput 
+            placeholder="Description"
+            onChangeText={(val) => this.setState({ description: val})}
+            placeholderTextColor="white"
+            style={styles.textInput}
+            multiline={true}
+          />
+        </View>
+        </ScrollView>
+      </View>
+    </ImageBackground>
     );
   }
 }
@@ -180,6 +192,11 @@ const styles = StyleSheet.create({
     height: '100%', 
     alignContent: 'center'
   },
+  form: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: '100%',
+  },
   background: {
     width: '100%', 
     height: '100%'
@@ -189,8 +206,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: 300,
-    width: '100%',
+    height: 500,
+    width: (width/3) * 2,
   },
   imageUploader: {
     backgroundColor: 'lightgrey',
@@ -198,13 +215,23 @@ const styles = StyleSheet.create({
     width: 50
   },
   image: {
-    height: 50, 
-    width: 50
+    height: width/3, 
+    width: width/3,
+    position: 'relative'
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     height: '100%',
     width: '100%'
+  },
+  editButton: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    borderRadius: 2,
+    color: 'white', 
+    padding: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0
   }
 })
 

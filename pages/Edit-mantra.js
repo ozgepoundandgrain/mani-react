@@ -1,14 +1,13 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, ImageBackground, ScrollView, Text, TouchableHighlight } from 'react-native';
+import { TextInput, View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
+import Header from './components/header'
 
 class EditMantra extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      visions: [],
-      image: '',
       title: this.props.navigation.state.params.title,
       description: this.props.navigation.state.params.description,
       id: this.props.navigation.state.params.mantraId,
@@ -61,7 +60,7 @@ class EditMantra extends React.Component {
   }
 
   submitDelete(id) {
-    fetch('https://prana-app.herokuapp.com/v1/posts/'+id, {
+    fetch('https://prana-app.herokuapp.com/v1/mantras/'+id, {
       method: 'DELETE',
       headers: {
         'X-User-Email': this.state.email,
@@ -79,29 +78,13 @@ class EditMantra extends React.Component {
         style={{width: '100%', height: '100%'}}
       >
         <View style={styles.overlay}>
-          <View style={styles.headerContainer}>
-            <TouchableHighlight 
-              underlayColor="transparent"
-              activeOpacity={0}
-              onPress={() => this.submitEdit(this.state.id)} 
-              style={styles.actionButton}
-            >
-              <Text>Save</Text>
-            </TouchableHighlight>
-            <TouchableHighlight 
-              underlayColor="transparent"
-              activeOpacity={0}
-              onPress={() => this.setModalVisible(true)}
-              style={styles.actionButton}
-            >
-              <Text>Delete</Text>
-            </TouchableHighlight>
-          </View>
-
-          <ScrollView 
-            style={{marginTop: 80}}
-            keyboardShouldPersistTaps='handled'
-          >
+        <Header
+          leftTitle="Delete"
+          rightTitle="Save"
+          rightTitleAction={() => this.submitEdit(this.state.id)} 
+          leftTitleAction={() => this.setModalVisible(true)}
+        />
+          <ScrollView>
             <TextInput
               placeholderTextColor="white"
               editable
@@ -123,7 +106,6 @@ class EditMantra extends React.Component {
               placeholder={this.state.description}
             />
           </ScrollView>
-
           <ConfirmationModal
             visible={this.state.modalVisible}
             onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
@@ -158,40 +140,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
-  actionButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 20,
-    marginRight: 20,
-    zIndex: 2,
-   },
-   headerContainer: {
-     width: '100%',
-     position: 'absolute',
-     top: 0,
-     right: 0,
-     left: 0,
-     flexDirection:'row',
-     justifyContent: 'space-between',
-     alignItems: 'center',
-     height: 90,
-     marginBottom: 20,
-   },
-   modalContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.90)',
-    position: 'absolute', 
-    top: 0, left: 0, 
-    right: 0, bottom: 0, 
-    justifyContent: 'center', 
-    alignItems: 'center'
-   },
-   buttonsContent: {
-    width: '100%',
-    flexDirection:'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    marginTop: 50
-   }
 })
 
 export default EditMantra

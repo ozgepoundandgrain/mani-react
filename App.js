@@ -6,7 +6,8 @@ import Initial from './pages/Initial'
 import PostMantra from './pages/Post-mantra'
 import PostVision from './pages/Post-vision'
 import EditMantra from './pages/Edit-mantra'
-import ShowVision from './pages/Show-vision.js'
+import ShowVision from './pages/Show-vision'
+import EditVision from './pages/Edit-vision'
 
 const AppNavigator = createStackNavigator({
   Authentication: {
@@ -41,6 +42,13 @@ const AppNavigator = createStackNavigator({
   },
   ShowVision: {
     screen: props=> <ShowVision {...props} />,
+    navigationOptions: {
+      title: "",
+      header: null
+    }
+  },
+  EditVision: {
+    screen: props=> <EditVision {...props} />,
     navigationOptions: {
       title: "",
       header: null
