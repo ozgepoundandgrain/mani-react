@@ -1,11 +1,12 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, ImageBackground, ScrollView, Modal } from 'react-native';
+import { TextInput, View, StyleSheet, ImageBackground, Dimensions, ScrollView, Modal } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
 import { DangerZone, Asset } from 'expo'
 import LoadingAnimation from './animations/glow-loading.json'
 
 let { Lottie } = DangerZone;
+var {width, height} = Dimensions.get('window')
 
 class EditMantra extends React.Component {
   constructor(props){
@@ -173,8 +174,8 @@ class EditMantra extends React.Component {
 
 const styles = StyleSheet.create({
   textInputTitle: {
-    padding: 20,
-    marginBottom: 20,
+    padding: 5,
+    marginBottom: 10,
     color: 'white',
     fontSize: 20,
     alignItems: 'center',
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: 300,
+    height: (width === 320) ? 200 : 300,
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',

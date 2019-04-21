@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: 500,
+    height: (width === 320) ? 240 : 300,
     width: (width/3) * 2
   },
   form: {

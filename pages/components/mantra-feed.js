@@ -52,7 +52,7 @@ class MantraFeed extends React.Component {
         style={styles.buttonTouchable} 
         onPress={() => this.redirect('EditMantra', item.id, item.title, item.description)}
       >
-        <View>
+        <View style={{flexDirection: 'row'}}>
           <View style={styles.circle}></View>
           <View style={styles.circle}></View>
           <View style={styles.circle}></View>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    marginTop: 40
+    marginTop: 10
   },
   innerScroll: {     
     marginBottom: 200
@@ -148,11 +148,11 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   buttonTouchable: {
-    flexDirection: 'row', 
     position: 'absolute', 
     top: 0, 
     right: 0,
-    padding: 30
+    paddingRight: 10,
+    paddingTop: 5
   },
   circle: {
     height: 4, 

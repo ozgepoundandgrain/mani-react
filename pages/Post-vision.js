@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: height/2,
+    height: (width === 320) ? 240 : 300,
     width: (width/3) * 2,
   },
   animationModal: {

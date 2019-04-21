@@ -52,10 +52,10 @@ class VisionFeed extends React.Component {
   }
 
   
-  componentDidMount() {
-    this.fetchVision()
-    this.imagesArray()
-  }
+  // componentDidMount() {
+  //   this.fetchVision()
+  //   this.imagesArray()
+  // }
 
   // componentWillUpdate() {
   //   this.fetchVision()
@@ -120,7 +120,6 @@ class VisionFeed extends React.Component {
         />
       );
     }
-    console.log((this.state.visions).map(vision => vision.image_url))
     return (
       <ScrollView style={styles.scrollView}>
         {this.state.visions ?

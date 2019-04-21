@@ -6,6 +6,9 @@ import VisionFeed from './components/vision-feed.js'
 import Footer from './components/footer.js'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
+var {width, height} = Dimensions.get('window')
+
+
 class Home extends React.Component {
   constructor(props){
     super(props);
@@ -58,7 +61,7 @@ SecondRoute = () => (
           <TabBar
             {...props}
             indicatorStyle={{ backgroundColor: 'white' }}
-            style={{ backgroundColor: 'transparent', marginTop: 30 }}
+            style={styles.tabStyle}
           />
         }
         navigationState={this.state}
@@ -106,6 +109,10 @@ const styles = StyleSheet.create({
   scene: {
     flex: 1,
   },
+  tabStyle: {
+    backgroundColor: 'transparent', 
+    marginTop: (width === 320) ? 15 : 30
+  }
 })
 
 export default Home

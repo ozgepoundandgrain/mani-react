@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Modal, View, ImageBackground, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, Modal, View, ImageBackground, TextInput, Dimensions } from 'react-native';
 import Header from './components/header'
 import { DangerZone, Asset } from 'expo'
 import LoadingAnimation from './animations/glow-loading.json'
 
 let { Lottie } = DangerZone;
+var {width, height} = Dimensions.get('window')
 
 class PostMantra extends React.Component {
   constructor(props) {
@@ -169,8 +170,8 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   textInputTitle: {
-    padding: 20,
-    marginBottom: 20,
+    padding: 5,
+    marginBottom: (width === 320) ? 10 : 20,
     color: 'white',
     fontSize: 20,
     alignItems: 'center',
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: 300,
+    height: (width === 320) ? 200 : 300,
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
