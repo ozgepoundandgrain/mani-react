@@ -1,6 +1,8 @@
 import React from 'react';
-import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, TextInput, ScrollView, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
+
+const ACCESS_TOKEN = 'authentication_token'
 
 class LoginForm extends React.Component {
 
@@ -10,6 +12,8 @@ class LoginForm extends React.Component {
       email: '',
       password: '',
       fontLoaded: false,
+      persistedEmail: '',
+      persistedToken: ''
     }
 
     this.clearData = this.clearData.bind(this)
@@ -122,9 +126,8 @@ class LoginForm extends React.Component {
       })
       let res = await response._bodyText;
       if (response.status >= 200 && response.status < 300) {
-        let accessToken = JSON.parse(res).data.user.authentication_token
-        this.storeToken(this.state.accessToken)
-        this.redirect(accessToken, this.state.email)
+        this.storeToken(JSON.parse(res).data.user.authentication_token)
+        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email)
       } else {
         let error =  res
         throw error
@@ -135,8 +138,9 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    console.log(this.state, this.props)
     return ([
-      <View style={styles.container} key={1}>
+      <ScrollView style={styles.container} key={1}>
         {this.state.fontLoaded && <Text style={styles.title}>LOGIN</Text>}
         <TextInput 
           placeholder="Email"
@@ -160,7 +164,7 @@ class LoginForm extends React.Component {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
         {this.state.error ? <Text style={styles.error}>Your username or password appears to be wrong, please try again</Text> : null }
-      </View>,
+      </ScrollView>,
       <TouchableHighlight
         key={2}
         underlayColor="transparent"

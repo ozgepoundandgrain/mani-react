@@ -152,6 +152,7 @@ class PostVision extends React.Component {
   render() {
     return ([
       <ImageBackground 
+        key={0}
         source={require('./images/ocean.jpg')} 
         style={styles.background}
       >
@@ -179,6 +180,7 @@ class PostVision extends React.Component {
       </View>
     </ImageBackground>,
           <Modal
+          key={1}
         animationType="fade"
         transparent
         visible={this.state.modalVisible}
@@ -227,7 +229,9 @@ const styles = StyleSheet.create({
     width: (width/3) * 2,
   },
   animationModal: {
-    backgroundColor: 'rgba(0, 0, 0, 0.70)',
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.70)',
     justifyContent: 'center',
     alignContent: 'center',
     textAlign: 'center',

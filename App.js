@@ -83,12 +83,9 @@ export default class App extends React.Component {
   
   render() {
     return (
-      // this.state.loadApp === false ? 
-      // <Initial />
-      // :
-      // <AppNavigator 
-      //   initialRouteName="Authentication"
-      // />
+      this.state.loadApp === false ? 
+      <Initial />
+      :
       <AppNavigator 
       initialRouteName="PostMantra"
     />

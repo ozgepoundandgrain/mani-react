@@ -8,7 +8,11 @@ const ACCESS_TOKEN = 'authentication_token';
 const drawerView = (logout) => (
   <View style={styles.outerDrawerContainer}>
     <View style={styles.innerDrawerContainer}>
-      <TouchableHighlight onPress={logout} >
+      <TouchableHighlight 
+        onPress={logout} 
+        underlayColor="white"
+        activeOpacity={0}
+      >
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableHighlight>
       <TouchableHighlight>
@@ -104,7 +108,7 @@ class DrawerComponent extends React.Component {
           openDrawerOffset={0.4}
           closedDrawerOffset={0}
           type={"static"}
-          content={drawerView(this.logout)}
+          content={drawerView(this.onLogout)}
           styles={drawerStyles}
           onClose={() => this.setState({ isDrawerClosed: true })}
           tapToClose={true}
