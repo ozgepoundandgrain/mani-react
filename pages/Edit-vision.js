@@ -58,29 +58,6 @@ class EditVision extends React.Component {
   }
 
 
-  async fetchData(){
-    try {
-      let response = await fetch('https://prana-app.herokuapp.com/v1/visions',{
-                              method: 'GET',
-                              headers: {
-                                'X-User-Email': this.state.email,
-                                'X-User-Token': this.state.accessToken,
-                                'Content-Type': 'application/json',
-                              }
-                            });
-        if (response.status >= 200 && response.status < 300) {
-          this.setState({visions: JSON.parse(response._bodyText).data})
-          this.setAnimationModalVisible(false)
-          this.redirect('Home', this.state.visions)
-        } else {
-          let error = res;
-          throw error;
-        }
-    } catch(error) {
-        console.log("error: " + error)
-    }
-  }
-
   async submitEdit(id) {
 
     this.setAnimationModalVisible(true)
@@ -101,7 +78,8 @@ class EditVision extends React.Component {
 
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
-          this.fetchData()
+          this.setAnimationModalVisible(false)
+          this.redirect('Home', this.state.visions)
         } else {
             let errors = res;
             throw errors;
@@ -126,7 +104,7 @@ class EditVision extends React.Component {
 
     let res = await response.text();
     if (response.status >= 200 && response.status < 300) {
-      this.fetchData()
+      this.redirect('Home', this.state.visions)
     } else {
         let errors = res;
         throw errors;
@@ -139,9 +117,6 @@ class EditVision extends React.Component {
   }
 
   deleteAction(id){
-    this.setAnimationModalVisible(true)
-    this._playAnimation()
-
     this.setModalVisible(!this.state.modalVisible)
     this.submitDelete(id)
     this.props.navigation.navigate('Home')

@@ -7,14 +7,15 @@ import {
   Modal,
   Dimensions,
   ScrollView,
+  Text,
   Image } from 'react-native';
   import Header from './components/header'
-import { ImagePicker, DangerZone } from 'expo'
+import { ImagePicker, DangerZone, Asset } from 'expo'
 import LoadingAnimation from './animations/glow-loading.json'
 
 let { Lottie } = DangerZone;
 
-var {width} = Dimensions.get('window')
+var {width, height} = Dimensions.get('window')
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -50,6 +51,13 @@ class PostVision extends React.Component {
         visions: data
       }
     )
+  }
+
+
+  async componentWillMount() {
+    await Asset.loadAsync([
+      require('./images/ocean.jpg'),
+    ]);
   }
 
   _playAnimation = () => {
@@ -167,6 +175,7 @@ class PostVision extends React.Component {
         <View style={styles.form}>
           <View style={styles.imageUploader}>
             <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
+            <Text style={styles.editButton}>Edit</Text>
           </View>
           <TextInput 
             placeholder="Description"
@@ -225,7 +234,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: 500,
+    height: height/2,
     width: (width/3) * 2,
   },
   animationModal: {
@@ -257,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.7)',
     borderRadius: 2,
     color: 'white', 
-    padding: 20,
+    padding: 5,
     position: 'absolute',
     bottom: 0,
     left: 0

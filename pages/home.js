@@ -68,6 +68,7 @@ SecondRoute = () => (
         })}
         onIndexChange={index => this.setState({ index })}
         initialLayout={{ width: Dimensions.get('window').width }}
+
       />
 
         <Footer 

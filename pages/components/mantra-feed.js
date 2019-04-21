@@ -17,6 +17,10 @@ class MantraFeed extends React.Component {
     this.fetchData()
   }
 
+  // componentWillUpdate() {
+  //   this.fetchData()
+  // }
+
   redirect(routeName, mantraId, title, description) {
     this.props.navigation.navigate(
       routeName,
@@ -93,6 +97,7 @@ class MantraFeed extends React.Component {
   }
 
   render() {
+    console.log('hello')
     return (
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInput, View, StyleSheet, ImageBackground, ScrollView, Modal } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
-import { DangerZone } from 'expo'
+import { DangerZone, Asset } from 'expo'
 import LoadingAnimation from './animations/glow-loading.json'
 
 let { Lottie } = DangerZone;
@@ -24,6 +24,12 @@ class EditMantra extends React.Component {
     this.submitEdit = this.submitEdit.bind(this)
     this.submitDelete = this.submitDelete.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
+  }
+
+  async componentWillMount() {
+    await Asset.loadAsync([
+      require('./images/ocean.jpg'),
+    ]);
   }
 
   setModalVisible(visible) {

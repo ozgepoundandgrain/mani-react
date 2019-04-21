@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Modal, View, ImageBackground, TextInput } from 'react-native';
 import Header from './components/header'
-import { DangerZone } from 'expo'
+import { DangerZone, Asset } from 'expo'
 import LoadingAnimation from './animations/glow-loading.json'
 
 let { Lottie } = DangerZone;
@@ -28,6 +28,13 @@ class PostMantra extends React.Component {
         mantras: data
       }
     )
+  }
+
+
+  async componentWillMount() {
+    await Asset.loadAsync([
+      require('./images/ocean.jpg'),
+    ]);
   }
 
   setModalVisible(visible) {
@@ -118,7 +125,6 @@ class PostMantra extends React.Component {
             placeholderTextColor="white"
             style={styles.textInputTitle}
             multiline={true}
-            maxLength={30}
           />
           <TextInput 
             placeholder="Description"

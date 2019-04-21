@@ -7,22 +7,59 @@ import {
   Dimensions,
   FlatList,
   TouchableHighlight } from 'react-native';
+import { AppLoading, Asset } from 'expo'
   
 
 var {height, width} = Dimensions.get('window')
+
+const cacheImages = (images) => {
+  return images.map(image => {
+    if (typeof image === 'string') {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+}
 
 class VisionFeed extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      image: ''
+      image: '',
+      isReady: false,
+      visions: [],
+      imagesURLarray: []
     }
   }
+
+  imagesArray() {
+    (this.state.visions).filter(vision => {
+      this.setState({ imagesURLarray: vision.image_url })
+    })
+  }
+
+  async _loadAssetsAsync() {
+    const imageAssets = cacheImages([
+      this.state.imagesURLarray
+    ]);
+    try {
+      await Promise.all([...imageAssets]);
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   
   componentDidMount() {
     this.fetchVision()
+    this.imagesArray()
   }
+
+  // componentWillUpdate() {
+  //   this.fetchVision()
+  // }
 
   async fetchVision(){
     try {
@@ -74,6 +111,16 @@ class VisionFeed extends React.Component {
 
 
   render() {
+    if (!this.state.isReady) {
+      return (
+        <AppLoading
+          startAsync={this._loadAssetsAsync}
+          onFinish={() => this.setState({ isReady: true })}
+          onError={console.warn}
+        />
+      );
+    }
+    console.log((this.state.visions).map(vision => vision.image_url))
     return (
       <ScrollView style={styles.scrollView}>
         {this.state.visions ?

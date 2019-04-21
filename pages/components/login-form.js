@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextInput, ScrollView, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -138,9 +138,8 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    console.log(this.state, this.props)
     return ([
-      <ScrollView style={styles.container} key={1}>
+      <View style={styles.container} key={1}>
         {this.state.fontLoaded && <Text style={styles.title}>LOGIN</Text>}
         <TextInput 
           placeholder="Email"
@@ -164,7 +163,7 @@ class LoginForm extends React.Component {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
         {this.state.error ? <Text style={styles.error}>Your username or password appears to be wrong, please try again</Text> : null }
-      </ScrollView>,
+      </View>,
       <TouchableHighlight
         key={2}
         underlayColor="transparent"
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
    fontSize: 50,
    color: 'white',
    textAlign: 'center',
-   paddingBottom: '40%',
+   paddingBottom: '10%',
    fontFamily: 'Raleway-Thin',
   },
   textInput: {

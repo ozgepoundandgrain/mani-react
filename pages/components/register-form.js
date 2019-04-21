@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView, TextInput, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, View, TextInput, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -149,7 +149,7 @@ class RegisterForm extends React.Component {
   render() {
     console.log(this.state, this.props)
     return ([
-      <ScrollView style={styles.container} key={1}>
+      <View style={styles.container} key={1}>
         <Text style={styles.title}>REGISTER</Text>
         <TextInput 
           placeholder="Email"
@@ -180,7 +180,7 @@ class RegisterForm extends React.Component {
           <Text style={styles.buttonText}>Register</Text>
         </TouchableHighlight>
         {this.state.error ? <Text style={styles.error}>{this.state.error}</Text> : null }
-      </ScrollView>,
+      </View>,
       <TouchableHighlight
         key={2}
         underlayColor="transparent"
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
    fontSize: 50,
    color: 'white',
    textAlign: 'center',
-   paddingBottom: '40%',
+   paddingBottom: '10%',
    fontFamily: 'Raleway-Thin',
   },
   textInput: {

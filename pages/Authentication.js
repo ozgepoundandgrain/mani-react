@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   StyleSheet,
   ImageBackground,
-  View } from 'react-native';
+  ScrollView } from 'react-native';
 import LoginForm from './components/login-form'
 import RegisterForm from './components/register-form'
 
@@ -30,7 +30,7 @@ class Authentication extends React.Component {
   render() {
     return (
       <ImageBackground source={require('./images/eye.jpg')} style={{width: '100%', height: '100%'}}>
-      <View style={styles.OuterContainer}>
+      <ScrollView contentContainerStyle={styles.OuterContainer}>
       {this.state.showLogin ?
         <LoginForm
           {...this.props}
@@ -41,7 +41,7 @@ class Authentication extends React.Component {
           {...this.props}
           onPressRedirect={this.changeForm}
         />}
-      </View>
+      </ScrollView>
       </ImageBackground>
     
     )
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: '30%'
+    paddingTop: '10%'
   }
 });
 

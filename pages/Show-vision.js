@@ -1,9 +1,19 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions, Text, ScrollView, TouchableHighlight } from 'react-native';
+import { StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
 import Header from './components/header'
-
-
+import { Asset, AppLoading } from 'expo'
+ 
 var {height, width} = Dimensions.get('window')
+
+const cacheImages = (images) => {
+  return images.map(image => {
+    if (typeof image === 'string') {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+}
 
 class ShowVision extends React.Component {
   constructor(props){
@@ -15,10 +25,21 @@ class ShowVision extends React.Component {
       id: this.props.navigation.state.params.visionId,
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
+      isReady: false
     }
     
     this.redirect = this.redirect.bind(this)
+  }
 
+  async _loadAssetsAsync() {
+    const imageAssets = cacheImages([
+      this.state.image
+    ]);
+    try {
+      await Promise.all([...imageAssets]);
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   redirect(routeName) {
@@ -36,6 +57,17 @@ class ShowVision extends React.Component {
 
 
   render() {
+
+    if (!this.state.isReady) {
+      return (
+        <AppLoading
+          startAsync={this._loadAssetsAsync}
+          onFinish={() => this.setState({ isReady: true })}
+          onError={console.warn}
+        />
+      );
+    }
+
     return ([
       <Header
         key={1}
