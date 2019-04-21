@@ -38,11 +38,12 @@ class ShowVision extends React.Component {
   render() {
     return ([
       <Header
+        key={1}
         leftTitle=""
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditVision')}
       />,
-      <ScrollView>
+      <ScrollView key={2}>
         <Image 
           source={{uri: this.state.image}} 
           style={{width: width, height: width}}

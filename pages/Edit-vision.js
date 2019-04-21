@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, Image, Dimensions, ScrollView, AsyncStorage, View, TextInput } from 'react-native';
+import { StyleSheet, Image, Modal, Dimensions, ScrollView, View, TextInput } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
+import { DangerZone } from 'expo'
+import LoadingAnimation from './animations/glow-loading.json'
 
-var {height, width} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
+let { Lottie } = DangerZone;
 
 class EditVision extends React.Component {
   constructor(props){
@@ -17,19 +20,32 @@ class EditVision extends React.Component {
       modalVisible: false,
       id: this.props.navigation.state.params.visionId,
       visions: [],
-      persistedVisions: []
+      animationModalVisible: false,
+      animation: null
     }
 
     this.submitEdit = this.submitEdit.bind(this)
     this.submitDelete = this.submitDelete.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
-    this.persistVision = this.persistVision.bind(this)
     this.redirect = this.redirect.bind(this)
   }
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
+
+  setAnimationModalVisible(visible) {
+    this.setState({animationModalVisible: visible});
+  }
+
+  _playAnimation = () => {
+    if (!this.state.animation) {
+      this.setState({ animation: LoadingAnimation }, this._playAnimation);
+    } else {
+      this.animation.reset();
+      this.animation.play();
+    }
+  };
 
   redirect(routeName, data) {
     this.props.navigation.navigate(
@@ -39,19 +55,6 @@ class EditVision extends React.Component {
         persistedVisions: data
       }
     )
-  }
-
-  persistVision() {
-    AsyncStorage.setItem('visions', JSON.stringify(this.state.visions))
-    this.setState({
-      persistedVisions: this.state.visions
-    })
-  }
-
-  check() {
-    AsyncStorage.getItem('visions').then((visions) => {
-      this.setState({ persistedVisions: visions})
-    })
   }
 
 
@@ -67,9 +70,8 @@ class EditVision extends React.Component {
                             });
         if (response.status >= 200 && response.status < 300) {
           this.setState({visions: JSON.parse(response._bodyText).data})
-          this.persistVision()
-          this.check()
-          this.redirect('Home', this.state.persistedVisions)
+          this.setAnimationModalVisible(false)
+          this.redirect('Home', this.state.visions)
         } else {
           let error = res;
           throw error;
@@ -80,6 +82,10 @@ class EditVision extends React.Component {
   }
 
   async submitEdit(id) {
+
+    this.setAnimationModalVisible(true)
+    this._playAnimation()
+
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/visions/'+id, {
             method: 'PATCH',
@@ -108,6 +114,7 @@ class EditVision extends React.Component {
   }
 
   async submitDelete(id) {
+
     try { let response = await fetch('https://prana-app.herokuapp.com/v1/visions/'+id, {
       method: 'DELETE',
       headers: {
@@ -132,6 +139,9 @@ class EditVision extends React.Component {
   }
 
   deleteAction(id){
+    this.setAnimationModalVisible(true)
+    this._playAnimation()
+
     this.setModalVisible(!this.state.modalVisible)
     this.submitDelete(id)
     this.props.navigation.navigate('Home')
@@ -140,12 +150,13 @@ class EditVision extends React.Component {
   render() {
     return ([
       <Header
+        key={1}
         leftTitle="Delete"
         rightTitle="Save"
         rightTitleAction={() => this.submitEdit(this.state.id)} 
         leftTitleAction={() => this.setModalVisible(true)}
       />,
-      <ScrollView>
+      <ScrollView key={2}>
          <View style={styles.form}>
         <Image 
           source={{uri: this.props.navigation.state.params.image_url}} 
@@ -163,10 +174,32 @@ class EditVision extends React.Component {
           </View>
       </ScrollView>,
       <ConfirmationModal
+        key={3}
         visible={this.state.modalVisible}
         onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
         onPressDelete={() => this.deleteAction(this.state.id)}
+      />,
+      <Modal
+          key={4}
+          animationType="fade"
+          transparent
+          visible={this.state.animationModalVisible}
+        >
+        <View style={styles.animationModal}>
+        <View style={{ alignContent: 'center' }}>
+        <Lottie
+        ref={animation => {
+          this.animation = animation;
+        }}
+        style={{
+          width: 150,
+          height: 150,
+        }}
+        source={this.state.animation}
       />
+      </View>
+      </View>
+    </Modal>
     ])
   }
 }
@@ -192,6 +225,16 @@ const styles = StyleSheet.create({
     marginRight: 20,
     zIndex: 2,
    },
+   animationModal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    height: '100%',
+    width: '100%'
+  },
 })
 
 export default EditVision

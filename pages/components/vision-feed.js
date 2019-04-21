@@ -20,7 +20,7 @@ class VisionFeed extends React.Component {
     }
   }
   
-  componentWillMount() {
+  componentDidMount() {
     this.fetchVision()
   }
 
@@ -57,34 +57,37 @@ class VisionFeed extends React.Component {
     )
   }
 
+  _renderItem = ({item}) => (
+    <TouchableHighlight
+      id={item.id}
+      onPress={() => this.redirect('ShowVision', item.id, item.image_url, item.description)}
+      underlayColor="transparent"
+      activeOpacity={0}
+    >
+      <Image 
+        key={item.id} 
+        style={{height: width/3, width: width/3}} 
+        source={{uri: item.image_url}}
+      />
+    </TouchableHighlight>
+  );
+
 
   render() {
-    return ([
-      this.state.visions ?
+    return (
       <ScrollView style={styles.scrollView}>
+        {this.state.visions ?
         <FlatList
-          keyExtractor={(index) => index.toString()}
+          keyExtractor={(item, index) => index}
           numColumns={3}
           data={(this.state.visions).reverse()}
-          renderItem={({item, index}) => 
-          <TouchableHighlight
-            key={index}
-            onPress={() => this.redirect('ShowVision', item.id, item.image_url, item.description)}
-            underlayColor="transparent"
-            activeOpacity={0}
-          >
-            <Image 
-              key={item.id} 
-              style={{height: width/3, width: width/3}} 
-              source={{uri: item.image_url}}
-            />
-          </TouchableHighlight>
-        }
-        />
-      </ScrollView>
+          renderItem={this._renderItem}
+      />
       :
       <Text>nothing</Text>
-      ])
+        }
+      </ScrollView>
+      )
   }
 }
 

@@ -1,7 +1,11 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import { TextInput, View, StyleSheet, ImageBackground, ScrollView, Modal } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
+import { DangerZone } from 'expo'
+import LoadingAnimation from './animations/glow-loading.json'
+
+let { Lottie } = DangerZone;
 
 class EditMantra extends React.Component {
   constructor(props){
@@ -13,7 +17,8 @@ class EditMantra extends React.Component {
       id: this.props.navigation.state.params.mantraId,
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
-      modalVisible: false
+      modalVisible: false,
+      animationModalVisible: false,
     }
 
     this.submitEdit = this.submitEdit.bind(this)
@@ -25,7 +30,24 @@ class EditMantra extends React.Component {
     this.setState({modalVisible: visible});
   }
 
+  setAnimationModalVisible(visible) {
+    this.setState({animationModalVisible: visible});
+  }
+
+  _playAnimation = () => {
+    if (!this.state.animation) {
+      this.setState({ animation: LoadingAnimation }, this._playAnimation);
+    } else {
+      this.animation.reset();
+      this.animation.play();
+    }
+  };
+
+
   async submitEdit(id) {
+    this.setAnimationModalVisible(true)
+    this._playAnimation()
+
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/'+id, {
             method: 'PATCH',
@@ -54,6 +76,9 @@ class EditMantra extends React.Component {
   }
 
   deleteAction(id){
+    this.setAnimationModalVisible(true)
+    this._playAnimation()
+    
     this.setModalVisible(!this.state.modalVisible)
     this.submitDelete(id)
     this.props.navigation.navigate('Home')
@@ -72,8 +97,9 @@ class EditMantra extends React.Component {
 
 
   render() {
-    return (
+    return ([
       <ImageBackground 
+      key={1}
         source={require('./images/ocean.jpg')} 
         style={{width: '100%', height: '100%'}}
       >
@@ -113,8 +139,29 @@ class EditMantra extends React.Component {
           />
 
         </View>
-      </ImageBackground>
-    )
+      </ImageBackground>,
+            <Modal
+            key={4}
+            animationType="fade"
+            transparent
+            visible={this.state.animationModalVisible}
+          >
+          <View style={styles.animationModal}>
+          <View style={{ alignContent: 'center' }}>
+          <Lottie
+          ref={animation => {
+            this.animation = animation;
+          }}
+          style={{
+            width: 150,
+            height: 150,
+          }}
+          source={this.state.animation}
+        />
+        </View>
+        </View>
+      </Modal>
+    ])
   }
 }
 
@@ -137,6 +184,16 @@ const styles = StyleSheet.create({
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
+    height: '100%',
+    width: '100%'
+  },
+  animationModal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
     height: '100%',
     width: '100%'
   },

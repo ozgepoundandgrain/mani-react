@@ -7,12 +7,13 @@ class MantraFeed extends React.Component {
     super(props);
 
     this.state = {
+      mantras: []
     }
 
     this.redirect = this.redirect.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchData()
   }
 
@@ -27,6 +28,36 @@ class MantraFeed extends React.Component {
       }
     )
   }
+
+  _renderItem = ({item}) => (
+    <View>
+      <View style={styles.mantraCard} key={item.id}>
+        <Text style={styles.title}>{item.title}</Text>
+        <ViewMoreText
+          numberOfLines={5}
+          renderViewMore={this.renderViewMore}
+          renderViewLess={this.renderViewLess}
+        >
+          <Text style={styles.description}>{item.description}</Text>
+        </ViewMoreText>
+      </View>
+
+      <TouchableHighlight
+        underlayColor="transparent"
+        activeOpacity={0}
+        style={styles.buttonTouchable} 
+        onPress={() => this.redirect('EditMantra', item.id, item.title, item.description)}
+      >
+        <View>
+          <View style={styles.circle}></View>
+          <View style={styles.circle}></View>
+          <View style={styles.circle}></View>
+        </View>
+      </TouchableHighlight>
+      </View>
+  );
+
+
 
   async fetchData(){
     try {
@@ -63,37 +94,16 @@ class MantraFeed extends React.Component {
 
   render() {
     return (
-      this.state.mantras ?
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>
         <FlatList
-          keyExtractor={(index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()}
           numColumns={1}
           data={(this.state.mantras).reverse()}
-          renderItem={({item, index}) => 
-              <TouchableHighlight
-                key={index}
-                onPress={() => this.redirect('EditMantra', item.id, item.title, item.description)}
-                underlayColor="transparent"
-                activeOpacity={0}
-              >
-                <View style={styles.mantraCard} key={item.id}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <ViewMoreText
-                    numberOfLines={5}
-                    renderViewMore={this.renderViewMore}
-                    renderViewLess={this.renderViewLess}
-                  >
-                    <Text style={styles.description}>{item.description}</Text>
-                  </ViewMoreText>
-                </View>
-              </TouchableHighlight>
-          }
+          renderItem={this._renderItem}
           />
         </View>
       </ScrollView>
-      :
-      <Text>nothing</Text>
     )
   }
 }
@@ -101,6 +111,7 @@ class MantraFeed extends React.Component {
 const styles = StyleSheet.create({
   mantraCard: {
     minHeight: 130,
+    position: 'relative',
     width: '100%',
     marginBottom: 30,
     padding: 20,
@@ -130,6 +141,20 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     paddingRight: 20
+  },
+  buttonTouchable: {
+    flexDirection: 'row', 
+    position: 'absolute', 
+    top: 0, 
+    right: 0,
+    padding: 30
+  },
+  circle: {
+    height: 4, 
+    width: 4, 
+    borderRadius: 2, 
+    backgroundColor: 'white', 
+    margin: 2
   }
 })
 

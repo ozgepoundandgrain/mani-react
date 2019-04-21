@@ -1,6 +1,10 @@
 import React from 'react';
-import { AsyncStorage, StyleSheet, View, ImageBackground, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, Modal, View, ImageBackground, TextInput } from 'react-native';
 import Header from './components/header'
+import { DangerZone } from 'expo'
+import LoadingAnimation from './animations/glow-loading.json'
+
+let { Lottie } = DangerZone;
 
 class PostMantra extends React.Component {
   constructor(props) {
@@ -8,11 +12,11 @@ class PostMantra extends React.Component {
     this.state = {
       title: '',
       description: '',
-      persistedMantras: '',
-      mantras: []
+      mantras: [],
+      animation: null,
+      modalVisible: false
     }
     this.submitMantra = this.submitMantra.bind(this)
-    this.persistMantra = this.persistMantra.bind(this)
     this.redirect = this.redirect.bind(this)
   }
 
@@ -21,23 +25,23 @@ class PostMantra extends React.Component {
       routeName,
       { accessToken: this.state.accessToken, 
         email: this.state.email,
-        persistedMantras: data
+        mantras: data
       }
     )
   }
 
-  persistMantra() {
-    AsyncStorage.setItem('mantras', JSON.stringify(this.state.mantras))
-    this.setState({
-      persistedMantras: this.state.mantras
-    })
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
-  check() {
-    AsyncStorage.getItem('mantras').then((mantras) => {
-      this.setState({ persistedMantras: mantras})
-    })
-  }
+  _playAnimation = () => {
+    if (!this.state.animation) {
+      this.setState({ animation: LoadingAnimation }, this._playAnimation);
+    } else {
+      this.animation.reset();
+      this.animation.play();
+    }
+  };
 
   async fetchData(){
     try {
@@ -51,9 +55,7 @@ class PostMantra extends React.Component {
                             });
         if (response.status >= 200 && response.status < 300) {
           this.setState({mantras: JSON.parse(response._bodyText).data})
-          this.persistMantra()
-          this.check()
-          this.redirect('Home', this.state.persistedMantras)
+          this.redirect('Home', this.state.mantras)
         } else {
           let error = res;
           throw error;
@@ -64,6 +66,9 @@ class PostMantra extends React.Component {
   }
 
   async submitMantra() {
+    this.setModalVisible(true)
+    this._playAnimation()
+
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/', {
             method: 'POST',
@@ -93,8 +98,9 @@ class PostMantra extends React.Component {
   }
 
   render() {
-    return (
+    return ([
         <ImageBackground 
+          key={1}
           source={require('./images/ocean.jpg')} 
           style={styles.background}
         >
@@ -124,8 +130,29 @@ class PostMantra extends React.Component {
           />
           </ScrollView>
         </View>
-        </ImageBackground>
-    );
+        </ImageBackground>,
+        <Modal
+        key={2}
+        animationType="fade"
+        transparent
+        visible={this.state.modalVisible}
+      >
+      <View style={styles.animationModal}>
+      <View style={{ alignContent: 'center' }}>
+      <Lottie
+      ref={animation => {
+        this.animation = animation;
+      }}
+      style={{
+        width: 150,
+        height: 150
+      }}
+      source={this.state.animation}
+    />
+    </View>
+        </View>
+      </Modal>
+    ]);
   }
 }
 
@@ -155,7 +182,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     height: '100%',
     width: '100%'
-  }
+  },
+  animationModal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    height: '100%',
+    width: '100%'
+  },
 })
 
 export default PostMantra

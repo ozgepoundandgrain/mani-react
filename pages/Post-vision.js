@@ -4,16 +4,17 @@ import {
   View, 
   ImageBackground, 
   TextInput, 
-  AsyncStorage,
+  Modal,
   Dimensions,
-  TouchableHighlight,
-  Text,
   ScrollView,
   Image } from 'react-native';
   import Header from './components/header'
-import { ImagePicker } from 'expo'
+import { ImagePicker, DangerZone } from 'expo'
+import LoadingAnimation from './animations/glow-loading.json'
 
-var {height, width} = Dimensions.get('window')
+let { Lottie } = DangerZone;
+
+var {width} = Dimensions.get('window')
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -24,11 +25,12 @@ class PostVision extends React.Component {
       imageURI: this.props.navigation.state.params.imageURI,
       description: '',
       visions: [],
-      persistedVisions: []
+      persistedVisions: [],
+      animation: null,
+      modalVisible: false,
     }
 
     this.uploadImage = this.uploadImage.bind(this)
-    this.persistVision = this.persistVision.bind(this)
     this.redirect = this.redirect.bind(this)
   }
 
@@ -45,26 +47,19 @@ class PostVision extends React.Component {
       routeName,
       { accessToken: this.state.accessToken, 
         email: this.state.email,
-        persistedVisions: data
+        visions: data
       }
     )
   }
 
-  persistVision() {
-    AsyncStorage.setItem('visions', JSON.stringify(this.state.visions))
-    this.setState({
-      persistedVisions: this.state.visions
-    })
-  }
-
-  check() {
-    console.log('check is called')
-    AsyncStorage.getItem('visions').then((visions) => {
-      if(this.mounted) {
-        this.setState({ persistedVisions: visions})
-      }
-    })
-  }
+  _playAnimation = () => {
+    if (!this.state.animation) {
+      this.setState({ animation: LoadingAnimation }, this._playAnimation);
+    } else {
+      this.animation.reset();
+      this.animation.play();
+    }
+  };
 
   async fetchVision(){
     try {
@@ -79,9 +74,7 @@ class PostVision extends React.Component {
 
         if (response.status >= 200 && response.status < 300) {
           this.setState({visions: JSON.parse(response._bodyText).data})
-          this.persistVision()
-          this.check()
-          this.redirect('Home', this.state.persistedVisions)
+          this.redirect('Home', this.state.visions)
         } else {
           let error = res;
           throw error;
@@ -111,6 +104,9 @@ class PostVision extends React.Component {
     }
     formData.append('image', { uri: localUri, name: filename, type });
 
+    this.setModalVisible(true)
+    this._playAnimation()
+
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
       method: 'POST',
@@ -138,6 +134,10 @@ class PostVision extends React.Component {
 
   };
 
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -150,7 +150,7 @@ class PostVision extends React.Component {
   }
 
   render() {
-    return (
+    return ([
       <ImageBackground 
         source={require('./images/ocean.jpg')} 
         style={styles.background}
@@ -166,9 +166,6 @@ class PostVision extends React.Component {
         <View style={styles.form}>
           <View style={styles.imageUploader}>
             <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
-            <TouchableHighlight onPress={this._pickImage}>
-              <Text style={styles.editButton}>Edit</Text>
-            </TouchableHighlight>
           </View>
           <TextInput 
             placeholder="Description"
@@ -180,8 +177,28 @@ class PostVision extends React.Component {
         </View>
         </ScrollView>
       </View>
-    </ImageBackground>
-    );
+    </ImageBackground>,
+          <Modal
+        animationType="fade"
+        transparent
+        visible={this.state.modalVisible}
+      >
+      <View style={styles.animationModal}>
+      <View style={{ alignContent: 'center' }}>
+      <Lottie
+      ref={animation => {
+        this.animation = animation;
+      }}
+      style={{
+        width: 150,
+        height: 150,
+      }}
+      source={this.state.animation}
+    />
+    </View>
+        </View>
+      </Modal>
+    ]);
   }
 }
 
@@ -208,6 +225,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: 500,
     width: (width/3) * 2,
+  },
+  animationModal: {
+    backgroundColor: 'rgba(0, 0, 0, 0.70)',
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    height: '100%',
+    width: '100%'
   },
   imageUploader: {
     backgroundColor: 'lightgrey',

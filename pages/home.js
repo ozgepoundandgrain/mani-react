@@ -14,8 +14,8 @@ class Home extends React.Component {
       showVision: true,
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
-      mantras: this.props.navigation.state.params.persistedMantras,
-      visions: this.props.navigation.state.params.persistedVisions,
+      mantras: this.props.navigation.state.params.mantras,
+      visions: this.props.navigation.state.params.visions,
       index: 0,
       routes: [
         { key: 'first', title: 'Vision Board' },
