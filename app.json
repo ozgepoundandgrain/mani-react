@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "manifestation-react",
-    "description": "This project is really great.",
+    "description": "Create your vision board and journaling for manifesting.",
     "slug": "manifestation-react",
     "privacy": "public",
     "sdkVersion": "31.0.0",
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ICON.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,7 +22,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-			"bundleIdentifier": "com.ozge.prana"
+			"bundleIdentifier": "com.egzo.prana"
 		}
   }
 }
