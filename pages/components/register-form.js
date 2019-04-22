@@ -125,7 +125,7 @@ class RegisterForm extends React.Component {
                               },
                               body: JSON.stringify({
                                 user:{
-                                  email: this.state.email,
+                                  email: (this.state.email).toLowerCase(),
                                   password: this.state.password,
                                   password_confirmation: this.state.password_confirmation,
                                 }
