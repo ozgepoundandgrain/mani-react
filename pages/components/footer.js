@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
+import { Animated, Easing, Text, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
 import { Permissions, ImagePicker } from 'expo'
 
 class Footer extends React.Component {
@@ -7,9 +7,14 @@ class Footer extends React.Component {
     super(props);
 
     this.state = {
+      fadeAnim: new Animated.Value(0), 
+      rotateAnim: new Animated.Value(0), 
     }
 
     this.redirect = this.redirect.bind(this)
+    this.showOptions = this.showOptions.bind(this)
+    this.rotate = this.rotate.bind(this)
+    this.animate = this.animate.bind(this)
   }
 
   async componentDidMount(){
@@ -24,6 +29,32 @@ class Footer extends React.Component {
   }
   }
 
+  componentWillMount() {
+    this.animatedValue = new Animated.Value(0);
+  }
+
+  showOptions() {
+    Animated.timing(                  
+      this.state.fadeAnim,            
+      {
+        toValue: this.state.fadeAnim._value === 0 ? 1 : 0,
+        duration: 300,
+      }
+    ).start();
+  }
+
+  rotate() {
+    Animated.timing(this.animatedValue, {
+      toValue: this.animatedValue._value === 0 ? 1 : 0,
+      duration: 300,
+      easing: Easing.linear
+    }).start()
+  }
+
+  animate() {
+    this.rotate()
+    this.showOptions()
+  }
 
   redirect(routeName) {
     this.props.navigation.navigate(
@@ -50,42 +81,74 @@ class Footer extends React.Component {
   }
 
   render() {
+
+    const interpolateRotation = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '45deg'],
+    })
+    const animatedStyle = {
+      transform: [
+        { rotate: interpolateRotation }
+      ]
+    }
+
+
     return (
       <View style={styles.FooterContainer}> 
-        <TouchableHighlight 
-            onPress={() => this.redirect('PostMantra')} 
-            style={styles.addButton}
-            underlayColor="white"
-            activeOpacity={0}
-          >
-            <Image style={{height: 30, width: 30}} source={require('../images/feather-btn.png')}/>
-          </TouchableHighlight>
 
-        <TouchableHighlight 
-          onPress={this._pickImage} 
-          style={styles.addButton}
-          underlayColor="white"
-          activeOpacity={0}
-        >
-          <Image style={{ width: 29, height: 18}} source={require('../images/eye-btn.png')}/>
-        </TouchableHighlight>
-      </View>
+        <View style={{flexDirection:'column'}}>
+
+          <Animated.View style={{
+            opacity: this.state.fadeAnim,
+          }}
+          >
+            <TouchableHighlight 
+                onPress={() => this.redirect('PostMantra')} 
+                style={styles.addButton}
+                underlayColor="white"
+                activeOpacity={0}
+              >
+                <Image style={{height: 30, width: 30}} source={require('../images/feather-btn.png')}/>
+              </TouchableHighlight>
+
+            <TouchableHighlight 
+              onPress={this._pickImage} 
+              style={styles.addButton}
+              underlayColor="white"
+              activeOpacity={0}
+            >
+              <Image style={{ width: 23, height: 15}} source={require('../images/eye-btn.png')}/>
+            </TouchableHighlight>
+          </Animated.View>
+
+          <Animated.View style={[animatedStyle]}>
+            <TouchableHighlight 
+              onPress={() => this.animate()} 
+              style={styles.addButtonMain}
+              underlayColor="white"
+              activeOpacity={0}
+            >
+              <Image style={{height: 30, width: 30}} source={require('../images/cross.png')}/>
+            </TouchableHighlight>
+          </Animated.View>
+
+        </View>
+       </View>
+
     )
   }
 }
 
 const styles = StyleSheet.create({
    addButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
+    width: 50,
+    height: 50,
+    borderRadius: 50/2,
     borderWidth: 1,
     borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    marginLeft: 20,
-    marginRight: 20,
     zIndex: 2,
     shadowColor: 'white',
     shadowOffset: {
@@ -95,18 +158,38 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 16,
     elevation: 24,
+    margin: 10,
+   },
+   addButtonMain: {
+    width: 50,
+    height: 50,
+    borderRadius: 50/2,
+    borderWidth: 1,
+    borderColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    zIndex: 2,
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    elevation: 24,
+    margin: 10,
    },
    FooterContainer: {
-     width: '100%',
      position: 'absolute',
      bottom: 0,
      right: 0,
-     left: 0,
-     flexDirection:'row',
-     justifyContent: 'space-between',
+     flexDirection:'column',
+     justifyContent: 'center',
      alignItems: 'center',
-     height: 90,
-     marginBottom: 20,
+     alignContent: 'center',
+     marginBottom: 10,
+     marginRight: 10
    },
    image: {
      height: 30,

@@ -51,11 +51,10 @@ class VisionFeed extends React.Component {
     }
   }
 
-  
-  // componentDidMount() {
-  //   this.fetchVision()
-  //   this.imagesArray()
-  // }
+  componentDidMount() {
+    this.fetchVision()
+    this.imagesArray()
+  }
 
   // componentWillUpdate() {
   //   this.fetchVision()

@@ -6,6 +6,7 @@ import {
   TextInput, 
   Modal,
   Dimensions,
+  TouchableHighlight,
   ScrollView,
   Text,
   Image } from 'react-native';
@@ -173,9 +174,11 @@ class PostVision extends React.Component {
           leftTitleAction={() => {}}
         />
         <View style={styles.form}>
-          <View style={styles.imageUploader}>
+          <View>
             <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
-            <Text style={styles.editButton}>Edit</Text>
+            <TouchableHighlight onPress={this._pickImage}>
+              <Text style={styles.editButton}>Edit</Text>
+            </TouchableHighlight>
           </View>
           <TextInput 
             placeholder="Description"
@@ -246,11 +249,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: '100%',
     width: '100%'
-  },
-  imageUploader: {
-    backgroundColor: 'lightgrey',
-    height: 50,
-    width: 50
   },
   image: {
     height: width/3, 
