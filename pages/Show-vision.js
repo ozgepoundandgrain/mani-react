@@ -3,7 +3,7 @@ import { StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
 import Header from './components/header'
 import { Asset, AppLoading } from 'expo'
  
-var {height, width} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
 
 const cacheImages = (images) => {
   return images.map(image => {
@@ -68,6 +68,7 @@ class ShowVision extends React.Component {
       );
     }
 
+    console.log('SHOW', this.props)
     return ([
       <Header
         key={1}

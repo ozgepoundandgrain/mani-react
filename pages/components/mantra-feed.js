@@ -2,12 +2,22 @@ import React from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableHighlight, FlatList } from 'react-native';
 import ViewMoreText from 'react-native-view-more-text';
 
+const background = (index) => {
+  return (
+    index % 2 === 0 ?
+    'white'
+    :
+    '#f6f8fa'
+  )
+}
+
 class MantraFeed extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      mantras: []
+      mantras: [],
+      data: this.props.data
     }
 
     this.redirect = this.redirect.bind(this)
@@ -17,15 +27,12 @@ class MantraFeed extends React.Component {
     this.fetchData()
   }
 
-  // componentWillUpdate() {
-  //   this.fetchData()
-  // }
-
   redirect(routeName, mantraId, title, description) {
     this.props.navigation.navigate(
       routeName,
       { accessToken: this.props.accessToken, 
         email: this.props.email,
+        data: this.props.data,
         mantraId: mantraId,
         title: title,
         description: description
@@ -33,8 +40,8 @@ class MantraFeed extends React.Component {
     )
   }
 
-  _renderItem = ({item}) => (
-    <View>
+  _renderItem = ({item, index}) => (
+    <View style={{backgroundColor: background(index), padding: 20}}>
       <View style={styles.mantraCard} key={item.id}>
         <Text style={styles.title}>{item.title}</Text>
         <ViewMoreText
@@ -86,25 +93,24 @@ class MantraFeed extends React.Component {
 
   renderViewMore(onPress){
     return(
-      <Text onPress={onPress}>View more</Text>
+      <Text style={{paddingTop: 10,color: 'blue'}} onPress={onPress}>View more</Text>
     )
   }
 
   renderViewLess(onPress){
     return(
-      <Text onPress={onPress}>View less</Text>
+      <Text style={{paddingTop: 10,color: 'blue'}} onPress={onPress}>View less</Text>
     )
   }
 
   render() {
-    console.log('hello')
     return (
       <ScrollView style={styles.scrollView}>
         <View style={styles.innerScroll}>
         <FlatList
           keyExtractor={(item, index) => index.toString()}
           numColumns={1}
-          data={(this.state.mantras).reverse()}
+          data={this.state.data ? (this.state.data) : (this.state.mantras).reverse()}
           renderItem={this._renderItem}
           />
         </View>
@@ -118,9 +124,7 @@ const styles = StyleSheet.create({
     minHeight: 130,
     position: 'relative',
     width: '100%',
-    marginBottom: 30,
-    padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.30)',
+    // padding: 20
   }, 
   scrollView: {
     position: 'absolute',
@@ -135,17 +139,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#13202E'
+    color: '#13202E',
+    paddingBottom: 10
   },
   description: {
     fontSize: 18,
-    color: 'white'
+    color: 'black',
+    fontWeight: "300"
   },
   view: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    paddingRight: 20
+    paddingRight: 20,
   },
   buttonTouchable: {
     position: 'absolute', 
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
     height: 4, 
     width: 4, 
     borderRadius: 2, 
-    backgroundColor: 'white', 
+    backgroundColor: 'black', 
     margin: 2
   }
 })

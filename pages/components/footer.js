@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
     zIndex: 2,
-    shadowColor: 'white',
     shadowOffset: {
       width: 0,
       height: 12,
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
     zIndex: 2,
-    shadowColor: 'white',
+    shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 12,

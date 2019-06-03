@@ -1,12 +1,10 @@
 import React from 'react';
-import { StyleSheet, Image, Modal, Dimensions, ScrollView, View, TextInput } from 'react-native';
+import { StyleSheet, Image, Modal, Dimensions, Text, ScrollView, View, TextInput } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
 import { DangerZone } from 'expo'
-import LoadingAnimation from './animations/glow-loading.json'
 
 var {width} = Dimensions.get('window')
-let { Lottie } = DangerZone;
 
 class EditVision extends React.Component {
   constructor(props){
@@ -38,21 +36,13 @@ class EditVision extends React.Component {
     this.setState({animationModalVisible: visible});
   }
 
-  _playAnimation = () => {
-    if (!this.state.animation) {
-      this.setState({ animation: LoadingAnimation }, this._playAnimation);
-    } else {
-      this.animation.reset();
-      this.animation.play();
-    }
-  };
 
-  redirect(routeName, data) {
+  redirect(routeName) {
     this.props.navigation.navigate(
       routeName,
       { accessToken: this.state.accessToken, 
         email: this.state.email,
-        persistedVisions: data
+        visions: this.state.visions
       }
     )
   }
@@ -61,7 +51,6 @@ class EditVision extends React.Component {
   async submitEdit(id) {
 
     this.setAnimationModalVisible(true)
-    this._playAnimation()
 
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/visions/'+id, {
@@ -79,7 +68,7 @@ class EditVision extends React.Component {
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
           this.setAnimationModalVisible(false)
-          this.redirect('Home', this.state.visions)
+          this.redirect('Home')
         } else {
             let errors = res;
             throw errors;
@@ -104,7 +93,7 @@ class EditVision extends React.Component {
 
     let res = await response.text();
     if (response.status >= 200 && response.status < 300) {
-      this.redirect('Home', this.state.visions)
+      this.redirect('Home')
     } else {
         let errors = res;
         throw errors;
@@ -123,6 +112,7 @@ class EditVision extends React.Component {
   }
 
   render() {
+    console.log('EDIT', this.state)
     return ([
       <Header
         key={1}
@@ -132,7 +122,6 @@ class EditVision extends React.Component {
         leftTitleAction={() => this.setModalVisible(true)}
       />,
       <ScrollView key={2}>
-         <View style={styles.form}>
         <Image 
           source={{uri: this.props.navigation.state.params.image_url}} 
           style={{width: width/3, height: width/3}}
@@ -146,7 +135,6 @@ class EditVision extends React.Component {
           placeholder={this.state.description}
           style={styles.textInputDescription}
         />
-          </View>
       </ScrollView>,
       <ConfirmationModal
         key={3}
@@ -162,17 +150,13 @@ class EditVision extends React.Component {
         >
         <View style={styles.animationModal}>
         <View style={{ alignContent: 'center' }}>
-        <Lottie
-        ref={animation => {
-          this.animation = animation;
-        }}
-        style={{
-          width: 150,
-          height: 150,
-        }}
-        source={this.state.animation}
-      />
-      </View>
+          <Text style={styles.text}>Decide</Text>
+          <Text style={styles.text}>Beleive</Text>
+          <Text style={styles.text}>Visualize</Text>
+          <Text style={styles.text}>Feel</Text>
+          <Text style={styles.text}>Give thanks</Text>
+          <Text style={styles.text}>Release</Text>
+        </View>
       </View>
     </Modal>
     ])
@@ -186,7 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 240 : 300,
-    width: (width/3) * 2
+    width: width
   },
   form: {
     flexDirection: 'row',
@@ -203,12 +187,21 @@ const styles = StyleSheet.create({
    animationModal: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignContent: 'center',
     textAlign: 'center',
     height: '100%',
     width: '100%'
+  },
+  text: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingBottom: 40,
   },
 })
 

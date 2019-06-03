@@ -102,7 +102,7 @@ class VisionFeed extends React.Component {
     >
       <Image 
         key={item.id} 
-        style={{height: width/3, width: width/3}} 
+        style={{height: width/2, width: width/2}} 
         source={{uri: item.image_url}}
       />
     </TouchableHighlight>
@@ -124,7 +124,7 @@ class VisionFeed extends React.Component {
         {this.state.visions ?
         <FlatList
           keyExtractor={(item, index) => index}
-          numColumns={3}
+          numColumns={2}
           data={(this.state.visions).reverse()}
           renderItem={this._renderItem}
       />

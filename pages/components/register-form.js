@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TextInput, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, View, TextInput, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -26,6 +26,7 @@ class RegisterForm extends React.Component {
       await Font.loadAsync({
       'Raleway-Thin': require('../../assets/fonts/Raleway-Thin.ttf'),
       'Raleway-Light': require('../../assets/fonts/Raleway-Light.ttf'),
+      'Abril-Fatface': require('../../assets/fonts/AbrilFatface-Regular.ttf'),
     });
     this.setState({ fontLoaded: true });
     } catch {
@@ -150,36 +151,42 @@ class RegisterForm extends React.Component {
     console.log(this.state, this.props)
     return ([
       <View style={styles.container} key={1}>
-        <Text style={styles.title}>REGISTER</Text>
+        {this.state.fontLoaded && <Text style={styles.prana}>Prana.</Text>}
+        <View style={styles.errorContainer}>
+          {this.state.fontLoaded && <Text style={styles.error}>{this.state.error}</Text>}
+        </View>
+        {this.state.fontLoaded && <Text style={styles.title}>Register</Text>}
         <TextInput 
           placeholder="Email"
           onChangeText={(val) => this.setState({ email: val})}
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           style={styles.textInput}
+          autoCapitalize = 'none'
         />
         <TextInput 
           placeholder="Password"
           onChangeText={(val) => this.setState({ password: val})}
           secureTextEntry
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           style={styles.textInput}
+          autoCapitalize = 'none'
         />
         <TextInput 
           placeholder="Confirm Password"
           onChangeText={(val) => this.setState({ password_confirmation: val})}
           secureTextEntry
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           style={styles.textInput}
+          autoCapitalize = 'none'
         />
         <TouchableHighlight 
-          underlayColor="white"
+          underlayColor="transparent"
           activeOpacity={0.5}
           onPress={this.register}
           style={styles.submitButton}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Image style={styles.image} source={require('../images/Arrows-Right-icon.png')} />
         </TouchableHighlight>
-        {this.state.error ? <Text style={styles.error}>{this.state.error}</Text> : null }
       </View>,
       <TouchableHighlight
         key={2}
@@ -188,7 +195,7 @@ class RegisterForm extends React.Component {
         style={styles.redirectButton}
         onPress={this.props.onPressRedirect}
       >
-        <Text style={styles.redirect}>Already have an account? <Text style={styles.underline}>Login</Text></Text>
+        <Text style={styles.underline}>Login</Text>
       </TouchableHighlight>
     
     ])
@@ -196,18 +203,22 @@ class RegisterForm extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  prana: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface'
+  },
   title: {
-   fontSize: 50,
-   color: 'white',
+   fontSize: 30,
+   color: 'black',
    textAlign: 'center',
-   paddingBottom: '10%',
-   fontFamily: 'Raleway-Thin',
+   paddingBottom: '15%',
+   fontFamily: 'Abril-Fatface'
   },
   textInput: {
-    borderBottomWidth: 1,
-    borderColor: 'white',
-    marginBottom: '20%',
-    color: 'white',
+    marginBottom: 40,
+    color: 'black',
     alignItems: 'center',
     textAlign: 'center'
   },
@@ -215,24 +226,22 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   submitButton: {
-    borderWidth: 1,
-    borderColor: 'white',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: 'white'
+    color: 'black'
   },
   error: {
-    color: 'white',
-    fontSize: 20,
+    color: 'red',
+    fontSize: 15,
     fontFamily: 'Raleway-Light',
     textAlign: 'center'
   },
   redirect: {
     marginTop: '50%',
-    color: 'white',
+    color: 'black',
     fontSize: 20
   },
   redirectButton: {
@@ -240,7 +249,13 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   underline: {
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    color: 'black',
+    marginBottom: '10%'
+  },
+  image: {width: 30, height: 10},
+  errorContainer: {
+    height: '10%'
   }
 });
 

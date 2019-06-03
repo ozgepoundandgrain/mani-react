@@ -29,7 +29,7 @@ class Authentication extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('./images/eye.jpg')} style={{width: '100%', height: '100%'}}>
+      // <ImageBackground source={require('./images/eye.jpg')} style={{width: '100%', height: '100%'}}>
       <ScrollView contentContainerStyle={styles.OuterContainer}>
       {this.state.showLogin ?
         <LoginForm
@@ -42,7 +42,7 @@ class Authentication extends React.Component {
           onPressRedirect={this.changeForm}
         />}
       </ScrollView>
-      </ImageBackground>
+      // </ImageBackground>
     
     )
   }

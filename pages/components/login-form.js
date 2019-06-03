@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, TextInput, View, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -13,7 +13,8 @@ class LoginForm extends React.Component {
       password: '',
       fontLoaded: false,
       persistedEmail: '',
-      persistedToken: ''
+      persistedToken: '',
+      error: ''
     }
 
     this.clearData = this.clearData.bind(this)
@@ -27,6 +28,7 @@ class LoginForm extends React.Component {
       await Font.loadAsync({
       'Raleway-Thin': require('../../assets/fonts/Raleway-Thin.ttf'),
       'Raleway-Light': require('../../assets/fonts/Raleway-Light.ttf'),
+      'Abril-Fatface': require('../../assets/fonts/AbrilFatface-Regular.ttf'),
     });
     this.setState({ fontLoaded: true });
     } catch {
@@ -130,39 +132,48 @@ class LoginForm extends React.Component {
         this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email)
       } else {
         let error =  res
+        this.setState({error: error})
+        this.setState({ error: 'Please try again' })
         throw error
       } 
     } catch(error) {
       this.removeToken()
+      this.setState({ error: 'Oops, try again' })
+
     }
   }
 
   render() {
     return ([
       <View style={styles.container} key={1}>
-        {this.state.fontLoaded && <Text style={styles.title}>LOGIN</Text>}
+        {this.state.fontLoaded && <Text style={styles.prana}>Prana.</Text>}
+        <View style={styles.errorContainer}>
+        {this.state.fontLoaded && <Text style={styles.error}>{this.state.error}</Text>}
+        </View>
+        {this.state.fontLoaded && <Text style={styles.title}>Login</Text>}
         <TextInput 
           placeholder="Email"
           style={styles.textInput}
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           onChangeText={(val) => this.setState({ email: val})}
+          autoCapitalize = 'none'
         />
         <TextInput 
           onChangeText={(val) => this.setState({ password: val})}
           placeholder="Password"
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           style={styles.textInput}
           secureTextEntry
+          autoCapitalize = 'none'
         />
         <TouchableHighlight 
-          underlayColor="white"
+          underlayColor="transparent"
           activeOpacity={0.5}
           onPress={this.login}
           style={styles.submitButton}
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <Image style={styles.image} source={require('../images/Arrows-Right-icon.png')} />
         </TouchableHighlight>
-        {this.state.error ? <Text style={styles.error}>Your username or password appears to be wrong, please try again</Text> : null }
       </View>,
       <TouchableHighlight
         key={2}
@@ -171,61 +182,56 @@ class LoginForm extends React.Component {
         style={styles.redirectButton}
         onPress={this.props.onPressRedirect}
       >
-        <Text style={styles.redirect}>Don't have an account? <Text style={styles.underline}>Register</Text></Text>
+        <Text style={styles.underline}>Register</Text>
       </TouchableHighlight>
     ])
   }
 }
 
 const styles = StyleSheet.create({
+  prana: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface'
+  },
   title: {
-   fontSize: 50,
-   color: 'white',
+   fontSize: 30,
+   color: 'black',
    textAlign: 'center',
-   paddingBottom: '10%',
-   fontFamily: 'Raleway-Thin',
+   paddingBottom: '15%',
+   fontFamily: 'Abril-Fatface',
   },
   textInput: {
-    borderBottomWidth: 1,
-    borderColor: 'white',
-    marginBottom: '20%',
-    color: 'white',
     alignItems: 'center',
     textAlign: 'center',
-    // fontFamily: 'Raleway-Thin',
+    marginBottom: 40
   },
   container: {
     width: '80%',
   },
   submitButton: {
-    borderWidth: 1,
-    borderColor: 'white',
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    // fontFamily: 'Raleway-Thin',
+    alignItems: 'center'
   },
   error: {
-    color: 'white',
-    fontSize: 20,
+    color: 'red',
+    fontSize: 15,
     fontFamily: 'Raleway-Light',
     textAlign: 'center'
   },
-  redirect: {
-    marginTop: '50%',
-    color: 'white',
-    fontSize: 20
+  errorContainer: {
+    height: '10%'
   },
   redirectButton: {
     position: 'absolute',
     bottom: 0,
   },
   underline: {
-    textDecorationLine: 'underline'
-  }
+    textDecorationLine: 'underline',
+    color: 'black',
+    marginBottom: '10%'
+  },
+  image: {width: 30, height: 10}
 });
 
 

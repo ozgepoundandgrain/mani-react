@@ -1,11 +1,8 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Modal, View, ImageBackground, TextInput, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, Modal, View, Text, TextInput, Dimensions } from 'react-native';
 import Header from './components/header'
-import { DangerZone, Asset } from 'expo'
-import LoadingAnimation from './animations/glow-loading.json'
 
-let { Lottie } = DangerZone;
-var {width, height} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
 
 class PostMantra extends React.Component {
   constructor(props) {
@@ -26,30 +23,15 @@ class PostMantra extends React.Component {
       routeName,
       { accessToken: this.state.accessToken, 
         email: this.state.email,
-        mantras: data
+        data: this.state.mantras,
       }
     )
-  }
-
-
-  async componentWillMount() {
-    await Asset.loadAsync([
-      require('./images/ocean.jpg'),
-    ]);
   }
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
 
-  _playAnimation = () => {
-    if (!this.state.animation) {
-      this.setState({ animation: LoadingAnimation }, this._playAnimation);
-    } else {
-      this.animation.reset();
-      this.animation.play();
-    }
-  };
 
   async fetchData(){
     try {
@@ -63,7 +45,7 @@ class PostMantra extends React.Component {
                             });
         if (response.status >= 200 && response.status < 300) {
           this.setState({mantras: JSON.parse(response._bodyText).data})
-          this.redirect('Home', this.state.mantras)
+          this.redirect('Home', JSON.parse(response._bodyText).data)
         } else {
           let error = res;
           throw error;
@@ -75,7 +57,6 @@ class PostMantra extends React.Component {
 
   async submitMantra() {
     this.setModalVisible(true)
-    this._playAnimation()
 
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/', {
@@ -97,6 +78,7 @@ class PostMantra extends React.Component {
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
             this.fetchData()
+            // this.redirect('Home')
         } else {
             let errors = res;
             throw errors;
@@ -107,56 +89,46 @@ class PostMantra extends React.Component {
 
   render() {
     return ([
-        <ImageBackground 
-          key={1}
-          source={require('./images/ocean.jpg')} 
-          style={styles.background}
-        >
-        <View style={styles.overlay}>
+        <View style={styles.overlay} key={0}>
         <ScrollView>
         <Header
-          leftTitle=""
+          leftTitle="Cancel"
           rightTitle="Post"
           rightTitleAction={this.submitMantra} 
-          leftTitleAction={() => {}}
+          leftTitleAction={() => this.props.navigation.goBack()}
         />
           <TextInput 
             placeholder="Title for your manifestation"
             onChangeText={(val) => this.setState({ title: val})}
-            placeholderTextColor="white"
+            placeholderTextColor="grey"
             style={styles.textInputTitle}
             multiline={true}
           />
           <TextInput 
             placeholder="Description"
             onChangeText={(val) => this.setState({ description: val})}
-            placeholderTextColor="white"
+            placeholderTextColor="grey"
             style={styles.textInputDescription}
             multiline={true}
             numberOfLines={60}
           />
           </ScrollView>
-        </View>
-        </ImageBackground>,
+        </View>,
         <Modal
-        key={2}
+        key={1}
         animationType="fade"
         transparent
         visible={this.state.modalVisible}
       >
       <View style={styles.animationModal}>
       <View style={{ alignContent: 'center' }}>
-      <Lottie
-      ref={animation => {
-        this.animation = animation;
-      }}
-      style={{
-        width: 150,
-        height: 150
-      }}
-      source={this.state.animation}
-    />
-    </View>
+        <Text style={styles.text}>Decide</Text>
+        <Text style={styles.text}>Beleive</Text>
+        <Text style={styles.text}>Visualize</Text>
+        <Text style={styles.text}>Feel</Text>
+        <Text style={styles.text}>Give thanks</Text>
+        <Text style={styles.text}>Release</Text>
+      </View>
         </View>
       </Modal>
     ]);
@@ -172,33 +144,43 @@ const styles = StyleSheet.create({
   textInputTitle: {
     padding: 5,
     marginBottom: (width === 320) ? 10 : 20,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
+    paddingLeft: 20,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
   },
   textInputDescription: {
     padding: 20,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 200 : 300,
+    backgroundColor: 'rgba(255, 255, 255, 0.40)',
   },
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'white',
     height: '100%',
     width: '100%'
   },
   animationModal: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignContent: 'center',
     textAlign: 'center',
     height: '100%',
     width: '100%'
+  },
+  text: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingBottom: 40,
   },
 })
 

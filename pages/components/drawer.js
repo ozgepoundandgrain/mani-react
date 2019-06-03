@@ -1,7 +1,6 @@
 import React from 'react';
-import { Text, View, TouchableHighlight, AsyncStorage, ImageBackground, StyleSheet, Image } from 'react-native';
+import { Text, View, TouchableHighlight, AsyncStorage, StyleSheet, Image } from 'react-native';
 import Drawer from 'react-native-drawer'
-import { Asset } from 'expo'
 
 const ACCESS_TOKEN = 'authentication_token';
 
@@ -49,10 +48,6 @@ class DrawerComponent extends React.Component {
 
   async componentWillMount() {
     this.getToken();
-
-    await Asset.loadAsync([
-      require('../images/ocean.jpg'),
-    ]);
   }
 
   componentDidMount(){
@@ -114,10 +109,6 @@ class DrawerComponent extends React.Component {
           tapToClose={true}
           open={!this.state.isDrawerClosed}
           >
-            <ImageBackground 
-              source={require('../images/ocean.jpg')} 
-              style={styles.background}
-            >
             <View style={styles.overlay}>
               <TouchableHighlight
                 underlayColor="transparent"
@@ -129,7 +120,6 @@ class DrawerComponent extends React.Component {
               </TouchableHighlight>
                   {this.props.children}
               </View>
-            </ImageBackground>
         </Drawer> 
       </View>   
     )
@@ -141,14 +131,14 @@ const drawerStyles = {
 }
 
 const styles = StyleSheet.create({
-  hamburger: {
-    paddingTop: 50, 
-    paddingLeft: 30
-  },
-  hamburgerRotated: {
-    paddingTop: 50, 
-    paddingLeft: 30,
-  },
+  // hamburger: {
+  //   paddingTop: 50, 
+  //   paddingLeft: 30
+  // },
+  // hamburgerRotated: {
+  //   paddingTop: 50, 
+  //   paddingLeft: 30,
+  // },
   logoutText: {
     shadowColor: 'white',
     paddingBottom: 20
@@ -170,9 +160,10 @@ const styles = StyleSheet.create({
   pageContainer: {
     height: '100%', 
     alignContent: 'center',
+    backgroundColor: 'white'
   },
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'white',
     height: '100%',
     width: '100%'
   }

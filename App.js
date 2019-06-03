@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation'
 import Home from './pages/home'
+import { Text } from 'react-native';
 import Authentication from './pages/Authentication'
 import Initial from './pages/Initial'
 import PostMantra from './pages/Post-mantra'
@@ -8,6 +9,13 @@ import PostVision from './pages/Post-vision'
 import EditMantra from './pages/Edit-mantra'
 import ShowVision from './pages/Show-vision'
 import EditVision from './pages/Edit-vision'
+import { Font } from 'expo';
+
+const Header = (fontLoaded) => {
+  return (
+    fontLoaded && <Text style={styles.header}>Prana.</Text>
+  )
+}
 
 const AppNavigator = createStackNavigator({
   Authentication: {
@@ -28,7 +36,7 @@ const AppNavigator = createStackNavigator({
     screen: props=> <Home {...props} />,
     navigationOptions: {
      title: '',
-     header: null,
+     header: props => <Header fontLoaded={props.fontLoaded} />,
      headerLeft: null,
      gesturesEnabled: false
    },
@@ -63,6 +71,18 @@ const AppNavigator = createStackNavigator({
   }
 })
 
+const styles = {
+  header: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingTop: 40,
+  }
+}
+
 
 
 export default class App extends React.Component {
@@ -71,23 +91,35 @@ export default class App extends React.Component {
     super();
 
     this.state = {
-      loadApp: false
+      loadApp: false,
+      fontLoaded: false
     }
   }
+  
+  async componentDidMount() {
+    try  {
+      await Font.loadAsync({
+      'Abril-Fatface': require('./assets/fonts/AbrilFatface-Regular.ttf'),
+    });
+    this.setState({ fontLoaded: true });
+    } catch {
+      console.log('could not load font')
+    }
 
-  componentDidMount() {
     setTimeout(() => {
       this.setState({ loadApp: true })
     }, 3000);
   }
-  
+
   render() {
     return (
       this.state.loadApp === false ? 
       <Initial />
       :
+      this.state.fontLoaded &&
       <AppNavigator 
-      initialRouteName="PostMantra"
+        fontLoaded={this.state.fontLoaded}
+        initialRouteName="PostMantra"
     />
     );
   }

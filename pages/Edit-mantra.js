@@ -1,12 +1,10 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, ImageBackground, Dimensions, ScrollView, Modal } from 'react-native';
+import { TextInput, View, StyleSheet, Text, Dimensions, ScrollView, Modal } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
-import { DangerZone, Asset } from 'expo'
-import LoadingAnimation from './animations/glow-loading.json'
+import { DangerZone } from 'expo'
 
-let { Lottie } = DangerZone;
-var {width, height} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
 
 class EditMantra extends React.Component {
   constructor(props){
@@ -20,17 +18,12 @@ class EditMantra extends React.Component {
       accessToken: this.props.navigation.state.params.accessToken,
       modalVisible: false,
       animationModalVisible: false,
+      data: []
     }
 
     this.submitEdit = this.submitEdit.bind(this)
     this.submitDelete = this.submitDelete.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
-  }
-
-  async componentWillMount() {
-    await Asset.loadAsync([
-      require('./images/ocean.jpg'),
-    ]);
   }
 
   setModalVisible(visible) {
@@ -41,19 +34,20 @@ class EditMantra extends React.Component {
     this.setState({animationModalVisible: visible});
   }
 
-  _playAnimation = () => {
-    if (!this.state.animation) {
-      this.setState({ animation: LoadingAnimation }, this._playAnimation);
-    } else {
-      this.animation.reset();
-      this.animation.play();
-    }
-  };
+  redirect(routeName) {
+    this.props.navigation.navigate(
+      routeName,
+      { accessToken: this.state.accessToken, 
+        email: this.state.email,
+        data: this.state.data
+      }
+    )
+  }
+
 
 
   async submitEdit(id) {
     this.setAnimationModalVisible(true)
-    this._playAnimation()
 
     try {
         let response = await fetch('https://prana-app.herokuapp.com/v1/mantras/'+id, {
@@ -72,7 +66,7 @@ class EditMantra extends React.Component {
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
             console.log('res success is: ', res);
-            this.props.navigation.navigate('Home');
+            this.redirect('Home')
         } else {
             let errors = res;
             throw errors;
@@ -84,11 +78,10 @@ class EditMantra extends React.Component {
 
   deleteAction(id){
     this.setAnimationModalVisible(true)
-    this._playAnimation()
     
     this.setModalVisible(!this.state.modalVisible)
     this.submitDelete(id)
-    this.props.navigation.navigate('Home')
+    this.redirect('Home')
   }
 
   submitDelete(id) {
@@ -104,13 +97,9 @@ class EditMantra extends React.Component {
 
 
   render() {
+    console.log(this.state, this.props)
     return ([
-      <ImageBackground 
-      key={1}
-        source={require('./images/ocean.jpg')} 
-        style={{width: '100%', height: '100%'}}
-      >
-        <View style={styles.overlay}>
+        <View style={styles.overlay} key={0}>
         <Header
           leftTitle="Delete"
           rightTitle="Save"
@@ -119,7 +108,7 @@ class EditMantra extends React.Component {
         />
           <ScrollView>
             <TextInput
-              placeholderTextColor="white"
+              placeholderTextColor="black"
               editable
               onChangeText={(title) => {this.setState({title})}}
               value={this.state.title}
@@ -129,7 +118,7 @@ class EditMantra extends React.Component {
             />
 
             <TextInput
-              placeholderTextColor="white"
+              placeholderTextColor="black"
               onChangeText={(description) => {this.setState({description})}}
               value={this.state.description}
               multiline
@@ -145,27 +134,22 @@ class EditMantra extends React.Component {
             onPressDelete={() => this.deleteAction(this.state.id)}
           />
 
-        </View>
-      </ImageBackground>,
+        </View>,
             <Modal
-            key={4}
+            key={1}
             animationType="fade"
             transparent
             visible={this.state.animationModalVisible}
           >
           <View style={styles.animationModal}>
           <View style={{ alignContent: 'center' }}>
-          <Lottie
-          ref={animation => {
-            this.animation = animation;
-          }}
-          style={{
-            width: 150,
-            height: 150,
-          }}
-          source={this.state.animation}
-        />
-        </View>
+            <Text style={styles.text}>Decide</Text>
+            <Text style={styles.text}>Beleive</Text>
+            <Text style={styles.text}>Visualize</Text>
+            <Text style={styles.text}>Feel</Text>
+            <Text style={styles.text}>Give thanks</Text>
+            <Text style={styles.text}>Release</Text>
+          </View>
         </View>
       </Modal>
     ])
@@ -176,21 +160,22 @@ const styles = StyleSheet.create({
   textInputTitle: {
     padding: 5,
     marginBottom: 10,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
+    backgroundColor: 'white',
+    paddingLeft: 20
   },
   textInputDescription: {
     padding: 20,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
+    backgroundColor: 'white',
     height: (width === 320) ? 200 : 300,
   },
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: '#f6f8fa',
     height: '100%',
     width: '100%'
   },
@@ -203,6 +188,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: '100%',
     width: '100%'
+  },
+  text: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingBottom: 40,
   },
 })
 

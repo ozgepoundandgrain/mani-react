@@ -1,9 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { DangerZone } from 'expo'
-import ANIME from './animations/loading.json'
-
-let { Lottie } = DangerZone;
+import { Font } from 'expo';
 
 
 class InitialScreen extends React.Component {
@@ -11,43 +8,34 @@ class InitialScreen extends React.Component {
     super(props);
 
     this.state = {
-      animation: null
+      fontLoaded: false
     }
-  }
-  componentWillMount() {
-    this._playAnimation();
   }
 
-  _playAnimation = () => {
-    if (!this.state.animation) {
-      this.setState({ animation: ANIME }, this._playAnimation);
-    } else {
-      this.animation.reset();
-      this.animation.play();
+  async componentWillMount() {
+    try  {
+      await Font.loadAsync({
+      'Abril-Fatface': require('../assets/fonts/AbrilFatface-Regular.ttf'),
+    });
+    this.setState({ fontLoaded: true });
+    } catch {
+      console.log('could not load font')
     }
-  };
+  }
 
   render() {
-    return(
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Your mind must arrive at the destination before your life does
-        </Text>
-        <View style={{ alignContent: 'center' }}>
-        {this.state.animation &&
-          <Lottie
-            ref={animation => {
-              this.animation = animation;
-            }}
-            style={{
-              width: 150,
-              height: 150,
-            }}
-            source={this.state.animation}
-          />}
-        </View>
-      </View>
-    )
+    return ([
+      this.state.fontLoaded &&
+      ([<Text key={0} style={styles.header}>Prana.</Text>,
+      <View style={styles.container} key={1}>
+        <Text style={styles.text}>Decide</Text>
+        <Text style={styles.text}>Beleive</Text>
+        <Text style={styles.text}>Visualize</Text>
+        <Text style={styles.text}>Feel</Text>
+        <Text style={styles.text}>Give thanks</Text>
+        <Text style={styles.text}>Release</Text>
+      </View>])
+    ])
   }
 }
 
@@ -57,14 +45,25 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black'
+    backgroundColor: 'white'
   },
   text: {
-    color: 'white', 
-    fontSize: 25, 
-    fontWeight: '200', 
-    textAlign: 'center', 
-    padding: 20
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingBottom: 40,
+  },
+  header: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingTop: 40,
   }
 });
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   StyleSheet, 
   View, 
-  ImageBackground, 
   TextInput, 
   Modal,
   Dimensions,
@@ -11,12 +10,9 @@ import {
   Text,
   Image } from 'react-native';
   import Header from './components/header'
-import { ImagePicker, DangerZone, Asset } from 'expo'
-import LoadingAnimation from './animations/glow-loading.json'
+import { ImagePicker } from 'expo'
 
-let { Lottie } = DangerZone;
-
-var {width, height} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -49,26 +45,10 @@ class PostVision extends React.Component {
       routeName,
       { accessToken: this.state.accessToken, 
         email: this.state.email,
-        visions: data
+        visions: this.state.visions,
       }
     )
   }
-
-
-  async componentWillMount() {
-    await Asset.loadAsync([
-      require('./images/ocean.jpg'),
-    ]);
-  }
-
-  _playAnimation = () => {
-    if (!this.state.animation) {
-      this.setState({ animation: LoadingAnimation }, this._playAnimation);
-    } else {
-      this.animation.reset();
-      this.animation.play();
-    }
-  };
 
   async fetchVision(){
     try {
@@ -83,7 +63,7 @@ class PostVision extends React.Component {
 
         if (response.status >= 200 && response.status < 300) {
           this.setState({visions: JSON.parse(response._bodyText).data})
-          this.redirect('Home', this.state.visions)
+          this.redirect('Home')
         } else {
           let error = res;
           throw error;
@@ -114,7 +94,6 @@ class PostVision extends React.Component {
     formData.append('image', { uri: localUri, name: filename, type });
 
     this.setModalVisible(true)
-    this._playAnimation()
 
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/visions/', {
@@ -160,55 +139,41 @@ class PostVision extends React.Component {
 
   render() {
     return ([
-      <ImageBackground 
-        key={0}
-        source={require('./images/ocean.jpg')} 
-        style={styles.background}
-      >
-        <View style={styles.overlay}>
+        <View style={styles.overlay} key={0}>
           <ScrollView style={styles.pageContainer}>
         <Header
-          leftTitle=""
+          leftTitle="Cancel"
           rightTitle="Post"
           rightTitleAction={this.uploadImage} 
-          leftTitleAction={() => {}}
+          leftTitleAction={() => this.props.navigation.goBack()}
         />
-        <View style={styles.form}>
-          <View>
             <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
             <TouchableHighlight onPress={this._pickImage}>
               <Text style={styles.editButton}>Edit</Text>
             </TouchableHighlight>
-          </View>
           <TextInput 
             placeholder="Description"
             onChangeText={(val) => this.setState({ description: val})}
-            placeholderTextColor="white"
+            placeholderTextColor="grey"
             style={styles.textInput}
             multiline={true}
           />
-        </View>
         </ScrollView>
-      </View>
-    </ImageBackground>,
-          <Modal
-          key={1}
+      </View>,
+      <Modal
+        key={1}
         animationType="fade"
         transparent
         visible={this.state.modalVisible}
       >
       <View style={styles.animationModal}>
       <View style={{ alignContent: 'center' }}>
-      <Lottie
-      ref={animation => {
-        this.animation = animation;
-      }}
-      style={{
-        width: 150,
-        height: 150,
-      }}
-      source={this.state.animation}
-    />
+      <Text style={styles.text}>Decide</Text>
+        <Text style={styles.text}>Beleive</Text>
+        <Text style={styles.text}>Visualize</Text>
+        <Text style={styles.text}>Feel</Text>
+        <Text style={styles.text}>Give thanks</Text>
+        <Text style={styles.text}>Release</Text>
     </View>
         </View>
       </Modal>
@@ -223,27 +188,22 @@ const styles = StyleSheet.create({
     height: '100%', 
     alignContent: 'center'
   },
-  form: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: '100%',
-  },
   background: {
     width: '100%', 
     height: '100%'
   },
   textInput: {
     padding: 20,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 240 : 300,
-    width: (width/3) * 2,
+    width: width
   },
   animationModal: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.70)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignContent: 'center',
     textAlign: 'center',
@@ -256,7 +216,7 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'white',
     height: '100%',
     width: '100%'
   },
@@ -268,7 +228,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     left: 0
-  }
+  },
+  text: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+    paddingBottom: 40,
+  },
 })
 
 export default PostVision
