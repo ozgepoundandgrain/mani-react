@@ -113,10 +113,13 @@ class DrawerComponent extends React.Component {
               <TouchableHighlight
                 underlayColor="transparent"
                 activeOpacity={0}
-                style={this.state.isDrawerClosed ? styles.hamburger : styles.hamburgerRotated}
+                // style={this.state.isDrawerClosed ? styles.hamburger : styles.hamburgerRotated}
                 onPress={this.handleDrawer}
               >
-                <Image source={require('../images/hamburger.png')}/>
+                <View style={styles.hamburgerContainer}>
+                  <View style={styles.hamburger}></View>
+                  <View style={styles.hamburger}></View>
+                </View>
               </TouchableHighlight>
                   {this.props.children}
               </View>
@@ -131,14 +134,19 @@ const drawerStyles = {
 }
 
 const styles = StyleSheet.create({
-  // hamburger: {
-  //   paddingTop: 50, 
-  //   paddingLeft: 30
-  // },
-  // hamburgerRotated: {
-  //   paddingTop: 50, 
-  //   paddingLeft: 30,
-  // },
+  hamburger: {
+    height: 2,
+    width: 20,
+    backgroundColor: 'black',
+    marginBottom: 4
+  },
+  hamburgerContainer: {
+    marginTop: 0,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
   logoutText: {
     shadowColor: 'white',
     paddingBottom: 20

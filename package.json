@@ -20,7 +20,7 @@
     "react-native-draggable-flatlist": "^1.1.7",
     "react-native-drawer": "^2.5.1",
     "react-native-image-picker": "^0.28.1",
-    "react-native-tab-view": "^2.1.0",
+    "react-native-tab-view": "^2.5.0",
     "react-native-view-more-text": "^2.1.0",
     "react-navigation": "^2.18.2"
   },

@@ -79,7 +79,7 @@ const styles = {
     textAlign: 'center',
     color: 'black',
     fontFamily: 'Abril-Fatface',
-    paddingTop: 40,
+    paddingTop: 30,
   }
 }
 

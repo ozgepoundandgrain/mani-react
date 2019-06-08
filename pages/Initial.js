@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'transparent'
   },
   text: {
     backgroundColor: "white",
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontFamily: 'Abril-Fatface',
-    paddingTop: 40,
+    paddingTop: 30,
   }
 });
 

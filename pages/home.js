@@ -29,7 +29,7 @@ class Home extends React.Component {
       visions: this.props.navigation.state.params.visions,
       updated: this.props.navigation.state.params.updated,
       data: this.props.navigation.state.params.data,
-      index: 0,
+      index: 1,
       image: '',
       isReady: false,
       visions: [],
@@ -211,16 +211,21 @@ class Home extends React.Component {
       <TabView
         renderTabBar={props =>
           <TabBar
-            labelStyle={{color: 'black', textTransform: 'lowercase'}}
+            labelStyle={{color: 'black'}}
             bounces
             {...props}
             indicatorStyle={{ backgroundColor: 'black' }}
             style={styles.tabStyle}
+            renderLabel={SceneMap({
+              'first': () => <Text>Vision board</Text>,
+              'second': () => <Text>Affirm</Text>
+            })
+            }
           />
         }
         navigationState={this.state}
         renderScene={SceneMap({
-          first: () => <ScrollView style={styles.scrollView}>
+          'first': () => <ScrollView style={styles.scrollView}>
           {this.state.visions ?
           <FlatList
             keyExtractor={(item, index) => index}
@@ -232,7 +237,7 @@ class Home extends React.Component {
         <Text>nothing</Text>
           }
         </ScrollView>,
-          second: () =>   <ScrollView style={styles.scrollView}>
+          'second': () =>   <ScrollView style={styles.scrollView}>
           <View style={styles.innerScroll}>
           <FlatList
             keyExtractor={(item, index) => index.toString()}
@@ -244,8 +249,8 @@ class Home extends React.Component {
         </ScrollView>,
         })}
         onIndexChange={index => this.setState({ index })}
+        // onRequestChangeTab={index => this.setState({ index })}
         initialLayout={{ width: Dimensions.get('window').width }}
-
       />
         <Footer 
           email={this.state.email}

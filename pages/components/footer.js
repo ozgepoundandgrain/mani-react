@@ -128,7 +128,7 @@ class Footer extends React.Component {
               underlayColor="white"
               activeOpacity={0}
             >
-              <Image style={{height: 30, width: 30}} source={require('../images/cross.png')}/>
+              <Image style={{height: 20, width: 20}} source={require('../images/cross.png')}/>
             </TouchableHighlight>
           </Animated.View>
 
