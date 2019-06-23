@@ -3,6 +3,7 @@ import { StyleSheet, Image, Modal, Dimensions, Text, ScrollView, View, TextInput
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
 import { DangerZone } from 'expo'
+import LoadingModal from './components/loading-modal'
 
 var {width} = Dimensions.get('window')
 
@@ -138,27 +139,15 @@ class EditVision extends React.Component {
       </ScrollView>,
       <ConfirmationModal
         key={3}
+        title="Delete this vision?"
         visible={this.state.modalVisible}
         onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
         onPressDelete={() => this.deleteAction(this.state.id)}
       />,
-      <Modal
-          key={4}
-          animationType="fade"
-          transparent
-          visible={this.state.animationModalVisible}
-        >
-        <View style={styles.animationModal}>
-        <View style={{ alignContent: 'center' }}>
-          <Text style={styles.text}>Decide</Text>
-          <Text style={styles.text}>Beleive</Text>
-          <Text style={styles.text}>Visualize</Text>
-          <Text style={styles.text}>Feel</Text>
-          <Text style={styles.text}>Give thanks</Text>
-          <Text style={styles.text}>Release</Text>
-        </View>
-      </View>
-    </Modal>
+      <LoadingModal 
+      key={4}
+      visible={this.state.animationModalVisible}
+    />
     ])
   }
 }

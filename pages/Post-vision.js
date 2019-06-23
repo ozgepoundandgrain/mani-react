@@ -3,16 +3,32 @@ import {
   StyleSheet, 
   View, 
   TextInput, 
-  Modal,
   Dimensions,
   TouchableHighlight,
   ScrollView,
   Text,
   Image } from 'react-native';
   import Header from './components/header'
-import { ImagePicker } from 'expo'
+import { ImagePicker, LinearGradient } from 'expo'
+import LoadingModal from './components/loading-modal'
 
 var {width} = Dimensions.get('window')
+
+const Info = ({visible}) => (
+  visible &&
+  <LinearGradient
+          colors={['#FD9308', '#F83953']}
+          style={{borderRadius: 3, padding: 10, width: ((width/3) * 2) - 20, marginLeft: 10, marginRight: 10}}
+          start={[1.5, 0.9]}
+          end={[0.5, 0.9]}
+        >
+        <View>
+          <Text style={{color: 'white', fontWeight: '600', paddingBottom: 10}}>Upload positive images that resonate with what you're manifesting</Text>
+          <Text style={{color: 'white', paddingBottom: 5}}>Affirm below, that these photos are of your life</Text>
+        </View>
+        </LinearGradient>
+)
+
 
 class PostVision extends React.Component {
   constructor(props) {
@@ -26,10 +42,12 @@ class PostVision extends React.Component {
       persistedVisions: [],
       animation: null,
       modalVisible: false,
+      showInfo: false
     }
 
     this.uploadImage = this.uploadImage.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.toggleInfo = this.toggleInfo.bind(this)
   }
 
   componentWillUnmount(){
@@ -137,6 +155,13 @@ class PostVision extends React.Component {
     }
   }
 
+  toggleInfo() {
+    this.state.showInfo ? 
+    this.setState({showInfo: false})
+    :
+    this.setState({showInfo: true})
+  }
+
   render() {
     return ([
         <View style={styles.overlay} key={0}>
@@ -147,36 +172,41 @@ class PostVision extends React.Component {
           rightTitleAction={this.uploadImage} 
           leftTitleAction={() => this.props.navigation.goBack()}
         />
-            <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
+        <View style={{flexDirection: 'row'}}>
+          <View>
+          <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
             <TouchableHighlight onPress={this._pickImage}>
               <Text style={styles.editButton}>Edit</Text>
             </TouchableHighlight>
-          <TextInput 
-            placeholder="Description"
+          </View>
+          <Info visible={this.state.showInfo}/>
+        </View>
+
+            <View>
+            <TextInput 
+            placeholder="Affirm in detail"
             onChangeText={(val) => this.setState({ description: val})}
             placeholderTextColor="grey"
             style={styles.textInput}
             multiline={true}
           />
+          <View style={{position: 'absolute', top: 0, right: 10}}>
+          <TouchableHighlight 
+                underlayColor="transparent"
+                activeOpacity={0.5}
+                onPress={this.toggleInfo}
+                style={{backgroundColor: 'grey', width: 20, height: 20, borderRadius: 10, justifyContent: 'center'}}
+              >
+                <Text style={{color: 'white', alignSelf: 'center'}}>?</Text>
+              </TouchableHighlight>
+          </View>
+            </View>
         </ScrollView>
       </View>,
-      <Modal
-        key={1}
-        animationType="fade"
-        transparent
-        visible={this.state.modalVisible}
-      >
-      <View style={styles.animationModal}>
-      <View style={{ alignContent: 'center' }}>
-      <Text style={styles.text}>Decide</Text>
-        <Text style={styles.text}>Beleive</Text>
-        <Text style={styles.text}>Visualize</Text>
-        <Text style={styles.text}>Feel</Text>
-        <Text style={styles.text}>Give thanks</Text>
-        <Text style={styles.text}>Release</Text>
-    </View>
-        </View>
-      </Modal>
+              <LoadingModal 
+              key={1}
+              visible={this.state.modalVisible}
+            />
     ]);
   }
 }
@@ -195,10 +225,11 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 20,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 240 : 300,
-    width: width
+    width: width,
+    fontWeight: '300'
   },
   animationModal: {
     flex: 1,

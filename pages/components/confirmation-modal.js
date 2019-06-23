@@ -1,64 +1,60 @@
 import React from 'react';
 import { Modal, View, StyleSheet, Text, TouchableHighlight } from 'react-native';
 
-class ConfirmationModal extends React.Component {
-  constructor(props){
-    super(props);
+const ConfirmationModal = (props) => {
 
-    this.state = {
-      modalVisible: false
-    }
-  }
-
-  render() {
     return (
       <Modal
         animationType="slide"
         transparent
-        visible={this.props.visible}
+        visible={props.visible}
       >
           <View style={styles.modalContent}>
-            <Text style={styles.title}>Are you sure you want to delete this entry?</Text>
+            <Text style={styles.title}>{props.title}</Text>
             <View style={styles.buttonsContent}>
               <TouchableHighlight
-                onPress={this.props.onPressDelete}
-                style={styles.deleteButton}
+                onPress={props.onPressDelete}
+                style={styles.deleteButton}        
+                underlayColor="#F2B5A7"
+                activeOpacity={0}
               >
-                <Text style={{fontSize: 20, color: 'red'}}>Delete</Text>
+                <Text style={{fontSize: 20, color: 'white', fontWeight: '400'}}>Delete</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 style={styles.cancelButton}
-                onPress={this.props.onPressCancel}
+                onPress={props.onPressCancel}
+                underlayColor="#F2B5A7"
+                activeOpacity={0}
               >
-                <Text style={{fontSize: 20, color: 'white'}}>Cancel</Text>
+                <Text style={{fontSize: 20, color: 'black', fontWeight: '400'}}>Cancel</Text>
               </TouchableHighlight>
             </View>
           </View>
       </Modal>
     )
-  }
 }
 
 const styles = StyleSheet.create({
   title: {
     fontSize: 20, 
     textAlign: 'center', 
-    color: 'white'
+    color: 'black'
   },
   cancelButton: {
     borderWidth: 1, 
-    borderColor: 'white', 
+    borderColor: 'black', 
     borderRadius: 5, 
     padding: 15
   },
   deleteButton: {
     borderWidth: 1, 
-    borderColor: 'red', 
+    borderColor: '#F25252', 
+    backgroundColor: '#F25252',
     borderRadius: 5, 
     padding: 15
   },
    modalContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.90)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     position: 'absolute', 
     top: 0, left: 0, 
     right: 0, bottom: 0, 

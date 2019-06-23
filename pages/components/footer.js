@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing, Text, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
+import { Animated, Easing, TouchableHighlight, Text, StyleSheet, View, Image } from 'react-native';
 import { Permissions, ImagePicker } from 'expo'
 
 class Footer extends React.Component {
@@ -102,6 +102,7 @@ class Footer extends React.Component {
             opacity: this.state.fadeAnim,
           }}
           >
+            <View>
             <TouchableHighlight 
                 onPress={() => this.redirect('PostMantra')} 
                 style={styles.addButton}
@@ -110,15 +111,20 @@ class Footer extends React.Component {
               >
                 <Image style={{height: 30, width: 30}} source={require('../images/feather-btn.png')}/>
               </TouchableHighlight>
+            </View>
 
-            <TouchableHighlight 
+        <View>
+              <TouchableHighlight 
               onPress={this._pickImage} 
               style={styles.addButton}
               underlayColor="white"
               activeOpacity={0}
             >
-              <Image style={{ width: 23, height: 15}} source={require('../images/eye-btn.png')}/>
+
+              <Image style={{ width: 40, height: 40}} source={require('../images/eye-icon.png')}/>
             </TouchableHighlight>
+        </View>
+
           </Animated.View>
 
           <Animated.View style={[animatedStyle]}>

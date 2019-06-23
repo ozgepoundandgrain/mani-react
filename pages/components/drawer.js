@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableHighlight, AsyncStorage, StyleSheet, Image } from 'react-native';
+import { Text, View, Animated, Easing, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import Drawer from 'react-native-drawer'
 
 const ACCESS_TOKEN = 'authentication_token';
@@ -28,13 +28,15 @@ class DrawerComponent extends React.Component {
     this.state = {
       accessToken: this.props.navigation.state.params.accessToken,
       viewOptions: false,
-
-      isDrawerClosed: true,
+      fadeAnim: new Animated.Value(0), 
+      rotateAnim: new Animated.Value(0),
+      isDrawerClosed: true
     }
     this.onLogout = this.onLogout.bind(this)
     this.redirect = this.redirect.bind(this)
     this.deleteToken = this.deleteToken.bind(this)
     this.handleDrawer = this.handleDrawer.bind(this)
+    this.rotate = this.rotate.bind(this)
   }
 
   redirect(routeName, accessToken) {
@@ -48,6 +50,7 @@ class DrawerComponent extends React.Component {
 
   async componentWillMount() {
     this.getToken();
+    this.animatedValue = new Animated.Value(0);
   }
 
   componentDidMount(){
@@ -89,7 +92,17 @@ class DrawerComponent extends React.Component {
     this.deleteToken();
   }
 
+  rotate() {
+    Animated.timing(this.animatedValue, {
+      toValue: this.animatedValue._value === 0 ? 1 : 0,
+      duration: 300,
+      easing: Easing.linear
+    }).start()
+  }
+
   handleDrawer() {
+    this.rotate()
+
     this.state.isDrawerClosed ?
     this.setState({isDrawerClosed: false })
     :
@@ -97,6 +110,18 @@ class DrawerComponent extends React.Component {
   }
 
   render() {
+
+    const interpolateRotation = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '45deg'],
+    })
+    const animatedStyle = {
+      transform: [
+        { rotate: interpolateRotation }
+      ]
+    }
+
+
     return (
       <View style={styles.pageContainer}>
         <Drawer
@@ -105,24 +130,30 @@ class DrawerComponent extends React.Component {
           type={"static"}
           content={drawerView(this.onLogout)}
           styles={drawerStyles}
-          onClose={() => this.setState({ isDrawerClosed: true })}
+          onClose={() => {this.setState({ isDrawerClosed: true }), this.rotate()}}
           tapToClose={true}
           open={!this.state.isDrawerClosed}
           >
             <View style={styles.overlay}>
+            
+            <View style={{width: 40, height: 40, justifyContent: 'center'}}>
+            <Animated.View style={[animatedStyle]}>
               <TouchableHighlight
                 underlayColor="transparent"
                 activeOpacity={0}
-                // style={this.state.isDrawerClosed ? styles.hamburger : styles.hamburgerRotated}
                 onPress={this.handleDrawer}
               >
-                <View style={styles.hamburgerContainer}>
-                  <View style={styles.hamburger}></View>
-                  <View style={styles.hamburger}></View>
-                </View>
+                  <View style={styles.hamburgerContainer}>
+                    <View style={styles.hamburger}></View>
+                    <View style={styles.hamburger}></View>
+                  </View>
               </TouchableHighlight>
+              </Animated.View>
+              </View>
+
                   {this.props.children}
               </View>
+
         </Drawer> 
       </View>   
     )
@@ -142,10 +173,11 @@ const styles = StyleSheet.create({
   },
   hamburgerContainer: {
     marginTop: 0,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    width: 40
   },
   logoutText: {
     shadowColor: 'white',

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInput, View, StyleSheet, Text, Dimensions, ScrollView, Modal } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
-import { DangerZone } from 'expo'
+import LoadingModal from './components/loading-modal'
 
 var {width} = Dimensions.get('window')
 
@@ -129,29 +129,17 @@ class EditMantra extends React.Component {
             />
           </ScrollView>
           <ConfirmationModal
+            title="Delete this mantra?"
             visible={this.state.modalVisible}
             onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
             onPressDelete={() => this.deleteAction(this.state.id)}
           />
 
         </View>,
-            <Modal
-            key={1}
-            animationType="fade"
-            transparent
-            visible={this.state.animationModalVisible}
-          >
-          <View style={styles.animationModal}>
-          <View style={{ alignContent: 'center' }}>
-            <Text style={styles.text}>Decide</Text>
-            <Text style={styles.text}>Beleive</Text>
-            <Text style={styles.text}>Visualize</Text>
-            <Text style={styles.text}>Feel</Text>
-            <Text style={styles.text}>Give thanks</Text>
-            <Text style={styles.text}>Release</Text>
-          </View>
-        </View>
-      </Modal>
+        <LoadingModal 
+        key={1}
+          visible={this.state.animationModalVisible}
+        />
     ])
   }
 }
@@ -178,26 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f8fa',
     height: '100%',
     width: '100%'
-  },
-  animationModal: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.70)',
-    justifyContent: 'center',
-    alignContent: 'center',
-    textAlign: 'center',
-    height: '100%',
-    width: '100%'
-  },
-  text: {
-    backgroundColor: "white",
-    color: 'black',
-    fontSize: 30,
-    textAlign: 'center',
-    color: 'black',
-    fontFamily: 'Abril-Fatface',
-    paddingBottom: 40,
-  },
+  }
 })
 
 export default EditMantra

@@ -229,6 +229,8 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    width:'100%',
+    height: 50
   },
   buttonText: {
     color: 'black'

@@ -1,8 +1,28 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Modal, View, Text, TextInput, Dimensions } from 'react-native';
+import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, TouchableHighlight } from 'react-native';
 import Header from './components/header'
+import LoadingModal from './components/loading-modal'
+import { LinearGradient } from 'expo'
 
 var {width} = Dimensions.get('window')
+
+const Info = ({visible}) => (
+  visible &&
+  <LinearGradient
+          colors={['#FD9308', '#F83953']}
+          style={{borderRadius: 3, padding: 10, margin: 10}}
+          start={[1.5, 0.9]}
+          end={[0.5, 0.9]}
+        >
+        <View>
+          <Text style={{color: 'white', fontWeight: '600', paddingBottom: 10}}>Use this space to affirm your visions into existence.</Text>
+          <Text style={{color: 'white', paddingBottom: 5}}>1. Be grateful for all that you currently have, for the magic is in the journey</Text>
+          <Text style={{color: 'white', paddingBottom: 5}}>2. Say it like your desires are already on their way to you</Text>
+          <Text style={{color: 'white', paddingBottom: 5}}>3. Describe it in such detail that you can see it, hear it, smell it</Text>
+          <Text style={{color: 'white'}}>4. Detach from the outcome</Text>
+        </View>
+        </LinearGradient>
+)
 
 class PostMantra extends React.Component {
   constructor(props) {
@@ -12,10 +32,12 @@ class PostMantra extends React.Component {
       description: '',
       mantras: [],
       animation: null,
-      modalVisible: false
+      modalVisible: false,
+      showInfo: false
     }
     this.submitMantra = this.submitMantra.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.toggleInfo = this.toggleInfo.bind(this)
   }
 
   redirect(routeName, data) {
@@ -87,50 +109,60 @@ class PostMantra extends React.Component {
     }
   }
 
+  toggleInfo() {
+    this.state.showInfo ? 
+    this.setState({showInfo: false})
+    :
+    this.setState({showInfo: true})
+  }
+
   render() {
     return ([
         <View style={styles.overlay} key={0}>
-        <ScrollView>
-        <Header
-          leftTitle="Cancel"
-          rightTitle="Post"
-          rightTitleAction={this.submitMantra} 
-          leftTitleAction={() => this.props.navigation.goBack()}
-        />
-          <TextInput 
-            placeholder="Title for your manifestation"
-            onChangeText={(val) => this.setState({ title: val})}
-            placeholderTextColor="grey"
-            style={styles.textInputTitle}
-            multiline={true}
+        
+      
+          <Header
+            leftTitle="Cancel"
+            rightTitle="Post"
+            rightTitleAction={this.submitMantra} 
+            leftTitleAction={() => this.props.navigation.goBack()}
           />
-          <TextInput 
-            placeholder="Description"
-            onChangeText={(val) => this.setState({ description: val})}
-            placeholderTextColor="grey"
-            style={styles.textInputDescription}
-            multiline={true}
-            numberOfLines={60}
-          />
+
+            <Info visible={this.state.showInfo} />
+            <TextInput 
+              placeholder="Affirmation title"
+              onChangeText={(val) => this.setState({ title: val})}
+              placeholderTextColor="grey"
+              style={styles.textInputTitle}
+              multiline={true}
+            />
+            <ScrollView>
+            <View>
+            <TextInput 
+              placeholder="Affirm in detail"
+              onChangeText={(val) => this.setState({ description: val})}
+              placeholderTextColor="grey"
+              style={styles.textInputDescription}
+              multiline={true}
+              numberOfLines={60}
+            />
+            <View style={{position: 'absolute', top: 0, right: 10}}>
+              <TouchableHighlight 
+                underlayColor="transparent"
+                activeOpacity={0.5}
+                onPress={this.toggleInfo}
+                style={{backgroundColor: 'grey', width: 20, height: 20, borderRadius: 10, justifyContent: 'center'}}
+              >
+                <Text style={{color: 'white', alignSelf: 'center'}}>?</Text>
+              </TouchableHighlight>
+            </View>
+            </View>
           </ScrollView>
         </View>,
-        <Modal
-        key={1}
-        animationType="fade"
-        transparent
-        visible={this.state.modalVisible}
-      >
-      <View style={styles.animationModal}>
-      <View style={{ alignContent: 'center' }}>
-        <Text style={styles.text}>Decide</Text>
-        <Text style={styles.text}>Beleive</Text>
-        <Text style={styles.text}>Visualize</Text>
-        <Text style={styles.text}>Feel</Text>
-        <Text style={styles.text}>Give thanks</Text>
-        <Text style={styles.text}>Release</Text>
-      </View>
-        </View>
-      </Modal>
+          <LoadingModal 
+          key={1}
+          visible={this.state.modalVisible}
+        />
     ]);
   }
 }
@@ -142,18 +174,20 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   textInputTitle: {
+    fontWeight: '300',
     padding: 5,
-    marginBottom: (width === 320) ? 10 : 20,
+    marginBottom: 10,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     paddingLeft: 20,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
   },
   textInputDescription: {
+    fontWeight: '300',
     padding: 20,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     alignItems: 'center',
     height: (width === 320) ? 200 : 300,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',

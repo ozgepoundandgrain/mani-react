@@ -211,7 +211,11 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   submitButton: {
-    alignItems: 'center'
+    alignItems: 'center',
+    width:'100%',
+    height: 50,
+    justifyContent: 'center',
+    padding: 10,
   },
   error: {
     color: 'red',

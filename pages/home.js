@@ -1,22 +1,22 @@
 import React from 'react';
-import { StyleSheet, Dimensions, Text, TouchableHighlight, Image, ScrollView, View, FlatList } from 'react-native';
+import { 
+  StyleSheet, 
+  Dimensions, 
+  Text,
+  TouchableHighlight, 
+  Image, 
+  ScrollView, 
+  View, 
+  FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import Footer from './components/footer.js'
 import ViewMoreText from 'react-native-view-more-text';
-
+import { LinearGradient } from 'expo'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-var {height, width} = Dimensions.get('window')
+var {width} = Dimensions.get('window')
 
 
-const background = (index) => {
-  return (
-    index % 2 === 0 ?
-    'white'
-    :
-    '#f6f8fa'
-  )
-}
 
 class Home extends React.Component {
   constructor(props){
@@ -39,9 +39,7 @@ class Home extends React.Component {
         { key: 'first', title: 'Vision Board' },
         { key: 'second', title: 'Affirm' },
       ],
-    }
-
-    // this.pressTab = this.pressTab.bind(this)
+    }  
   }
 
   componentDidMount() {
@@ -119,19 +117,27 @@ class Home extends React.Component {
     </TouchableHighlight>
   );
 
-
   _renderData = ({item, index}) => (
-    <View style={{backgroundColor: background(index), padding: 20}}>
+    <View style={{margin: 10}}>
+        <LinearGradient
+          colors={['#F27F64', '#D74F67']}
+          style={{borderRadius: 3, padding: 20}}
+          start={[1.5, 0.9]}
+          end={[0.5, 0.9]}
+        >
       <View style={styles.mantraCard} key={item.id}>
+
         <Text style={styles.title}>{item.title}</Text>
         <ViewMoreText
-          numberOfLines={5}
+          numberOfLines={2}
           renderViewMore={this.renderViewMore}
           renderViewLess={this.renderViewLess}
         >
           <Text style={styles.description}>{item.description}</Text>
         </ViewMoreText>
+        
       </View>
+      </LinearGradient>
 
       <TouchableHighlight
         underlayColor="transparent"
@@ -150,13 +156,13 @@ class Home extends React.Component {
 
   renderViewMore(onPress){
     return(
-      <Text style={{paddingTop: 10,color: 'blue'}} onPress={onPress}>View more</Text>
+      <Text style={{paddingTop: 10,color: 'white', textDecorationLine: 'underline'}} onPress={onPress}>View more</Text>
     )
   }
 
   renderViewLess(onPress){
     return(
-      <Text style={{paddingTop: 10,color: 'blue'}} onPress={onPress}>View less</Text>
+      <Text style={{paddingTop: 10,color: 'white', textDecorationLine: 'underline'}} onPress={onPress}>View less</Text>
     )
   }
 
@@ -249,7 +255,6 @@ class Home extends React.Component {
         </ScrollView>,
         })}
         onIndexChange={index => this.setState({ index })}
-        // onRequestChangeTab={index => this.setState({ index })}
         initialLayout={{ width: Dimensions.get('window').width }}
       />
         <Footer 
@@ -276,13 +281,6 @@ const styles = StyleSheet.create({
     shadowRadius: 11.14,
     elevation: 17,
   },
-   mantraCard: {
-    zIndex: 1,
-    minHeight: 130,
-    width: '100%',
-    marginBottom: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-  },
   scene: {
     flex: 1,
   },
@@ -290,10 +288,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   mantraCard: {
-    minHeight: 130,
+    height: 'auto',
     position: 'relative',
-    width: '100%',
-    // padding: 20
+    width: '100%'
   }, 
   scrollView: {
     position: 'absolute',
@@ -308,12 +305,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#13202E',
+    color: 'white',
     paddingBottom: 10
   },
   description: {
     fontSize: 18,
-    color: 'black',
+    color: 'white',
     fontWeight: "300"
   },
   view: {
@@ -324,7 +321,7 @@ const styles = StyleSheet.create({
   },
   buttonTouchable: {
     position: 'absolute', 
-    top: 0, 
+    top: 5, 
     right: 0,
     paddingRight: 10,
     paddingTop: 5
@@ -333,7 +330,7 @@ const styles = StyleSheet.create({
     height: 4, 
     width: 4, 
     borderRadius: 2, 
-    backgroundColor: 'black', 
+    backgroundColor: 'white', 
     margin: 2
   }
 })
