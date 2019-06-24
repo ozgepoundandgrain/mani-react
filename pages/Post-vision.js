@@ -182,15 +182,7 @@ class PostVision extends React.Component {
           <Info visible={this.state.showInfo}/>
         </View>
 
-            <View>
-            <TextInput 
-            placeholder="Affirm in detail"
-            onChangeText={(val) => this.setState({ description: val})}
-            placeholderTextColor="grey"
-            style={styles.textInput}
-            multiline={true}
-          />
-          <View style={{position: 'absolute', top: 0, right: 10}}>
+        <View style={{alignSelf: 'flex-end', paddingRight: 10}}>
           <TouchableHighlight 
                 underlayColor="transparent"
                 activeOpacity={0.5}
@@ -200,6 +192,15 @@ class PostVision extends React.Component {
                 <Text style={{color: 'white', alignSelf: 'center'}}>?</Text>
               </TouchableHighlight>
           </View>
+
+            <View>
+            <TextInput 
+            placeholder="Affirm in detail"
+            onChangeText={(val) => this.setState({ description: val})}
+            placeholderTextColor="grey"
+            style={styles.textInput}
+            multiline={true}
+          />
             </View>
         </ScrollView>
       </View>,
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   editButton: {
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0, 1)',
     borderRadius: 2,
     color: 'white', 
     padding: 5,

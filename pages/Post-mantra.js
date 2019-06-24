@@ -129,6 +129,7 @@ class PostMantra extends React.Component {
           />
 
             <Info visible={this.state.showInfo} />
+            <ScrollView>
             <TextInput 
               placeholder="Affirmation title"
               onChangeText={(val) => this.setState({ title: val})}
@@ -136,17 +137,7 @@ class PostMantra extends React.Component {
               style={styles.textInputTitle}
               multiline={true}
             />
-            <ScrollView>
-            <View>
-            <TextInput 
-              placeholder="Affirm in detail"
-              onChangeText={(val) => this.setState({ description: val})}
-              placeholderTextColor="grey"
-              style={styles.textInputDescription}
-              multiline={true}
-              numberOfLines={60}
-            />
-            <View style={{position: 'absolute', top: 0, right: 10}}>
+            <View style={{ alignSelf: 'flex-end', paddingRight: 10}}>
               <TouchableHighlight 
                 underlayColor="transparent"
                 activeOpacity={0.5}
@@ -156,6 +147,15 @@ class PostMantra extends React.Component {
                 <Text style={{color: 'white', alignSelf: 'center'}}>?</Text>
               </TouchableHighlight>
             </View>
+            <View>
+            <TextInput 
+              placeholder="Affirm in detail"
+              onChangeText={(val) => this.setState({ description: val})}
+              placeholderTextColor="grey"
+              style={styles.textInputDescription}
+              multiline={true}
+              numberOfLines={60}
+            />
             </View>
           </ScrollView>
         </View>,

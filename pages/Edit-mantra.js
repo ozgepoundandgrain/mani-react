@@ -149,18 +149,20 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     alignItems: 'center',
     backgroundColor: 'white',
-    paddingLeft: 20
+    paddingLeft: 20,
+    fontWeight: '300'
   },
   textInputDescription: {
     padding: 20,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     alignItems: 'center',
     backgroundColor: 'white',
     height: (width === 320) ? 200 : 300,
+    fontWeight: '300'
   },
   overlay: {
     backgroundColor: '#f6f8fa',

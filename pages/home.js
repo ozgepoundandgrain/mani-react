@@ -14,7 +14,7 @@ import ViewMoreText from 'react-native-view-more-text';
 import { LinearGradient } from 'expo'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-var {width} = Dimensions.get('window')
+var {width, height} = Dimensions.get('window')
 
 
 
@@ -25,14 +25,13 @@ class Home extends React.Component {
     this.state = {
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
-      mantras: this.props.navigation.state.params.mantras,
-      visions: this.props.navigation.state.params.visions,
+      mantras: this.props.navigation.state.params.mantras || [],
+      visions: this.props.navigation.state.params.visions || [],
       updated: this.props.navigation.state.params.updated,
       data: this.props.navigation.state.params.data,
-      index: 1,
+      index: 0,
       image: '',
       isReady: false,
-      visions: [],
       imagesURLarray: [],
 
       routes: [
@@ -232,7 +231,7 @@ class Home extends React.Component {
         navigationState={this.state}
         renderScene={SceneMap({
           'first': () => <ScrollView style={styles.scrollView}>
-          {this.state.visions ?
+          {this.state.visions.length > 0 ?
           <FlatList
             keyExtractor={(item, index) => index}
             numColumns={2}
@@ -240,17 +239,22 @@ class Home extends React.Component {
             renderItem={this._renderVision}
         />
         :
-        <Text>nothing</Text>
+          <Text style={{marginTop: '10%', padding: '10%', fontSize: 20, fontWeight: '300', textAlign: 'center'}}>Use this blank canvas to manifest all of your desires 🤩</Text>
           }
         </ScrollView>,
           'second': () =>   <ScrollView style={styles.scrollView}>
           <View style={styles.innerScroll}>
-          <FlatList
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={1}
-            data={this.state.mantras}
-            renderItem={this._renderData}
-            />
+            {
+              this.state.mantras.length > 0 ?
+              <FlatList
+              keyExtractor={(item, index) => index.toString()}
+              numColumns={1}
+              data={this.state.mantras}
+              renderItem={this._renderData}
+              />
+              :
+              <Text style={{marginTop: '10%', padding: '10%', fontSize: 20, fontWeight: '300', textAlign: 'center'}}>Use this blank canvas to affirm your best life 👑</Text>
+            }
           </View>
         </ScrollView>,
         })}

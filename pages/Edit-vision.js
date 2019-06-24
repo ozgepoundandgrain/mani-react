@@ -156,10 +156,11 @@ const styles = StyleSheet.create({
   textInputDescription: {
     padding: 20,
     color: 'black',
-    fontSize: 20,
+    fontSize: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 240 : 300,
-    width: width
+    width: width,
+    fontWeight: '300'
   },
   form: {
     flexDirection: 'row',
