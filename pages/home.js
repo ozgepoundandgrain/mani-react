@@ -11,10 +11,31 @@ import {
 import DrawerComponent from './components/drawer.js'
 import Footer from './components/footer.js'
 import ViewMoreText from 'react-native-view-more-text';
-import { LinearGradient } from 'expo'
+import Expo, { LinearGradient } from 'expo'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 var {width, height} = Dimensions.get('window')
+
+
+import { Permissions, Notifications } from 'expo';
+
+
+async function getToken() {
+  // Remote notifications do not work in simulators, only on device
+  if (!Expo.Constants.isDevice) {
+    return;
+  }
+  let { status } = await Expo.Permissions.askAsync(
+    Expo.Permissions.NOTIFICATIONS,
+  );
+  if (status !== 'granted') {
+    return;
+  }
+  let value = await Expo.Notifications.getExpoPushTokenAsync();
+  console.log('Our token', value);
+  /// Send this to a server
+}
+
 
 
 
@@ -44,6 +65,8 @@ class Home extends React.Component {
   componentDidMount() {
     this.fetchData()
     this.fetchVision()
+    this.registerForPushNotificationsAsync()
+    getToken()
   }
 
   componentDidUpdate(prevProps) {
@@ -55,6 +78,56 @@ class Home extends React.Component {
     if (this.props.navigation.state.params.visions !== prevProps.navigation.state.params.visions) {
       this.fetchVision()
     }
+  }
+
+  handleNotification = ({ origin, data }) => {
+    console.log(
+      `Push notification ${origin} with data: ${JSON.stringify(data)}`,
+    );
+  };
+
+  
+  async registerForPushNotificationsAsync() {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+  
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+  
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      return;
+    }
+  
+    // Get the token that uniquely identifies this device
+    let token = await Notifications.getExpoPushTokenAsync();
+    this.setState({expo_push_token: token})
+    
+  
+  
+    // POST the token to your backend server from where you can retrieve it to send push notifications.
+    return fetch(`https://prana-app.herokuapp.com/v1/users/${this.state.accessToken}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: {
+          expo_push_token: this.state.expo_push_token
+        },
+      })
+      
+    });
+  
   }
 
   redirect(routeName, mantraId, title, description) {
