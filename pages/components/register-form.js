@@ -55,11 +55,12 @@ class RegisterForm extends React.Component {
     })
   }
 
-  redirect(accessToken, email) {
+  redirect(accessToken, email, id) {
     this.props.navigation.navigate(
       'Home',
       { accessToken: accessToken, 
         email: email,
+        userId: id,
         onLogout: () => this.clearData()
       }
     )
@@ -135,7 +136,7 @@ class RegisterForm extends React.Component {
       let res = await response._bodyText;
       if (response.status >= 200 && response.status < 300) {
         this.storeToken(JSON.parse(res).data.user.authentication_token)
-        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email)
+        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
       } else {
           let error = res;
           this.setState({ error: 'Please try again' })

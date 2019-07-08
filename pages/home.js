@@ -5,13 +5,14 @@ import {
   Text,
   TouchableHighlight, 
   Image, 
-  ScrollView, 
+  ScrollView,
+  AsyncStorage, 
   View, 
   FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import Footer from './components/footer.js'
 import ViewMoreText from 'react-native-view-more-text';
-import Expo, { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 var {width, height} = Dimensions.get('window')
@@ -46,6 +47,7 @@ class Home extends React.Component {
     this.state = {
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
+      userId: this.props.navigation.state.params.userId,
       mantras: this.props.navigation.state.params.mantras || [],
       visions: this.props.navigation.state.params.visions || [],
       updated: this.props.navigation.state.params.updated,
@@ -65,8 +67,9 @@ class Home extends React.Component {
   componentDidMount() {
     this.fetchData()
     this.fetchVision()
-    this.registerForPushNotificationsAsync()
     getToken()
+    this._storeData()
+    this._retrieveData()
   }
 
   componentDidUpdate(prevProps) {
@@ -114,16 +117,14 @@ class Home extends React.Component {
   
   
     // POST the token to your backend server from where you can retrieve it to send push notifications.
-    return fetch(`https://prana-app.herokuapp.com/v1/users/${this.state.accessToken}`, {
+    return fetch(`https://prana-app.herokuapp.com/v1/users/${this.state.userId}`, {
       method: 'PATCH',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user: {
           expo_push_token: this.state.expo_push_token
-        },
       })
       
     });
@@ -279,6 +280,30 @@ class Home extends React.Component {
     } catch(error) {
     }
   }
+
+
+  async _storeData (){
+    const userId = this.state.userId ? (this.state.userId).toString() : ''
+    try {
+      await AsyncStorage.setItem('UserId', userId);
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  async _retrieveData () {
+    try {
+      const value = await AsyncStorage.getItem('UserId');
+      if (value !== null) {
+        // We have data!!
+        console.log(value);
+        this.setState({userId: value})
+        this.registerForPushNotificationsAsync()
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
 
 

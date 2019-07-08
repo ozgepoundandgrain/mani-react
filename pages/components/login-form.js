@@ -41,41 +41,20 @@ class LoginForm extends React.Component {
     let accessToken = this.state.accessToken
     AsyncStorage.setItem('email', email)
     AsyncStorage.setItem('accessToken', accessToken)
-    this.setState({
-      persistedEmail: email,
-      persistedToken: TOKEN
-    })
   }
 
-  check() {
-    AsyncStorage.getItem('email').then((email) => {
-      this.setState({ persistedEmail: email})
-    })
-  
-    AsyncStorage.getItem('accessToken').then((accessToken) => {
-      this.setState({ persistedToken: accessToken})
-    })
-  }
 
-  redirect(accessToken, email) {
+  redirect(accessToken, email, id) {
     this.props.navigation.navigate(
       'Home',
       { accessToken: accessToken, 
         email: email,
+        userId: id,
         onLogout: () => this.clearData()
       }
     )
   }
 
-  
-  componentWillMount() {
-    this.check()
-  }
-  
-  
-  componentDidUpdate() {
-    this.state.persistedToken && this.redirect(this.state.persistedToken, this.state.persistedEmail)
-  }
   
   clearData() {
     console.log('clear data1')
@@ -128,8 +107,9 @@ class LoginForm extends React.Component {
       })
       let res = await response._bodyText;
       if (response.status >= 200 && response.status < 300) {
+        console.log('RES', JSON.parse(res).data.user)
         this.storeToken(JSON.parse(res).data.user.authentication_token)
-        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email)
+        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
       } else {
         let error =  res
         this.setState({error: error})
