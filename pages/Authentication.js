@@ -5,6 +5,7 @@ import {
   ScrollView } from 'react-native';
 import LoginForm from './components/login-form'
 import RegisterForm from './components/register-form'
+import LoadingModal from './components/loading-modal';
 
 class Authentication extends React.Component {
   constructor(props) {
@@ -14,10 +15,22 @@ class Authentication extends React.Component {
       password: '',
       error: '',
       accessToken: '',
-      showLogin: true
+      showLogin: true,
+      animationModalVisible: true
     }
     this.changeForm = this.changeForm.bind(this)
   }
+
+  componentDidMount() {
+    this.timer = setInterval(
+        () => this.setState({ animationModalVisible: false }),
+        3000,
+    );
+}
+
+componentWillUnmount() {
+    clearInterval(this.timer);
+}
 
   changeForm = () => {
     this.state.showLogin ?
@@ -28,9 +41,9 @@ class Authentication extends React.Component {
 
 
   render() {
+    console.log('AUTH PAGE')
     return (
-      // <ImageBackground source={require('./images/eye.jpg')} style={{width: '100%', height: '100%'}}>
-      <ScrollView contentContainerStyle={styles.OuterContainer}>
+      <ScrollView contentContainerStyle={styles.OuterContainer} key="0">
       {this.state.showLogin ?
         <LoginForm
           {...this.props}
@@ -42,7 +55,6 @@ class Authentication extends React.Component {
           onPressRedirect={this.changeForm}
         />}
       </ScrollView>
-      // </ImageBackground>
     
     )
   }

@@ -113,9 +113,6 @@ export default class App extends React.Component {
 
   render() {
     return (
-     this.state.loadApp === false ? 
-     <Initial />
-     :
      this.state.fontLoaded &&
      <AppNavigator 
        fontLoaded={this.state.fontLoaded}

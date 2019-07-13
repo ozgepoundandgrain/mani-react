@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, TextInput, View, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
+import InitialScreen from '../Initial'
+
 
 const ACCESS_TOKEN = 'authentication_token'
 
@@ -34,34 +36,72 @@ class LoginForm extends React.Component {
     } catch {
       console.log('could not load font')
     }
+
+
   }
+  
+
+  componentDidMount() {
+    this.timer = setInterval(
+      () => this.setState({ animationModalVisible: false }),
+      3000,
+  );
+  }
+
+
+componentWillUnmount() {
+    clearInterval(this.timer);
+}
+
 
   persistData(TOKEN) {
     let email = this.state.email
     let accessToken = this.state.accessToken
     AsyncStorage.setItem('email', email)
     AsyncStorage.setItem('accessToken', accessToken)
+    this.setState({
+      persistedEmail: email,
+      persistedToken: TOKEN
+    })
   }
 
+  check() {
+    AsyncStorage.getItem('email').then((email) => {
+      this.setState({ persistedEmail: email})
+    })
 
-  redirect(accessToken, email, id) {
+    AsyncStorage.getItem('accessToken').then((accessToken) => {
+      this.setState({ persistedToken: accessToken})
+    })
+  }
+
+  redirect(accessToken, email) {
     this.props.navigation.navigate(
       'Home',
       { accessToken: accessToken, 
         email: email,
-        userId: id,
         onLogout: () => this.clearData()
       }
     )
   }
 
-  
+  componentWillMount() {
+    this.check()
+  }
+
+
+  componentDidUpdate() {
+    this.state.persistedToken && this.redirect(this.state.persistedToken, this.state.persistedEmail)
+  }
+
+
   clearData() {
-    console.log('clear data1')
+    console.log('clear data2')
     AsyncStorage.clear()
+    this.removeToken()
     this.setState({ persistedToken: '', persistedEmail: ''})
   }
-  
+
   
     async storeToken(accessToken) {
       try {
@@ -124,6 +164,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    console.log('LOGIN PAGE')
     return ([
       <View style={styles.container} key={1}>
         {this.state.fontLoaded && <Text style={styles.prana}>Prana.</Text>}
@@ -163,7 +204,11 @@ class LoginForm extends React.Component {
         onPress={this.props.onPressRedirect}
       >
         <Text style={styles.underline}>Register</Text>
-      </TouchableHighlight>
+      </TouchableHighlight>,
+            <InitialScreen 
+            key={3}
+            visible={this.state.animationModalVisible}
+          />
     ])
   }
 }
