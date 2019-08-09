@@ -123,18 +123,18 @@ class Home extends React.Component {
   
   }
 
-  // redirect(routeName, mantraId, title, description) {
-  //   this.props.navigation.navigate(
-  //     routeName,
-  //     { accessToken: this.state.accessToken, 
-  //       email: this.state.email,
-  //       data: this.state.data,
-  //       mantraId: mantraId,
-  //       title: title,
-  //       description: description
-  //     }
-  //   )
-  // }
+  redirect(routeName, mantraId, title, description) {
+    this.props.navigation.navigate(
+      routeName,
+      { accessToken: this.state.accessToken, 
+        email: this.state.email,
+        data: this.state.data,
+        mantraId: mantraId,
+        title: title,
+        description: description
+      }
+    )
+  }
 
 
   redirectToImage(routeName, visionId, image_url, description) {
@@ -164,10 +164,17 @@ class Home extends React.Component {
         />
       </TouchableHighlight>
       :
-      <View style={{height: width/2, width: width/2, backgroundColor: 'pink'}}>
-        <Text>{item.title}</Text>
-        <Text>{item.description}</Text>
-      </View>
+      <TouchableHighlight
+        id={item.id}
+        onPress={() => this.redirect('ShowMantra', item.id, item.title, item.description)}
+        underlayColor="transparent"
+        activeOpacity={0}
+      >
+        <View style={{height: width/2, width: width/2, backgroundColor: 'pink'}}>
+          <Text>{item.title}</Text>
+          <Text>{item.description}</Text>
+        </View>
+      </TouchableHighlight>
   )
 
   async fetchData(){
