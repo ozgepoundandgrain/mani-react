@@ -84,9 +84,9 @@ class RegisterForm extends React.Component {
   }
   
   clearData() {
-    console.log('clear data2')
-    AsyncStorage.clear()
     this.setState({ persistedToken: '', persistedEmail: ''})
+    AsyncStorage.clear()
+    this.removeToken()
   }
   
   

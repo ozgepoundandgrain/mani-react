@@ -81,10 +81,9 @@ class LoginForm extends React.Component {
 
 
   clearData() {
-    console.log('clear data2')
+    this.setState({ persistedToken: '', persistedEmail: ''})
     AsyncStorage.clear()
     this.removeToken()
-    this.setState({ persistedToken: '', persistedEmail: ''})
   }
 
   

@@ -5,17 +5,14 @@ import {
   Text,
   TouchableHighlight, 
   Image, 
-  ScrollView,
   AsyncStorage, 
   View, 
   FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import Footer from './components/footer.js'
-import ViewMoreText from 'react-native-view-more-text';
-import { LinearGradient } from 'expo'
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-var {width, height} = Dimensions.get('window')
+
+var {width} = Dimensions.get('window')
 
 
 import { Permissions, Notifications } from 'expo';
@@ -55,12 +52,7 @@ class Home extends React.Component {
       index: 0,
       image: '',
       isReady: false,
-      imagesURLarray: [],
-
-      routes: [
-        { key: 'first', title: 'Vision Board' },
-        { key: 'second', title: 'Affirm' },
-      ],
+      imagesURLarray: []
     }  
   }
 
@@ -131,18 +123,18 @@ class Home extends React.Component {
   
   }
 
-  redirect(routeName, mantraId, title, description) {
-    this.props.navigation.navigate(
-      routeName,
-      { accessToken: this.state.accessToken, 
-        email: this.state.email,
-        data: this.state.data,
-        mantraId: mantraId,
-        title: title,
-        description: description
-      }
-    )
-  }
+  // redirect(routeName, mantraId, title, description) {
+  //   this.props.navigation.navigate(
+  //     routeName,
+  //     { accessToken: this.state.accessToken, 
+  //       email: this.state.email,
+  //       data: this.state.data,
+  //       mantraId: mantraId,
+  //       title: title,
+  //       description: description
+  //     }
+  //   )
+  // }
 
 
   redirectToImage(routeName, visionId, image_url, description) {
@@ -157,87 +149,26 @@ class Home extends React.Component {
     )
   }
 
-  imagesArray() {
-    (this.state.visions).filter(vision => {
-      this.setState({ imagesURLarray: vision.image_url })
-    })
-  }
-
-  async _loadAssetsAsync() {
-    const imageAssets = cacheImages([
-      this.state.imagesURLarray
-    ]);
-    try {
-      await Promise.all([...imageAssets]);
-    } catch(error) {
-      console.log(error)
-    }
-  }
-
-
-  _renderVision = ({item}) => (
-    <TouchableHighlight
-      id={item.id}
-      onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
-      underlayColor="transparent"
-      activeOpacity={0}
-    >
-      <Image 
-        key={item.id} 
-        style={{height: width/2, width: width/2}} 
-        source={{uri: item.image_url}}
-      />
-    </TouchableHighlight>
-  );
-
-  _renderData = ({item, index}) => (
-    <View style={{margin: 10}}>
-        <LinearGradient
-          colors={['#F27F64', '#D74F67']}
-          style={{borderRadius: 3, padding: 20}}
-          start={[1.5, 0.9]}
-          end={[0.5, 0.9]}
-        >
-      <View style={styles.mantraCard} key={item.id}>
-
-        <Text style={styles.title}>{item.title}</Text>
-        <ViewMoreText
-          numberOfLines={2}
-          renderViewMore={this.renderViewMore}
-          renderViewLess={this.renderViewLess}
-        >
-          <Text style={styles.description}>{item.description}</Text>
-        </ViewMoreText>
-        
-      </View>
-      </LinearGradient>
-
+  renderItems = ({item}) => (
+      item.image_url ?
       <TouchableHighlight
+        id={item.id}
+        onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
         underlayColor="transparent"
         activeOpacity={0}
-        style={styles.buttonTouchable} 
-        onPress={() => this.redirect('EditMantra', item.id, item.title, item.description)}
       >
-        <View style={{flexDirection: 'row'}}>
-          <View style={styles.circle}></View>
-          <View style={styles.circle}></View>
-          <View style={styles.circle}></View>
-        </View>
+        <Image 
+          key={item.id} 
+          style={{height: width/2, width: width/2}} 
+          source={{uri: item.image_url}}
+        />
       </TouchableHighlight>
+      :
+      <View style={{height: width/2, width: width/2, backgroundColor: 'pink'}}>
+        <Text>{item.title}</Text>
+        <Text>{item.description}</Text>
       </View>
-  );
-
-  renderViewMore(onPress){
-    return(
-      <Text style={{paddingTop: 10,color: 'white', textDecorationLine: 'underline'}} onPress={onPress}>View more</Text>
-    )
-  }
-
-  renderViewLess(onPress){
-    return(
-      <Text style={{paddingTop: 10,color: 'white', textDecorationLine: 'underline'}} onPress={onPress}>View less</Text>
-    )
-  }
+  )
 
   async fetchData(){
     try {
@@ -308,57 +239,14 @@ class Home extends React.Component {
 
 
   render() {
-    console.log(this.state)
     return (
       <DrawerComponent {...this.props}>
-      <TabView
-        renderTabBar={props =>
-          <TabBar
-            labelStyle={{color: 'black'}}
-            bounces
-            {...props}
-            indicatorStyle={{ backgroundColor: 'black' }}
-            style={styles.tabStyle}
-            renderLabel={SceneMap({
-              'first': () => <Text>Vision board</Text>,
-              'second': () => <Text>Affirm</Text>
-            })
-            }
-          />
-        }
-        navigationState={this.state}
-        renderScene={SceneMap({
-          'first': () => <ScrollView style={styles.scrollView}>
-          {this.state.visions.length > 0 ?
-          <FlatList
-            keyExtractor={(item, index) => index}
-            numColumns={2}
-            data={this.state.visions}
-            renderItem={this._renderVision}
+        <FlatList
+          keyExtractor={(item, index) => index}
+          numColumns={2}
+          data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
+          renderItem={this.renderItems}
         />
-        :
-          <Text style={{marginTop: '10%', padding: '10%', fontSize: 20, fontWeight: '300', textAlign: 'center'}}>Use this blank canvas to manifest all of your desires 🤩</Text>
-          }
-        </ScrollView>,
-          'second': () =>   <ScrollView style={styles.scrollView}>
-          <View style={styles.innerScroll}>
-            {
-              this.state.mantras.length > 0 ?
-              <FlatList
-              keyExtractor={(item, index) => index.toString()}
-              numColumns={1}
-              data={this.state.mantras}
-              renderItem={this._renderData}
-              />
-              :
-              <Text style={{marginTop: '10%', padding: '10%', fontSize: 20, fontWeight: '300', textAlign: 'center'}}>Use this blank canvas to affirm your best life 👑</Text>
-            }
-          </View>
-        </ScrollView>,
-        })}
-        onIndexChange={index => this.setState({ index })}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
         <Footer 
           email={this.state.email}
           accessToken={this.state.accessToken}
@@ -370,71 +258,6 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  tab: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    backgroundColor: 'transparent',
-    shadowColor: "white",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.46,
-    shadowRadius: 11.14,
-    elevation: 17,
-  },
-  scene: {
-    flex: 1,
-  },
-  tabStyle: {
-    backgroundColor: 'white'
-  },
-  mantraCard: {
-    height: 'auto',
-    position: 'relative',
-    width: '100%'
-  }, 
-  scrollView: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    marginTop: 10
-  },
-  innerScroll: {     
-    marginBottom: 200
-  },
-  title: {
-    fontSize: 20,
-    color: 'white',
-    paddingBottom: 10
-  },
-  description: {
-    fontSize: 18,
-    color: 'white',
-    fontWeight: "300"
-  },
-  view: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    paddingRight: 20,
-  },
-  buttonTouchable: {
-    position: 'absolute', 
-    top: 5, 
-    right: 0,
-    paddingRight: 10,
-    paddingTop: 5
-  },
-  circle: {
-    height: 4, 
-    width: 4, 
-    borderRadius: 2, 
-    backgroundColor: 'white', 
-    margin: 2
-  }
 })
 
 export default Home

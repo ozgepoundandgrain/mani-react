@@ -21,16 +21,16 @@ class Authentication extends React.Component {
     this.changeForm = this.changeForm.bind(this)
   }
 
-  componentDidMount() {
-    this.timer = setInterval(
-        () => this.setState({ animationModalVisible: false }),
-        3000,
-    );
-}
+//   componentDidMount() {
+//     this.timer = setInterval(
+//         () => this.setState({ animationModalVisible: false }),
+//         3000,
+//     );
+// }
 
-componentWillUnmount() {
-    clearInterval(this.timer);
-}
+// componentWillUnmount() {
+//     clearInterval(this.timer);
+// }
 
   changeForm = () => {
     this.state.showLogin ?

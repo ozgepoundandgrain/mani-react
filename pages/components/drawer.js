@@ -80,15 +80,14 @@ class DrawerComponent extends React.Component {
   async deleteToken() {
     try {
         await AsyncStorage.removeItem(ACCESS_TOKEN)
-        this.redirect('Authentication')
         this.props.navigation.state.params.onLogout()
+        this.redirect('Authentication')
     } catch(error) {
         console.log("Something went wrong1");
     }
   }
 
   onLogout(){
-    this.setState({showProgress: true})
     this.deleteToken();
   }
 
