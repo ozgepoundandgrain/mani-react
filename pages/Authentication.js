@@ -41,7 +41,6 @@ componentWillUnmount() {
 
 
   render() {
-    console.log('AUTH PAGE')
     return (
       <ScrollView contentContainerStyle={styles.OuterContainer} key="0">
       {this.state.showLogin ?

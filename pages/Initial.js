@@ -4,24 +4,24 @@ import { Font } from 'expo';
 
 
 const InitialScreen = (props) => {
-    return ([
+    return (
       <Modal
         animationType="fade"
         transparent
         visible={props.visible}
       >
-      <View style={styles.animationModal}>
-      <View style={{ alignContent: 'center' }}>
-        <Text style={styles.text}>Decide</Text>
-        <Text style={styles.text}>Beleive</Text>
-        <Text style={styles.text}>Visualize</Text>
-        <Text style={styles.text}>Feel</Text>
-        <Text style={styles.text}>Give thanks</Text>
-        <Text style={styles.text}>Release</Text>
+        <View style={styles.animationModal}>
+        <View style={{ alignContent: 'center' }}>
+          <Text style={styles.text}>Decide</Text>
+          <Text style={styles.text}>Beleive</Text>
+          <Text style={styles.text}>Visualize</Text>
+          <Text style={styles.text}>Feel</Text>
+          <Text style={styles.text}>Give thanks</Text>
+          <Text style={styles.text}>Release</Text>
+        </View>
       </View>
-    </View>
-  </Modal>
-    ])
+    </Modal>
+    )
   }
 
 const styles = StyleSheet.create({

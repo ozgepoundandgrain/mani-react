@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TextInput, View, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 import InitialScreen from '../Initial'
-
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 const ACCESS_TOKEN = 'authentication_token'
 
@@ -36,22 +36,7 @@ class LoginForm extends React.Component {
     } catch {
       console.log('could not load font')
     }
-
-
   }
-  
-
-  componentDidMount() {
-    this.timer = setInterval(
-      () => this.setState({ animationModalVisible: false }),
-      3000,
-  );
-  }
-
-
-componentWillUnmount() {
-    clearInterval(this.timer);
-}
 
 
   persistData(TOKEN) {
@@ -133,6 +118,7 @@ componentWillUnmount() {
     }
 
   async onLoginPressed() {
+    this.loadingButton.showLoading(true);
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/sessions/', {
         method: 'POST',
@@ -150,16 +136,18 @@ componentWillUnmount() {
         console.log('RES', JSON.parse(res).data.user)
         this.storeToken(JSON.parse(res).data.user.authentication_token)
         this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
+        this.loadingButton.showLoading(false);
       } else {
+        this.loadingButton.showLoading(false);
         let error =  res
         this.setState({error: error})
         this.setState({ error: 'Please try again' })
         throw error
       } 
     } catch(error) {
+      this.loadingButton.showLoading(false);
       this.removeToken()
       this.setState({ error: 'Oops, try again' })
-
     }
   }
 
@@ -187,14 +175,19 @@ componentWillUnmount() {
           secureTextEntry
           autoCapitalize = 'none'
         />
-        <TouchableHighlight 
-          underlayColor="transparent"
-          activeOpacity={0.5}
+        <View style={{height: 57}}/>
+
+        <AnimateLoadingButton
+          ref={c => (this.loadingButton = c)}
+          width={200}
+          height={50}
+          title="Login"
+          titleFontSize={16}
+          titleColor="rgb(255,255,255)"
+          backgroundColor="rgb(29,18,121)"
+          borderRadius={4}
           onPress={this.login}
-          style={styles.submitButton}
-        >
-          <Image style={styles.image} source={require('../images/Arrows-Right-icon.png')} />
-        </TouchableHighlight>
+        />
       </View>,
       <TouchableHighlight
         key={2}
@@ -204,11 +197,11 @@ componentWillUnmount() {
         onPress={this.props.onPressRedirect}
       >
         <Text style={styles.underline}>Register</Text>
-      </TouchableHighlight>,
-            <InitialScreen 
-            key={3}
-            visible={this.state.animationModalVisible}
-          />
+      </TouchableHighlight>
+          //   <InitialScreen 
+          //   key={3}
+          //   visible={this.state.animationModalVisible}
+          // />
     ])
   }
 }

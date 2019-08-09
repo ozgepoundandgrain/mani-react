@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, TextInput, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
+
 
 const ACCESS_TOKEN = 'authentication_token'
 
@@ -118,6 +120,7 @@ class RegisterForm extends React.Component {
     }
 
   async onRegisterPressed() {
+    this.loadingButton.showLoading(true);
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/users', {
                               method: 'POST',
@@ -137,12 +140,15 @@ class RegisterForm extends React.Component {
       if (response.status >= 200 && response.status < 300) {
         this.storeToken(JSON.parse(res).data.user.authentication_token)
         this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
+        this.loadingButton.showLoading(false);
       } else {
+        this.loadingButton.showLoading(false);
           let error = res;
           this.setState({ error: 'Please try again' })
           throw error;
       }
     } catch(errors) {
+      this.loadingButton.showLoading(false);
         this.removeToken()
         this.setState({ error: 'Oops, try again' })
       }
@@ -180,14 +186,19 @@ class RegisterForm extends React.Component {
           style={styles.textInput}
           autoCapitalize = 'none'
         />
-        <TouchableHighlight 
-          underlayColor="transparent"
-          activeOpacity={0.5}
+
+<AnimateLoadingButton
+          ref={c => (this.loadingButton = c)}
+          width={200}
+          height={50}
+          title="Register"
+          titleFontSize={16}
+          titleColor="rgb(255,255,255)"
+          backgroundColor="rgb(29,18,121)"
+          borderRadius={4}
           onPress={this.register}
-          style={styles.submitButton}
-        >
-          <Image style={styles.image} source={require('../images/Arrows-Right-icon.png')} />
-        </TouchableHighlight>
+        />
+
       </View>,
       <TouchableHighlight
         key={2}
