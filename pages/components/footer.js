@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing, TouchableHighlight, Text, StyleSheet, View, Image } from 'react-native';
+import { Animated, Easing, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
 import { Permissions, ImagePicker } from 'expo'
 
 class Footer extends React.Component {

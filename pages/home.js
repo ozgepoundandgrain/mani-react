@@ -182,7 +182,7 @@ class Home extends React.Component {
       activeOpacity={0}
     >
       <View style={{height: width, width: width, backgroundColor: 'white', padding: 20, overflow: 'hidden'}}>
-        <Text style={{fontSize: 20}}>{item.title}</Text>
+        <Text numberOfLines={2} style={{fontSize: 20}}>{item.title}</Text>
         <Text numberOfLines={16} style={{fontSize: 16}}>{item.description}</Text>
       </View>
     </TouchableHighlight>}
@@ -214,8 +214,8 @@ class Home extends React.Component {
         activeOpacity={0}
         style={{margin: 2}}
       >
-        <View style={{height: (width/2 - 4), width: (width/2 - 4), backgroundColor: 'pink', overflow: 'hidden', padding: 10}}>
-          <Text style={{fontSize: 20}}>{item.title}</Text>
+        <View style={{height: (width/2 - 4), width: (width/2 - 4), backgroundColor: '#FFEFBA', overflow: 'hidden', padding: 10}}>
+          <Text numberOfLines={2} style={{fontSize: 20}}>{item.title}</Text>
           <Text numberOfLines={6} style={{fontSize: 16}}>{item.description}</Text>
         </View>
       </TouchableHighlight>
@@ -290,7 +290,6 @@ class Home extends React.Component {
 
 
   render() {
-    console.log(this.state)
     const list = (this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})
     return (
       <DrawerComponent {...this.props}>
@@ -303,7 +302,7 @@ class Home extends React.Component {
         :
         [<FlatList
           key={1}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => `list-item-${index}`}
           numColumns={2}
           data={list}
           renderItem={this.renderItems}
@@ -332,8 +331,8 @@ class Home extends React.Component {
               getItemLayout={(data, index) => (
                 {length: width, offset: width * index, index}
               )}
-              initialScrollIndex={this.state.scrollToIndex}
-              keyExtractor={(item, index) => index}
+              initialScrollIndex={(this.state.scrollToIndex).toString()}
+              keyExtractor={(item, index) => `modal-list-item-${index}`}
               numColumns={1}
               data={list}
               renderItem={this.renderItemsForModal}

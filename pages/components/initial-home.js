@@ -1,12 +1,32 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { ImagePicker } from 'expo'
 import AnimateLoadingButton from 'react-native-animate-loading-button';
+import { Permissions, ImagePicker } from 'expo';
+
 
 class InitialHome extends React.Component {
   constructor(props){
     super(props);
+
+
+    this.state = {
+      image: ''
+    }  
+
+
     this.redirect = this.redirect.bind(this)
+  }
+
+  async componentDidMount(){
+    const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+    if (permission.status !== 'granted') {
+      const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (newPermission.status === 'granted') {
+        console.log('just granted')
+      }
+  } else {
+      console.log('GRANTED ALREADY')
+  }
   }
 
 
@@ -20,7 +40,7 @@ class InitialHome extends React.Component {
     )
   }
 
-  _pickImage = async () => {
+  _pickImage = async () => {    
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -43,7 +63,6 @@ class InitialHome extends React.Component {
       </Text>
 
         <AnimateLoadingButton
-          ref={c => (this.loadingButton = c)}
           width={200}
           height={50}
           title="Add Affirmation"
@@ -57,11 +76,11 @@ class InitialHome extends React.Component {
         <Text style={{width: '100%', textAlign: 'center'}}>Or</Text>
 
         <AnimateLoadingButton
-          ref={c => (this.loadingButton = c)}
           width={200}
           height={50}
           title="Add Vision"
           titleFontSize={16}
+          // ef={c => (this.loadingButton = c)}
           titleColor="rgb(255,255,255)"
           backgroundColor="rgb(29,18,121)"
           borderRadius={4}
