@@ -56,7 +56,8 @@ class Home extends React.Component {
       image: '',
       isReady: false,
       imagesURLarray: [],
-      modalVisible: false
+      modalVisible: false,
+      scrollToIndex: 1
     }  
   }
 
@@ -158,7 +159,7 @@ class Home extends React.Component {
   renderItemsForModal = ({item}) => (
     <View style={{paddingBottom: 30}}>
     {item.image_url ?
-    <View>
+    <View style={{backgroundColor: 'white'}}>
       <TouchableHighlight
         id={item.id}
         onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
@@ -171,7 +172,7 @@ class Home extends React.Component {
           source={{uri: item.image_url}}
         />
       </TouchableHighlight>
-      <Text style={{color: 'white', fontSize: 20, padding: 20}}>{item.description}</Text>
+      {/* <Text style={{color: 'black', fontSize: 20, padding: 20}}>{item.description}</Text> */}
     </View>
     :
     <TouchableHighlight
@@ -180,7 +181,7 @@ class Home extends React.Component {
       underlayColor="transparent"
       activeOpacity={0}
     >
-      <View style={{height: 'auto', width: width, backgroundColor: 'white', padding: 20}}>
+      <View style={{height: width, width: width, backgroundColor: 'white', padding: 20}}>
         <Text style={{fontSize: 20}}>{item.title}</Text>
         <Text style={{fontSize: 16}}>{item.description}</Text>
       </View>
@@ -190,11 +191,11 @@ class Home extends React.Component {
 
 
 
-  renderItems = ({item}) => (
+  renderItems = ({item, index}) => (
       item.image_url ?
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.setState({modalVisible: true, topItem: item.id})}
+        onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
         activeOpacity={0}
       >
@@ -207,7 +208,7 @@ class Home extends React.Component {
       :
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.setState({modalVisible: true, topItem: item.id})}
+        onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
         activeOpacity={0}
       >
@@ -287,6 +288,8 @@ class Home extends React.Component {
 
 
   render() {
+    console.log(this.state)
+    const list = (this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})
     return (
       <DrawerComponent {...this.props}>
         {this.state.mantras.concat(this.state.visions.length) < 1 ? 
@@ -300,7 +303,7 @@ class Home extends React.Component {
           key={1}
           keyExtractor={(item, index) => index}
           numColumns={2}
-          data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
+          data={list}
           renderItem={this.renderItems}
         />,
         <Modal
@@ -324,9 +327,13 @@ class Home extends React.Component {
 
           <View style={styles.modalContentContainer}>
             <FlatList
+              getItemLayout={(data, index) => (
+                {length: width, offset: width * index, index}
+              )}
+              initialScrollIndex={this.state.scrollToIndex}
               keyExtractor={(item, index) => index}
               numColumns={1}
-              data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
+              data={list}
               renderItem={this.renderItemsForModal}
             />
           </View>
