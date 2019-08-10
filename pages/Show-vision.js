@@ -88,25 +88,6 @@ class ShowVision extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  actionButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 20,
-    marginRight: 20,
-    zIndex: 2,
-   },
-   headerContainer: {
-    width: '100%',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    flexDirection:'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 90,
-    marginBottom: 20,
-  },
 })
 
 export default ShowVision

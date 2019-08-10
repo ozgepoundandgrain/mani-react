@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Image, Modal, Dimensions, Text, ScrollView, View, TextInput } from 'react-native';
+import { StyleSheet, Image, Dimensions, ScrollView, TextInput } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
-import { DangerZone } from 'expo'
 import LoadingModal from './components/loading-modal'
 
 var {width} = Dimensions.get('window')

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Text, TextInput, View, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import LoadingModal from './loading-modal'
 
 
 const ACCESS_TOKEN = 'authentication_token'
@@ -17,8 +16,7 @@ class LoginForm extends React.Component {
       fontLoaded: false,
       persistedEmail: '',
       persistedToken: '',
-      error: '',
-      loadApp: false
+      error: ''
     }
 
     this.clearData = this.clearData.bind(this)
@@ -38,10 +36,6 @@ class LoginForm extends React.Component {
     } catch {
       console.log('could not load font')
     }
-
-    setTimeout(() => {
-      this.setState({ loadApp: true })
-    }, 4000)
   }
 
 
@@ -145,7 +139,6 @@ class LoginForm extends React.Component {
       } else {
         this.loadingButton.showLoading(false);
         let error =  res
-        this.setState({error: error})
         this.setState({ error: 'Please try again' })
         throw error
       } 
@@ -201,11 +194,7 @@ class LoginForm extends React.Component {
         onPress={this.props.onPressRedirect}
       >
         <Text style={styles.underline}>Register</Text>
-      </TouchableHighlight>,
-        <LoadingModal 
-        key={3}
-        visible={!this.state.loadApp}
-      />
+      </TouchableHighlight>
     ])
   }
 }

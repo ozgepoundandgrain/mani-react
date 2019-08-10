@@ -9,19 +9,19 @@ var {width} = Dimensions.get('window')
 const Info = ({visible}) => (
   visible &&
   <LinearGradient
-          colors={['#FD9308', '#F83953']}
-          style={{borderRadius: 3, padding: 10, margin: 10}}
-          start={[1.5, 0.9]}
-          end={[0.5, 0.9]}
-        >
-        <View>
-          <Text style={{color: 'white', fontWeight: '600', paddingBottom: 10}}>Use this space to affirm your visions into existence.</Text>
-          <Text style={{color: 'white', paddingBottom: 5}}>1. Be grateful for all that you currently have, for the magic is in the journey</Text>
-          <Text style={{color: 'white', paddingBottom: 5}}>2. Say it like your desires are already on their way to you</Text>
-          <Text style={{color: 'white', paddingBottom: 5}}>3. Describe it in such detail that you can see it, hear it, smell it</Text>
-          <Text style={{color: 'white'}}>4. Detach from the outcome</Text>
-        </View>
-        </LinearGradient>
+    colors={['#FD9308', '#F83953']}
+    style={{borderRadius: 3, padding: 10, margin: 10}}
+    start={[1.5, 0.9]}
+    end={[0.5, 0.9]}
+  >
+  <View>
+    <Text style={{color: 'white', fontWeight: '600', paddingBottom: 10}}>Use this space to affirm your visions into existence.</Text>
+    <Text style={{color: 'white', paddingBottom: 5}}>1. Be grateful for all that you currently have, for the magic is in the journey</Text>
+    <Text style={{color: 'white', paddingBottom: 5}}>2. Say it like your desires are already on their way to you</Text>
+    <Text style={{color: 'white', paddingBottom: 5}}>3. Describe it in such detail that you can see it, hear it, smell it</Text>
+    <Text style={{color: 'white'}}>4. Detach from the outcome</Text>
+  </View>
+  </LinearGradient>
 )
 
 class PostMantra extends React.Component {

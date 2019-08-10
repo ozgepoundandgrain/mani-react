@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View, StyleSheet, Text, Dimensions, ScrollView, Modal } from 'react-native';
+import { TextInput, View, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
 import ConfirmationModal from './components/confirmation-modal';
 import Header from './components/header'
 import LoadingModal from './components/loading-modal'
@@ -137,7 +137,7 @@ class EditMantra extends React.Component {
 
         </View>,
         <LoadingModal 
-        key={1}
+          key={1}
           visible={this.state.animationModalVisible}
         />
     ])
