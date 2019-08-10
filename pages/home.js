@@ -4,6 +4,7 @@ import {
   Dimensions, 
   Text,
   TouchableHighlight, 
+  Modal,
   Image, 
   AsyncStorage, 
   View, 
@@ -17,6 +18,7 @@ var {width} = Dimensions.get('window')
 
 
 import { Permissions, Notifications } from 'expo';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 async function getToken() {
@@ -53,7 +55,8 @@ class Home extends React.Component {
       index: 0,
       image: '',
       isReady: false,
-      imagesURLarray: []
+      imagesURLarray: [],
+      modalVisible: false
     }  
   }
 
@@ -135,6 +138,7 @@ class Home extends React.Component {
         description: description
       }
     )
+    this.setState({modalVisible: false})
   }
 
 
@@ -148,13 +152,49 @@ class Home extends React.Component {
         description: description
       }
     )
+    this.setState({modalVisible: false})
   }
+
+  renderItemsForModal = ({item}) => (
+    <View style={{paddingBottom: 30}}>
+    {item.image_url ?
+    <View>
+      <TouchableHighlight
+        id={item.id}
+        onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
+        underlayColor="transparent"
+        activeOpacity={0}
+      >
+        <Image 
+          key={item.id} 
+          style={{height: width, width: width}} 
+          source={{uri: item.image_url}}
+        />
+      </TouchableHighlight>
+      <Text style={{color: 'white', fontSize: 20, padding: 20}}>{item.description}</Text>
+    </View>
+    :
+    <TouchableHighlight
+      id={item.id}
+      onPress={() => this.redirect('ShowMantra', item.id, item.title, item.description)}
+      underlayColor="transparent"
+      activeOpacity={0}
+    >
+      <View style={{height: 'auto', width: width, backgroundColor: 'white', padding: 20}}>
+        <Text style={{fontSize: 20}}>{item.title}</Text>
+        <Text style={{fontSize: 16}}>{item.description}</Text>
+      </View>
+    </TouchableHighlight>}
+    </View>
+)
+
+
 
   renderItems = ({item}) => (
       item.image_url ?
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
+        onPress={() => this.setState({modalVisible: true, topItem: item.id})}
         underlayColor="transparent"
         activeOpacity={0}
       >
@@ -167,7 +207,7 @@ class Home extends React.Component {
       :
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.redirect('ShowMantra', item.id, item.title, item.description)}
+        onPress={() => this.setState({modalVisible: true, topItem: item.id})}
         underlayColor="transparent"
         activeOpacity={0}
       >
@@ -263,6 +303,34 @@ class Home extends React.Component {
           data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
           renderItem={this.renderItems}
         />,
+        <Modal
+          key={4}
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <TouchableOpacity 
+            style={styles.closeContainer}
+            onPress={() => this.setState({modalVisible: false})}
+            activeOpacity={1}
+          >
+            <Text style={styles.close}>
+                Close
+              </Text>
+          </TouchableOpacity>
+
+          <View style={styles.modalContentContainer}>
+            <FlatList
+              keyExtractor={(item, index) => index}
+              numColumns={1}
+              data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
+              renderItem={this.renderItemsForModal}
+            />
+          </View>
+      </Modal>,
         <Footer 
           key={2}
           email={this.state.email}
@@ -275,6 +343,12 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  modalContentContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    minHeight: '100%'
+  },
+  close: {color: 'white', textAlign: 'right', marginTop: 50, marginRight: 15},
+  closeContainer: {width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.8)', height: 70}
 })
 
 export default Home

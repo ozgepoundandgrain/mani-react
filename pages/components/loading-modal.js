@@ -50,6 +50,7 @@ class LoadingModal extends React.Component {
           content.map((cont, index)=> {
             return (
             <Animatable.Text 
+              key={index}
               delay={index*400} 
               animation="slideInDown" 
               iterationCount={5} 
