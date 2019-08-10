@@ -202,7 +202,7 @@ class Home extends React.Component {
       >
         <Image 
           key={item.id} 
-          style={{height: width/2, width: width/2}} 
+          style={{height: (width/2 - 4), width: (width/2 - 4)}} 
           source={{uri: item.image_url}}
         />
       </TouchableHighlight>
@@ -214,7 +214,7 @@ class Home extends React.Component {
         activeOpacity={0}
         style={{margin: 2}}
       >
-        <View style={{height: width/2, width: width/2, backgroundColor: 'pink', overflow: 'hidden', padding: 10}}>
+        <View style={{height: (width/2 - 4), width: (width/2 - 4), backgroundColor: 'pink', overflow: 'hidden', padding: 10}}>
           <Text style={{fontSize: 20}}>{item.title}</Text>
           <Text numberOfLines={6} style={{fontSize: 16}}>{item.description}</Text>
         </View>
