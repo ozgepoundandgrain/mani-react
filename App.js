@@ -1,9 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation'
 import Home from './pages/home'
-import { Text } from 'react-native';
 import Authentication from './pages/Authentication'
-import Initial from './pages/Initial'
 import PostMantra from './pages/Post-mantra'
 import PostVision from './pages/Post-vision'
 import EditMantra from './pages/Edit-mantra'
@@ -33,7 +31,6 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
      title: '',
      header: null,
-    //  header: props => <Header fontLoaded={props.fontLoaded} />,
      headerLeft: null,
      gesturesEnabled: false
    },
@@ -98,16 +95,17 @@ export default class App extends React.Component {
       console.log('could not load font')
     }
 
-    setTimeout(() => {
-      this.setState({ loadApp: true })
-    }, 3000);
   }
 
+
+
   render() {
+    console.log(this.state)
     return (
      this.state.fontLoaded &&
      <AppNavigator 
-       fontLoaded={this.state.fontLoaded}
+     key={1}
+      //  fontLoaded={this.state.fontLoaded}
        initialRouteName="PostMantra"
     />
     );

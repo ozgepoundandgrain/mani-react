@@ -155,7 +155,6 @@ class RegisterForm extends React.Component {
     }
 
   render() {
-    console.log(this.state, this.props)
     return ([
       <View style={styles.container} key={1}>
         {this.state.fontLoaded && <Text style={styles.prana}>Prana.</Text>}
@@ -187,7 +186,7 @@ class RegisterForm extends React.Component {
           autoCapitalize = 'none'
         />
 
-<AnimateLoadingButton
+        <AnimateLoadingButton
           ref={c => (this.loadingButton = c)}
           width={200}
           height={50}
@@ -198,7 +197,6 @@ class RegisterForm extends React.Component {
           borderRadius={4}
           onPress={this.register}
         />
-
       </View>,
       <TouchableHighlight
         key={2}

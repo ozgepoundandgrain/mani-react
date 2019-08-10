@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, TextInput, View, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import { Font } from 'expo';
-import InitialScreen from '../Initial'
 import AnimateLoadingButton from 'react-native-animate-loading-button';
+import LoadingModal from './loading-modal'
+
 
 const ACCESS_TOKEN = 'authentication_token'
 
@@ -16,7 +17,8 @@ class LoginForm extends React.Component {
       fontLoaded: false,
       persistedEmail: '',
       persistedToken: '',
-      error: ''
+      error: '',
+      loadApp: false
     }
 
     this.clearData = this.clearData.bind(this)
@@ -36,6 +38,10 @@ class LoginForm extends React.Component {
     } catch {
       console.log('could not load font')
     }
+
+    setTimeout(() => {
+      this.setState({ loadApp: true })
+    }, 4000)
   }
 
 
@@ -151,7 +157,6 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    console.log('LOGIN PAGE')
     return ([
       <View style={styles.container} key={1}>
         {this.state.fontLoaded && <Text style={styles.prana}>Prana.</Text>}
@@ -196,11 +201,11 @@ class LoginForm extends React.Component {
         onPress={this.props.onPressRedirect}
       >
         <Text style={styles.underline}>Register</Text>
-      </TouchableHighlight>
-          //   <InitialScreen 
-          //   key={3}
-          //   visible={this.state.animationModalVisible}
-          // />
+      </TouchableHighlight>,
+        <LoadingModal 
+        key={3}
+        visible={!this.state.loadApp}
+      />
     ])
   }
 }
