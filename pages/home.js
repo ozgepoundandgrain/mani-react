@@ -9,6 +9,7 @@ import {
   View, 
   FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
+import InitialHome from './components/initial-home.js'
 import Footer from './components/footer.js'
 
 
@@ -248,17 +249,26 @@ class Home extends React.Component {
   render() {
     return (
       <DrawerComponent {...this.props}>
-        <FlatList
+        {this.state.mantras.concat(this.state.visions.length) < 1 ? 
+        <InitialHome 
+          {...this.props}
+          email={this.state.email}
+          accessToken={this.state.accessToken}
+        />
+        :
+        [<FlatList
+          key={1}
           keyExtractor={(item, index) => index}
           numColumns={2}
           data={(this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})}
           renderItem={this.renderItems}
-        />
+        />,
         <Footer 
+          key={2}
           email={this.state.email}
           accessToken={this.state.accessToken}
           {...this.props}
-        />
+        />]}
       </DrawerComponent>
     )
   }

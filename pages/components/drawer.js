@@ -135,7 +135,7 @@ class DrawerComponent extends React.Component {
           >
             <View style={styles.overlay}>
             
-            <View style={{width: 40, height: 40, justifyContent: 'center'}}>
+            <View style={styles.headerContainer}>
             <Animated.View style={[animatedStyle]}>
               <TouchableHighlight
                 underlayColor="transparent"
@@ -148,6 +148,11 @@ class DrawerComponent extends React.Component {
                   </View>
               </TouchableHighlight>
               </Animated.View>
+
+              <Text style={styles.header}>Prana.</Text>
+
+              <Text style={styles.headerInvisible}>Prana.</Text>
+            
               </View>
 
                   {this.props.children}
@@ -164,6 +169,25 @@ const drawerStyles = {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    width: '100%', 
+    height: 40, 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginTop: 30,
+    marginBottom: 20
+  },
+  headerInvisible: {
+    color: 'transparent',
+  },
+  header: {
+    backgroundColor: "white",
+    color: 'black',
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'black',
+    fontFamily: 'Abril-Fatface',
+  },
   hamburger: {
     height: 2,
     width: 20,
@@ -171,7 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 4
   },
   hamburgerContainer: {
-    marginTop: 0,
+    marginTop: 20,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 10,

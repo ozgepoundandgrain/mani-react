@@ -12,11 +12,6 @@ import ShowMantra from './pages/Show-mantra'
 import EditVision from './pages/Edit-vision'
 import { Font } from 'expo';
 
-const Header = (fontLoaded) => {
-  return (
-    fontLoaded && <Text style={styles.header}>Prana.</Text>
-  )
-}
 
 const AppNavigator = createStackNavigator({
   Authentication: {
@@ -37,7 +32,8 @@ const AppNavigator = createStackNavigator({
     screen: props=> <Home {...props} />,
     navigationOptions: {
      title: '',
-     header: props => <Header fontLoaded={props.fontLoaded} />,
+     header: null,
+    //  header: props => <Header fontLoaded={props.fontLoaded} />,
      headerLeft: null,
      gesturesEnabled: false
    },
@@ -78,18 +74,6 @@ const AppNavigator = createStackNavigator({
     }
   }
 })
-
-const styles = {
-  header: {
-    backgroundColor: "white",
-    color: 'black',
-    fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    fontFamily: 'Abril-Fatface',
-    paddingTop: 30,
-  }
-}
 
 
 
