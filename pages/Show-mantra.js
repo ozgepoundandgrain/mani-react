@@ -43,9 +43,9 @@ class ShowMantra extends React.Component {
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditMantra')}
       />,
-      <ScrollView key={2}>
-          <Text>{this.state.title}</Text>
-        <Text>{this.state.description}</Text>
+      <ScrollView key={2} style={{padding: 20}}>
+          <Text style={{fontSize: 20, paddingBottom: 15}}>{this.state.title}</Text>
+          <Text style={{fontSize: 16}}>{this.state.description}</Text>
       </ScrollView>
     ])
   }

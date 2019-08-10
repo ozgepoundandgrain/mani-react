@@ -40,36 +40,35 @@ class LoadingModal extends React.Component {
   render() {
     return (
       <Modal
-        animationType="fade"
         transparent
         visible={this.props.visible}
       >
-      <View style={styles.animationModal}>
-      <View style={{ alignContent: 'center' }}>
-        {
-          content.map((cont, index)=> {
-            return (
-            <Animatable.Text 
-              key={index}
-              delay={index*400} 
-              animation="slideInDown" 
-              iterationCount={5} 
-              direction="alternate">
-                <Text 
-                  style={[this.state.fontLoaded && {fontFamily: 'Abril-Fatface'}, styles.text]}
-                >
-                    {cont}
-                </Text>
-              </Animatable.Text>
-            )
-          })
-        }
+        <View style={styles.animationModal}>
+        <View style={{ alignContent: 'center' }}>
+          {
+            content.map((cont, index)=> {
+              return (
+              <Animatable.Text 
+                key={index}
+                delay={index*400} 
+                animation="slideInDown" 
+                iterationCount={5} 
+                direction="alternate">
+                  <Text 
+                    style={[this.state.fontLoaded && {fontFamily: 'Abril-Fatface'}, styles.text]}
+                  >
+                      {cont}
+                  </Text>
+                </Animatable.Text>
+              )
+            })
+          }
+        </View>
       </View>
-    </View>
-  </Modal>
+    </Modal>
     )
-}
   }
+}
 
 const styles = StyleSheet.create({
     text: {

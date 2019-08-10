@@ -109,11 +109,11 @@ class Footer extends React.Component {
                 underlayColor="white"
                 activeOpacity={0}
               >
-                <Image style={{height: 20, width: 20}} source={require('../images/affirm.png')}/>
+                <Image style={{height: 29, width: 17}} source={require('../images/affirm.png')}/>
               </TouchableHighlight>
             </View>
 
-        <View>
+            <View>
               <TouchableHighlight 
               onPress={this._pickImage} 
               style={styles.addButton}
@@ -121,7 +121,7 @@ class Footer extends React.Component {
               activeOpacity={0}
             >
 
-              <Image style={{ width: 40, height: 40}} source={require('../images/eye.png')}/>
+              <Image style={{ width: 22, height: 25}} source={require('../images/visualize.png')}/>
             </TouchableHighlight>
         </View>
 

@@ -181,9 +181,9 @@ class Home extends React.Component {
       underlayColor="transparent"
       activeOpacity={0}
     >
-      <View style={{height: width, width: width, backgroundColor: 'white', padding: 20}}>
+      <View style={{height: width, width: width, backgroundColor: 'white', padding: 20, overflow: 'hidden'}}>
         <Text style={{fontSize: 20}}>{item.title}</Text>
-        <Text style={{fontSize: 16}}>{item.description}</Text>
+        <Text numberOfLines={16} style={{fontSize: 16}}>{item.description}</Text>
       </View>
     </TouchableHighlight>}
     </View>
@@ -198,6 +198,7 @@ class Home extends React.Component {
         onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
         activeOpacity={0}
+        style={{margin: 2}}
       >
         <Image 
           key={item.id} 
@@ -211,10 +212,11 @@ class Home extends React.Component {
         onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
         activeOpacity={0}
+        style={{margin: 2}}
       >
-        <View style={{height: width/2, width: width/2, backgroundColor: 'pink'}}>
-          <Text>{item.title}</Text>
-          <Text>{item.description}</Text>
+        <View style={{height: width/2, width: width/2, backgroundColor: 'pink', overflow: 'hidden', padding: 10}}>
+          <Text style={{fontSize: 20}}>{item.title}</Text>
+          <Text numberOfLines={6} style={{fontSize: 16}}>{item.description}</Text>
         </View>
       </TouchableHighlight>
   )
@@ -352,7 +354,8 @@ class Home extends React.Component {
 const styles = StyleSheet.create({
   modalContentContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    minHeight: '100%'
+    minHeight: '100%',
+    paddingBottom: 100
   },
   close: {color: 'white', textAlign: 'right', marginTop: 50, marginRight: 15},
   closeContainer: {width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.8)', height: 70}
