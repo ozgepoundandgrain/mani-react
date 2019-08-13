@@ -40,8 +40,9 @@ class ShowMantra extends React.Component {
         leftTitle=""
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditMantra')}
+        showCTA
       />,
-      <ScrollView key={2} style={{padding: 20}}>
+      <ScrollView key={2} style={styles.scrollview}>
           <Text style={{fontSize: 20, paddingBottom: 15}}>{this.state.title}</Text>
           <Text style={{fontSize: 16}}>{this.state.description}</Text>
       </ScrollView>
@@ -50,6 +51,7 @@ class ShowMantra extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  scrollview: {padding: 20, marginTop: 15}
 })
 
 export default ShowMantra

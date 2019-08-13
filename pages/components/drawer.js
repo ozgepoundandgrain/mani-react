@@ -1,8 +1,18 @@
 import React from 'react';
-import { Text, View, Animated, Easing, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, Dimensions, Platform, View, Animated, Easing, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
 import Drawer from 'react-native-drawer'
 
 const ACCESS_TOKEN = 'authentication_token';
+
+const isIphoneXorAbove = () => {
+  const dimen = Dimensions.get('window');
+  return (
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    ((dimen.height === 812 || dimen.width === 812) || (dimen.height === 896 || dimen.width === 896))
+  );
+}
 
 const drawerView = (logout) => (
   <View style={styles.outerDrawerContainer}>
@@ -195,12 +205,12 @@ const styles = StyleSheet.create({
     marginBottom: 4
   },
   hamburgerContainer: {
-    marginTop: 20,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 10,
     paddingBottom: 10,
-    width: 40
+    width: 40,
+    marginTop: isIphoneXorAbove ? 20 : 0
   },
   logoutText: {
     shadowColor: 'white',

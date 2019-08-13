@@ -1,45 +1,52 @@
 import React from 'react';
 import { 
-  Text, 
-  View, 
+  View,
   StyleSheet, 
-  Dimensions,
-  TouchableHighlight } from 'react-native';
-  
+  Dimensions } from 'react-native';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 
-var {height, width} = Dimensions.get('window')
+
+var { width } = Dimensions.get('window')
 
 class Header extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      image: ''
     }
   }
 
 
-
   render() {
     return (
-      <View  style={styles.container} >
-        <TouchableHighlight 
-          underlayColor="transparent"
-          activeOpacity={0}
-          onPress={this.props.leftTitleAction}
-          style={styles.actionButton}
-        >
-          <Text>{this.props.leftTitle}</Text>
-        </TouchableHighlight>
-        <View style={styles.CTAcontainer}>
-        <TouchableHighlight 
-          underlayColor="transparent"
-          activeOpacity={0}
-          onPress={this.props.rightTitleAction}
-          style={styles.CTAbutton}
-        >
-          <Text style={styles.CTAtext}>{this.props.rightTitle}</Text>
-        </TouchableHighlight>
+      <View  style={styles.container}>
+
+        <View style={styles.actionButton}>
+          <AnimateLoadingButton
+            width={70}
+            height={25}
+            title={this.props.leftTitle}
+            titleFontSize={16}
+            titleColor="rgb(29,18,121)"
+            backgroundColor="transparent"
+            borderRadius={4}
+            onPress={this.props.leftTitleAction}
+          />
+        </View>
+
+
+        <View style={styles.CTAbutton}>
+          {this.props.showCTA &&
+          <AnimateLoadingButton
+            width={70}
+            height={25}
+            title={this.props.rightTitle}
+            titleFontSize={16}
+            titleColor="rgb(255,255,255)"
+            backgroundColor="rgb(29,18,121)"
+            borderRadius={4}
+            onPress={this.props.rightTitleAction}
+          />}
         </View>
       </View>
     )
@@ -55,32 +62,13 @@ const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginLeft: 20,
-    marginRight: 20,
-    zIndex: 2,
-    paddingBottom: 10,
+    marginLeft: 10
    },
    CTAbutton: {
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginLeft: 20,
-    marginRight: 20,
-    zIndex: 2,
-    marginBottom: 5,
-    padding: 5,
-    borderRadius: 6,
-     backgroundColor: '#F25252',
-     height: 'auto',
-     width: 60
-   },
-   CTAcontainer: {
-    height: 100, 
-    justifyContent: 'flex-end'
-   },
-   CTAtext: {
-     color: 'white'
+    marginRight: 10
    }
-
 })
 
 export default Header

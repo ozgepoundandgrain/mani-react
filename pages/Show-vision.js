@@ -71,12 +71,13 @@ class ShowVision extends React.Component {
     console.log('SHOW', this.props)
     return ([
       <Header
+        showCTA
         key={1}
         leftTitle=""
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditVision')}
       />,
-      <ScrollView key={2}>
+      <ScrollView key={2} style={styles.scrollview}>
         <Image 
           source={{uri: this.state.image}} 
           style={{width: width, height: width}}
@@ -88,6 +89,9 @@ class ShowVision extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  scrollview: {
+    marginTop: 15
+  }
 })
 
 export default ShowVision

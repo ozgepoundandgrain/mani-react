@@ -105,14 +105,14 @@ class EditMantra extends React.Component {
           rightTitle="Save"
           rightTitleAction={() => this.submitEdit(this.state.id)} 
           leftTitleAction={() => this.setModalVisible(true)}
+          showCTA
         />
-          <ScrollView>
+          <ScrollView style={styles.scrollview}>
             <TextInput
               placeholderTextColor="black"
               editable
               onChangeText={(title) => {this.setState({title})}}
               value={this.state.title}
-              maxLength = {40}
               placeholder={this.state.title}
               style={styles.textInputTitle}
             />
@@ -168,6 +168,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f8fa',
     height: '100%',
     width: '100%'
+  },
+  scrollview: {
+    marginTop: 15
   }
 })
 

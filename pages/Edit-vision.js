@@ -120,11 +120,12 @@ class EditVision extends React.Component {
         rightTitle="Save"
         rightTitleAction={() => this.submitEdit(this.state.id)} 
         leftTitleAction={() => this.setModalVisible(true)}
+        showCTA
       />,
-      <ScrollView key={2}>
+      <ScrollView key={2} style={styles.scrollview}>
         <Image 
           source={{uri: this.props.navigation.state.params.image_url}} 
-          style={{width: width/3, height: width/3}}
+          style={{width: width/3, height: width/3, marginLeft: 15}}
         />
         <TextInput
           placeholderTextColor="black"
@@ -153,12 +154,13 @@ class EditVision extends React.Component {
 
 const styles = StyleSheet.create({
   textInputDescription: {
-    padding: 20,
+    marginLeft: 15,
+    marginRight: 15,
     color: 'black',
     fontSize: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.40)',
     height: (width === 320) ? 240 : 300,
-    width: width,
+    width: width - 30,
     fontWeight: '300'
   },
   form: {
@@ -173,16 +175,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
     zIndex: 2,
    },
-   animationModal: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.90)',
-    justifyContent: 'center',
-    alignContent: 'center',
-    textAlign: 'center',
-    height: '100%',
-    width: '100%'
-  },
   text: {
     backgroundColor: "white",
     color: 'black',
@@ -192,6 +184,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Abril-Fatface',
     paddingBottom: 40,
   },
+  scrollview: {
+    marginTop: 15
+  }
 })
 
 export default EditVision

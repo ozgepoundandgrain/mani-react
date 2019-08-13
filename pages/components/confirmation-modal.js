@@ -18,7 +18,7 @@ const ConfirmationModal = (props) => {
                 underlayColor="#F2B5A7"
                 activeOpacity={0}
               >
-                <Text style={{fontSize: 20, color: 'white', fontWeight: '400'}}>Delete</Text>
+                <Text style={{fontSize: 16, color: 'white', fontWeight: '400'}}>Delete</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 style={styles.cancelButton}
@@ -26,7 +26,7 @@ const ConfirmationModal = (props) => {
                 underlayColor="#F2B5A7"
                 activeOpacity={0}
               >
-                <Text style={{fontSize: 20, color: 'black', fontWeight: '400'}}>Cancel</Text>
+                <Text style={{fontSize: 16, color: 'black', fontWeight: '400'}}>Cancel</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -44,14 +44,14 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: 'black', 
     borderRadius: 5, 
-    padding: 15
+    padding: 5
   },
   deleteButton: {
     borderWidth: 1, 
     borderColor: '#F25252', 
     backgroundColor: '#F25252',
     borderRadius: 5, 
-    padding: 15
+    padding: 5
   },
    modalContent: {
     backgroundColor: 'rgba(255, 255, 255, 0.90)',
