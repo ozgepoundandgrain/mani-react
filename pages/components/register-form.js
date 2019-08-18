@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TextInput, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 
@@ -129,17 +129,17 @@ class RegisterForm extends React.Component {
                                 'Content-Type': 'application/json',
                               },
                               body: JSON.stringify({
-                                user:{
+                                user: {
                                   email: (this.state.email).toLowerCase(),
                                   password: this.state.password,
                                   password_confirmation: this.state.password_confirmation,
                                 }
                               })
                             });
-      let res = await response._bodyText;
+      let res = await response.json();
       if (response.status >= 200 && response.status < 300) {
-        this.storeToken(JSON.parse(res).data.user.authentication_token)
-        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
+        this.storeToken(res.data.user.authentication_token)
+        this.redirect(res.data.user.authentication_token, this.state.email, res.data.user.id)
         this.loadingButton.showLoading(false);
       } else {
         this.loadingButton.showLoading(false);
@@ -148,7 +148,8 @@ class RegisterForm extends React.Component {
           throw error;
       }
     } catch(errors) {
-      this.loadingButton.showLoading(false);
+        console.log('REGISTER', errors)
+        this.loadingButton.showLoading(false);
         this.removeToken()
         this.setState({ error: 'Oops, try again' })
       }

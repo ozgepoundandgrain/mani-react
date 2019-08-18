@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import { Permissions, ImagePicker } from 'expo';
-
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 class InitialHome extends React.Component {
   constructor(props){

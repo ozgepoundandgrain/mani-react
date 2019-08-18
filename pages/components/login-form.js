@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 
@@ -130,11 +130,11 @@ class LoginForm extends React.Component {
             password: this.state.password
         })
       })
-      let res = await response._bodyText;
+      let res = await response.json();
       if (response.status >= 200 && response.status < 300) {
-        console.log('RES', JSON.parse(res).data.user)
-        this.storeToken(JSON.parse(res).data.user.authentication_token)
-        this.redirect(JSON.parse(res).data.user.authentication_token, this.state.email, JSON.parse(res).data.user.id)
+        console.log('RES', res.data.user)
+        this.storeToken(res.data.user.authentication_token)
+        this.redirect(res.data.user.authentication_token, this.state.email, res.data.user.id)
         this.loadingButton.showLoading(false);
       } else {
         this.loadingButton.showLoading(false);

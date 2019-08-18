@@ -9,7 +9,7 @@ import {
   Text,
   Image } from 'react-native';
   import Header from './components/header'
-import { ImagePicker } from 'expo'
+  import * as ImagePicker from 'expo-image-picker';
 import LoadingModal from './components/loading-modal'
 
 var {width} = Dimensions.get('window')
@@ -32,6 +32,7 @@ class PostVision extends React.Component {
 
     this.uploadImage = this.uploadImage.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.setModalVisible = this.setModalVisible.bind(this)
     this.toggleInfo = this.toggleInfo.bind(this)
   }
 
@@ -53,6 +54,10 @@ class PostVision extends React.Component {
     )
   }
 
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
   async fetchVision(){
     try {
       let response = await fetch('https://prana-app.herokuapp.com/v1/visions/',{
@@ -64,11 +69,14 @@ class PostVision extends React.Component {
                               }
                             });
 
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
-          this.setState({visions: JSON.parse(response._bodyText).data})
+          this.setState({visions: res.data})
           this.redirect('Home')
         } else {
           let error = res;
+          this.setModalVisible(false)
+          this.setState({error: 'Oops, something went wrong. Try again!'})
           throw error;
         }
     } catch(error) {
@@ -110,7 +118,7 @@ class PostVision extends React.Component {
       },
     });
 
-    let res = await response.text();
+    let res = await response.json();
     if (response.status >= 200 && response.status < 300) {
         this.fetchVision()
     } else {
@@ -125,9 +133,6 @@ class PostVision extends React.Component {
 
   };
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

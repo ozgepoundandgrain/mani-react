@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, View, StyleSheet, Text } from 'react-native';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import * as Animatable from 'react-native-animatable';
 
 

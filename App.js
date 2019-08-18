@@ -8,8 +8,7 @@ import EditMantra from './pages/Edit-mantra'
 import ShowVision from './pages/Show-vision'
 import ShowMantra from './pages/Show-mantra'
 import EditVision from './pages/Edit-vision'
-import { Font } from 'expo';
-
+import * as Font from 'expo-font'
 
 const AppNavigator = createStackNavigator({
   Authentication: {

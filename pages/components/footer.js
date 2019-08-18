@@ -1,6 +1,8 @@
 import React from 'react';
-import { Animated, Easing, TouchableHighlight, StyleSheet, View, Image } from 'react-native';
-import { Permissions, ImagePicker } from 'expo'
+import { Animated, Easing, TouchableHighlight, StyleSheet, View, Text } from 'react-native';
+import LoadingModal from './loading-modal'
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 class Footer extends React.Component {
   constructor(props){
@@ -9,12 +11,14 @@ class Footer extends React.Component {
     this.state = {
       fadeAnim: new Animated.Value(0), 
       rotateAnim: new Animated.Value(0), 
+      modalVisible: false
     }
 
     this.redirect = this.redirect.bind(this)
     this.showOptions = this.showOptions.bind(this)
     this.rotate = this.rotate.bind(this)
     this.animate = this.animate.bind(this)
+    this.setModalVisible = this.setModalVisible.bind(this)
   }
 
   async componentDidMount(){
@@ -67,18 +71,25 @@ class Footer extends React.Component {
   }
 
   _pickImage = async () => {
+    this.setModalVisible(true)
+    
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ image: result.uri });
       this.redirect('PostVision')
+      this.setModalVisible(false)
     }
+    this.setModalVisible(false)
   }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
 
   render() {
 
@@ -93,8 +104,8 @@ class Footer extends React.Component {
     }
 
 
-    return (
-      <View style={styles.FooterContainer}> 
+    return ([
+      <View style={styles.FooterContainer} key={0}> 
 
         <View style={{flexDirection:'column'}}>
 
@@ -109,7 +120,7 @@ class Footer extends React.Component {
                 underlayColor="white"
                 activeOpacity={0}
               >
-                <Image style={{height: 29, width: 17}} source={require('../images/affirm.png')}/>
+                <Text style={{fontSize: 30}}>📿</Text>
               </TouchableHighlight>
             </View>
 
@@ -121,7 +132,7 @@ class Footer extends React.Component {
               activeOpacity={0}
             >
 
-              <Image style={{ width: 22, height: 25}} source={require('../images/visualize.png')}/>
+              <Text style={{fontSize: 30}}>🔮</Text>
             </TouchableHighlight>
         </View>
 
@@ -134,14 +145,18 @@ class Footer extends React.Component {
               underlayColor="white"
               activeOpacity={0}
             >
-              <Image style={{height: 20, width: 20}} source={require('../images/cross.png')}/>
+              <Text style={{fontSize: 40, fontWeight: '200', marginTop: -5}}>+</Text>
             </TouchableHighlight>
           </Animated.View>
 
         </View>
-       </View>
+       </View>,
+       <LoadingModal 
+       key={1}
+       visible={this.state.modalVisible}
+     />
 
-    )
+        ])
   }
 }
 
@@ -195,10 +210,6 @@ const styles = StyleSheet.create({
      alignContent: 'center',
      marginBottom: 10,
      marginRight: 10
-   },
-   image: {
-     height: 30,
-     width: 30
    }
 })
 

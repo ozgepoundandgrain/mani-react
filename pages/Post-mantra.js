@@ -44,11 +44,14 @@ class PostMantra extends React.Component {
                                 'Content-Type': 'application/json',
                               }
                             });
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
-          this.setState({mantras: JSON.parse(response._bodyText).data})
-          this.redirect('Home', JSON.parse(response._bodyText).data)
+          this.setState({mantras: res.data})
+          this.redirect('Home', res.data)
         } else {
           let error = res;
+          this.setModalVisible(true)
+          this.setState({error: 'Oops, something went wrong. Try again!'})
           throw error;
         }
     } catch(error) {
@@ -76,7 +79,7 @@ class PostMantra extends React.Component {
             })
         });
 
-        let res = await response.text();
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
             this.fetchData()
             // this.redirect('Home')

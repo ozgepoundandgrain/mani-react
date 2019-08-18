@@ -65,7 +65,7 @@ class EditVision extends React.Component {
             })
         });
 
-        let res = await response.text();
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
           this.setAnimationModalVisible(false)
           this.redirect('Home')

@@ -65,7 +65,6 @@ class EditMantra extends React.Component {
 
         let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
-            console.log('res success is: ', res);
             this.redirect('Home')
         } else {
             let errors = res;

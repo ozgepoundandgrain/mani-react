@@ -8,17 +8,18 @@ import {
   Image, 
   AsyncStorage, 
   View, 
+  TouchableOpacity,
   FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import InitialHome from './components/initial-home.js'
 import Footer from './components/footer.js'
-
+import * as Permissions from 'expo-permissions';
+import moment from 'moment'
+import { summary } from 'date-streaks';
+import { Notifications } from 'expo';
 
 var {width} = Dimensions.get('window')
 
-
-import { Permissions, Notifications } from 'expo';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 async function getToken() {
@@ -38,12 +39,9 @@ async function getToken() {
 }
 
 
-
-
 class Home extends React.Component {
   constructor(props){
     super(props);
-
     this.state = {
       email: this.props.navigation.state.params.email,
       accessToken: this.props.navigation.state.params.accessToken,
@@ -57,7 +55,8 @@ class Home extends React.Component {
       isReady: false,
       imagesURLarray: [],
       modalVisible: false,
-      scrollToIndex: 1
+      scrollToIndex: 1,
+      datesArray: []
     }  
   }
 
@@ -78,6 +77,40 @@ class Home extends React.Component {
     if (this.props.navigation.state.params.visions !== prevProps.navigation.state.params.visions) {
       this.fetchVision()
     }
+
+    // if ((this.props.navigation.state.params.visions !== prevProps.navigation.state.params.visions) &&
+    // (this.props.navigation.state.params.data !== prevProps.navigation.state.params.data))  {
+    //   let allData = this.state.mantras.concat(this.state.visions)
+
+    //   allData.map(data => {
+    //     return (
+    //       this.setState({datesArray: data.created_at})
+    //     )
+    //   })
+    //   const { datesArray } = this.state
+
+    //   console.log(summary({datesArray}))
+    // }
+  }
+
+  getDates() {
+    let allData = this.state.mantras.concat(this.state.visions)
+    let arr = []
+    allData.map(data => {
+      // this.setState({datesArray: data.created_at}) &&
+      arr.push(new Date(moment(data.created_at).format('MM-DD-YYYY')))
+
+    })
+
+    const dates = [
+      new Date('01/01/2018'),
+      new Date('01/02/2018'),
+      new Date('01/08/2018'),
+      new Date('01/09/2018')
+    ];
+
+    console.log(summary({ dates }), summary({ arr })) 
+    console.log(arr, dates) 
   }
 
   handleNotification = ({ origin, data }) => {
@@ -197,7 +230,7 @@ class Home extends React.Component {
         id={item.id}
         onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
-        activeOpacity={0}
+        activeOpacity={1}
         style={{margin: 2}}
       >
         <Image 
@@ -211,7 +244,7 @@ class Home extends React.Component {
         id={item.id}
         onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
         underlayColor="transparent"
-        activeOpacity={0}
+        activeOpacity={1}
         style={{margin: 2}}
       >
         <View style={{height: (width/2 - 4), width: (width/2 - 4), backgroundColor: '#FFEFBA', overflow: 'hidden', padding: 10}}>
@@ -231,8 +264,9 @@ class Home extends React.Component {
                                 'Content-Type': 'application/json',
                               }
                             });
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
-          this.setState({mantras: JSON.parse(response._bodyText).data})
+          this.setState({mantras: res.data})
         } else {
           let error = res;
           throw error;
@@ -253,8 +287,9 @@ class Home extends React.Component {
                               }
                             });
 
+        let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
-          this.setState({visions: JSON.parse(response._bodyText).data})
+          this.setState({visions: res.data})
         } else {
           let error = res;
           throw error;
@@ -289,8 +324,10 @@ class Home extends React.Component {
 
 
 
+
   render() {
     const list = (this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})
+    this.getDates()
     return (
       <DrawerComponent {...this.props}>
         {this.state.mantras.concat(this.state.visions.length) < 1 ? 

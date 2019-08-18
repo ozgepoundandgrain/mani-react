@@ -68,7 +68,6 @@ class ShowVision extends React.Component {
       );
     }
 
-    console.log('SHOW', this.props)
     return ([
       <Header
         showCTA
@@ -76,6 +75,7 @@ class ShowVision extends React.Component {
         leftTitle=""
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditVision')}
+        leftTitleAction={() => {}}
       />,
       <ScrollView key={2} style={styles.scrollview}>
         <Image 
