@@ -43,8 +43,8 @@ class ShowMantra extends React.Component {
         showCTA
       />,
       <ScrollView key={2} style={styles.scrollview}>
-          <Text style={{fontSize: 20, paddingBottom: 15}}>{this.state.title}</Text>
-          <Text style={{fontSize: 16}}>{this.state.description}</Text>
+          <Text style={{fontSize: 30, paddingBottom: 15}}>{this.state.title}</Text>
+          <Text style={{fontSize: 20, fontWeight: '300'}}>{this.state.description}</Text>
       </ScrollView>
     ])
   }

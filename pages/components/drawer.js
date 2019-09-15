@@ -47,6 +47,7 @@ class DrawerComponent extends React.Component {
     this.deleteToken = this.deleteToken.bind(this)
     this.handleDrawer = this.handleDrawer.bind(this)
     this.rotate = this.rotate.bind(this)
+    this.emojis = this.emojis.bind(this)
   }
 
   redirect(routeName, accessToken) {
@@ -118,6 +119,38 @@ class DrawerComponent extends React.Component {
     this.setState({isDrawerClosed: true })
   }
 
+  emojis(streaks) {
+    if (streaks === 0) {
+      return "👀"
+    } else if (streaks === 1) {
+      return "👀🔮"
+    } else if (streaks === 2) {
+      return "👀🔮💛🔥"
+    } else if (streaks === 3) {
+      return "👀🔮💛🔥🔥"
+    } else if (streaks === 4) {
+      return "🔥🔥💛"
+    } else if (streaks === 5) {
+      return "🔥💛🥰"
+    } else if (streaks === 6) {
+      return "💛🥰👑"
+    } else if (streaks === 7) {
+      return "🥰👑🔥"
+    } else if (streaks === 8) {
+      return "🔮🔥🔥"
+    } else if (streaks === 9) {
+      return "🔮🔥☘️"
+    } else if (streaks === 10) {
+      return "🔥☘️📿👁"
+    } else if (streaks > 10) {
+      return "🔥☘️📿🧿"
+    } else if (streaks > 20) {
+      return "☘️📿🧿💛"
+    } else if (streaks > 30) {
+      return "🔥🔥🔥"
+    }
+  }
+
   render() {
 
     const interpolateRotation = this.animatedValue.interpolate({
@@ -129,6 +162,8 @@ class DrawerComponent extends React.Component {
         { rotate: interpolateRotation }
       ]
     }
+
+
 
 
     return (
@@ -161,8 +196,12 @@ class DrawerComponent extends React.Component {
 
               <Text style={styles.header}>Prana.</Text>
 
-              <Text style={styles.headerInvisible}>Prana.</Text>
-            
+              <View style={styles.streaks}>
+                <Text>Streaks:</Text>
+                <Text style={{textAlign: 'center'}}>{this.emojis(this.props.streaks)}</Text>
+                <Text style={{textAlign: 'center'}}>{this.props.streaks} </Text>
+              </View>
+
               </View>
 
                   {this.props.children}
@@ -181,14 +220,18 @@ const drawerStyles = {
 const styles = StyleSheet.create({
   headerContainer: {
     width: '100%', 
-    height: 40, 
+    // height: 40, 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     marginTop: 30,
     marginBottom: 20
   },
-  headerInvisible: {
-    color: 'transparent',
+  streaks: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    // marginTop: isIphoneXorAbove ? 20 : 0
   },
   header: {
     backgroundColor: "white",

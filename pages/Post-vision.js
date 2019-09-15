@@ -165,11 +165,14 @@ class PostVision extends React.Component {
         />
         <View style={styles.imagecontainer}>
           <View>
-          <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
             <TouchableHighlight onPress={this._pickImage}>
-              <Text style={styles.editButton}>Edit</Text>
+              <View>
+                <Image style={styles.image} source={{ uri: this.state.imageURI }}/>
+                <Text style={styles.editButton}>Edit</Text>
+              </View>
             </TouchableHighlight>
           </View>
+
         </View>
 
           <View>

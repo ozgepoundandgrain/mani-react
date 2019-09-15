@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
+import { StyleSheet, Image, Dimensions, Text, ScrollView, View } from 'react-native';
 import Header from './components/header'
 import { Asset, AppLoading } from 'expo'
  
@@ -80,9 +80,9 @@ class ShowVision extends React.Component {
       <ScrollView key={2} style={styles.scrollview}>
         <Image 
           source={{uri: this.state.image}} 
-          style={{width: width, height: width}}
+          style={styles.image}
         />
-        <Text>{this.state.description}</Text>
+        <Text style={styles.text}>{this.state.description}</Text>
       </ScrollView>
     ])
   }
@@ -90,7 +90,28 @@ class ShowVision extends React.Component {
 
 const styles = StyleSheet.create({
   scrollview: {
-    marginTop: 15
+    marginTop: 15,
+  },
+  image: {
+    width: width-32, 
+    height: width-32, 
+    borderRadius: 10, 
+    margin: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  text: {
+    marginLeft: 16,
+    marginRight: 16,
+    fontSize: 20,
+    fontWeight: '300'
   }
 })
 

@@ -4,17 +4,14 @@ import {
   Dimensions, 
   Text,
   TouchableHighlight, 
-  Modal,
   Image, 
   AsyncStorage, 
   View, 
-  TouchableOpacity,
   FlatList } from 'react-native';
 import DrawerComponent from './components/drawer.js'
 import InitialHome from './components/initial-home.js'
 import Footer from './components/footer.js'
 import * as Permissions from 'expo-permissions';
-import moment from 'moment'
 import { summary } from 'date-streaks';
 import { Notifications } from 'expo';
 
@@ -77,40 +74,6 @@ class Home extends React.Component {
     if (this.props.navigation.state.params.visions !== prevProps.navigation.state.params.visions) {
       this.fetchVision()
     }
-
-    // if ((this.props.navigation.state.params.visions !== prevProps.navigation.state.params.visions) &&
-    // (this.props.navigation.state.params.data !== prevProps.navigation.state.params.data))  {
-    //   let allData = this.state.mantras.concat(this.state.visions)
-
-    //   allData.map(data => {
-    //     return (
-    //       this.setState({datesArray: data.created_at})
-    //     )
-    //   })
-    //   const { datesArray } = this.state
-
-    //   console.log(summary({datesArray}))
-    // }
-  }
-
-  getDates() {
-    let allData = this.state.mantras.concat(this.state.visions)
-    let arr = []
-    allData.map(data => {
-      // this.setState({datesArray: data.created_at}) &&
-      arr.push(new Date(moment(data.created_at).format('MM-DD-YYYY')))
-
-    })
-
-    const dates = [
-      new Date('01/01/2018'),
-      new Date('01/02/2018'),
-      new Date('01/08/2018'),
-      new Date('01/09/2018')
-    ];
-
-    console.log(summary({ dates }), summary({ arr })) 
-    console.log(arr, dates) 
   }
 
   handleNotification = ({ origin, data }) => {
@@ -189,67 +152,32 @@ class Home extends React.Component {
     this.setState({modalVisible: false})
   }
 
-  renderItemsForModal = ({item}) => (
-    <View style={{paddingBottom: 30}}>
-    {item.image_url ?
-    <View style={{backgroundColor: 'white'}}>
-      <TouchableHighlight
-        id={item.id}
-        onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
-        underlayColor="transparent"
-        activeOpacity={0}
-      >
-        <Image 
-          key={item.id} 
-          style={{height: width, width: width}} 
-          source={{uri: item.image_url}}
-        />
-      </TouchableHighlight>
-      {/* <Text style={{color: 'black', fontSize: 20, padding: 20}}>{item.description}</Text> */}
-    </View>
-    :
-    <TouchableHighlight
-      id={item.id}
-      onPress={() => this.redirect('ShowMantra', item.id, item.title, item.description)}
-      underlayColor="transparent"
-      activeOpacity={0}
-    >
-      <View style={{height: width, width: width, backgroundColor: 'white', padding: 20, overflow: 'hidden'}}>
-        <Text numberOfLines={2} style={{fontSize: 20}}>{item.title}</Text>
-        <Text numberOfLines={16} style={{fontSize: 16}}>{item.description}</Text>
-      </View>
-    </TouchableHighlight>}
-    </View>
-)
-
-
-
   renderItems = ({item, index}) => (
       item.image_url ?
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
+        onPress={() => this.redirectToImage('ShowVision', item.id, item.image_url, item.description)}
         underlayColor="transparent"
         activeOpacity={1}
-        style={{margin: 2}}
+        style={styles.boxShadow}
       >
         <Image 
           key={item.id} 
-          style={{height: (width/2 - 4), width: (width/2 - 4)}} 
+          style={{height: (width/2 - 8), width: (width/2 - 8), borderRadius: 10}} 
           source={{uri: item.image_url}}
         />
       </TouchableHighlight>
       :
       <TouchableHighlight
         id={item.id}
-        onPress={() => this.setState({modalVisible: true, topItem: item, scrollToIndex: index})}
+        onPress={() => this.redirect('ShowMantra', item.id, item.title, item.description)}
         underlayColor="transparent"
         activeOpacity={1}
-        style={{margin: 2}}
+        style={styles.boxShadow}
       >
-        <View style={{height: (width/2 - 4), width: (width/2 - 4), backgroundColor: '#FFEFBA', overflow: 'hidden', padding: 10}}>
+        <View style={styles.mantraContainer}>
           <Text numberOfLines={2} style={{fontSize: 20}}>{item.title}</Text>
-          <Text numberOfLines={6} style={{fontSize: 16}}>{item.description}</Text>
+          <Text numberOfLines={6} style={{fontSize: 20, fontWeight: '300'}}>{item.description}</Text>
         </View>
       </TouchableHighlight>
   )
@@ -322,14 +250,14 @@ class Home extends React.Component {
     }
   };
 
-
-
-
   render() {
     const list = (this.state.mantras.concat(this.state.visions)).sort(function(a,b){return new Date(a.created_at) - new Date(b.created_at)})
-    this.getDates()
+    const dates = []
+    const items = this.state.mantras.concat(this.state.visions)
+    items.map(i => dates.push(new Date(i.created_at)))
+    const currentStreak = summary({ dates }).currentStreak
     return (
-      <DrawerComponent {...this.props}>
+      <DrawerComponent {...this.props} streaks={currentStreak}>
         {this.state.mantras.concat(this.state.visions.length) < 1 ? 
         <InitialHome 
           {...this.props}
@@ -344,38 +272,6 @@ class Home extends React.Component {
           data={list}
           renderItem={this.renderItems}
         />,
-        <Modal
-          key={4}
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-        >
-          <TouchableOpacity 
-            style={styles.closeContainer}
-            onPress={() => this.setState({modalVisible: false})}
-            activeOpacity={1}
-          >
-            <Text style={styles.close}>
-                Close
-              </Text>
-          </TouchableOpacity>
-
-          <View style={styles.modalContentContainer}>
-            <FlatList
-              getItemLayout={(data, index) => (
-                {length: width, offset: width * index, index}
-              )}
-              initialScrollIndex={(this.state.scrollToIndex).toString()}
-              keyExtractor={(item, index) => `modal-list-item-${index}`}
-              numColumns={1}
-              data={list}
-              renderItem={this.renderItemsForModal}
-            />
-          </View>
-      </Modal>,
         <Footer 
           key={2}
           email={this.state.email}
@@ -394,7 +290,28 @@ const styles = StyleSheet.create({
     paddingBottom: 100
   },
   close: {color: 'white', textAlign: 'right', marginTop: 50, marginRight: 15},
-  closeContainer: {width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.8)', height: 70}
+  closeContainer: {width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.8)', height: 70},
+  boxShadow: {
+    margin: 4, 
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  mantraContainer: {
+    height: (width/2 - 8), 
+    width: (width/2 - 8), 
+    borderRadius: 10, 
+    overflow: 'hidden', 
+    padding: 10,
+    backgroundColor: 'white'
+  }
 })
 
 export default Home
