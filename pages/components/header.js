@@ -36,7 +36,6 @@ class Header extends React.Component {
 
 
         <View style={styles.CTAbutton}>
-          {this.props.showCTA &&
           <AnimateLoadingButton
             width={70}
             height={25}
@@ -45,8 +44,8 @@ class Header extends React.Component {
             titleColor="rgb(255,255,255)"
             backgroundColor="rgb(29,18,121)"
             borderRadius={4}
-            onPress={this.props.rightTitleAction}
-          />}
+            onPress={this.props.CTAactive ? this.props.rightTitleAction : () => {}}
+          />
         </View>
       </View>
     )

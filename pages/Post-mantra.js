@@ -1,7 +1,14 @@
 import React from 'react';
-import { ScrollView, View, TextInput, Dimensions, StyleSheet } from 'react-native';
+import { 
+  ScrollView, 
+  Keyboard, 
+  View, 
+  TextInput, 
+  Dimensions, 
+  StyleSheet } from 'react-native';
 import Header from './components/header'
 import LoadingModal from './components/loading-modal'
+import CarouselComponent from './components/carousel'
 
 var {width} = Dimensions.get('window')
 
@@ -100,7 +107,7 @@ class PostMantra extends React.Component {
             rightTitle="Post"
             rightTitleAction={this.submitMantra} 
             leftTitleAction={() => this.props.navigation.goBack()}
-            showCTA={!!this.state.description && !!this.state.title}
+            CTAactive={!!this.state.description && !!this.state.title}
           />
           
           <ScrollView style={styles.scrollView}>
@@ -109,7 +116,9 @@ class PostMantra extends React.Component {
               onChangeText={(val) => this.setState({ title: val})}
               placeholderTextColor="grey"
               style={styles.textInputTitle}
-              multiline={true}
+              multiline={false}
+              onSubmitEditing={() => { this.secondTextInput.focus(); }}
+              returnKeyType = { "next" }
             />
             <View>
               <TextInput 
@@ -119,8 +128,12 @@ class PostMantra extends React.Component {
                 style={styles.textInputDescription}
                 multiline={true}
                 numberOfLines={60}
+                returnKeyType = { "next" }
+                ref={(input) => { this.secondTextInput = input; }}
+                onSubmitEditing={() => Keyboard.dismiss()}
               />
             </View>
+            <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
           </ScrollView>
         </View>,
         <LoadingModal 
@@ -135,7 +148,7 @@ class PostMantra extends React.Component {
 const styles = StyleSheet.create({
   textInputTitle: {
     fontWeight: '300',
-    paddingBottom: 5,
+    padding: 10,
     marginBottom: 10,
     color: 'black',
     fontSize: 15,

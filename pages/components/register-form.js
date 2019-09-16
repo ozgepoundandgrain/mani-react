@@ -1,5 +1,11 @@
 import React from 'react';
-import { Text, View, TextInput, Image, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { 
+  Text, 
+  View, 
+  TextInput,
+  TouchableHighlight, 
+  AsyncStorage, 
+  StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
@@ -169,6 +175,8 @@ class RegisterForm extends React.Component {
           placeholderTextColor="black"
           style={styles.textInput}
           autoCapitalize = 'none'
+          onSubmitEditing={() => { this.secondTextInput.focus(); }}
+          returnKeyType = { "next" }
         />
         <TextInput 
           placeholder="Password"
@@ -177,6 +185,9 @@ class RegisterForm extends React.Component {
           placeholderTextColor="black"
           style={styles.textInput}
           autoCapitalize = 'none'
+          onSubmitEditing={() => { this.thirdTextInput.focus(); }}
+          returnKeyType = { "next" }
+          ref={(input) => { this.secondTextInput = input; }}
         />
         <TextInput 
           placeholder="Confirm Password"
@@ -185,6 +196,9 @@ class RegisterForm extends React.Component {
           placeholderTextColor="black"
           style={styles.textInput}
           autoCapitalize = 'none'
+          onSubmitEditing={this.register}
+          returnKeyType = { "next" }
+          ref={(input) => { this.thirdTextInput = input; }}
         />
 
         <AnimateLoadingButton

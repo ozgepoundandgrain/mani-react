@@ -1,8 +1,19 @@
 import React from 'react';
-import { Text, Dimensions, Platform, View, Animated, Easing, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { 
+  Text, 
+  Dimensions, 
+  Platform, 
+  View, 
+  Animated, 
+  Easing, 
+  TouchableHighlight, 
+  AsyncStorage, 
+  StyleSheet } from 'react-native';
 import Drawer from 'react-native-drawer'
+import CarouselComponent from './carousel'
 
 const ACCESS_TOKEN = 'authentication_token';
+var {width} = Dimensions.get('window')
 
 const isIphoneXorAbove = () => {
   const dimen = Dimensions.get('window');
@@ -25,7 +36,7 @@ const drawerView = (logout) => (
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableHighlight>
       <TouchableHighlight>
-        <Text style={{shadowColor: 'white'}}>Contact: info@prana.com</Text>
+        <Text style={{shadowColor: 'white', paddingLeft: 10}}>Contact: info@prana.com</Text>
       </TouchableHighlight>
     </View>
   </View>
@@ -125,13 +136,13 @@ class DrawerComponent extends React.Component {
     } else if (streaks === 1) {
       return "👀🔮"
     } else if (streaks === 2) {
-      return "👀🔮💛🔥"
+      return "👀🔮🔥"
     } else if (streaks === 3) {
-      return "👀🔮💛🔥🔥"
+      return "👀🔮💛🔥"
     } else if (streaks === 4) {
-      return "🔥🔥💛"
+      return "🔥💛"
     } else if (streaks === 5) {
-      return "🔥💛🥰"
+      return "🔥💛🧿"
     } else if (streaks === 6) {
       return "💛🥰👑"
     } else if (streaks === 7) {
@@ -169,7 +180,7 @@ class DrawerComponent extends React.Component {
     return (
       <View style={styles.pageContainer}>
         <Drawer
-          openDrawerOffset={0.4}
+          openDrawerOffset={0.3}
           closedDrawerOffset={0}
           type={"static"}
           content={drawerView(this.onLogout)}
@@ -219,12 +230,12 @@ const drawerStyles = {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    width: '100%', 
+    width: width, 
     // height: 40, 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     marginTop: 30,
-    marginBottom: 20
+    // marginBottom: 20,
   },
   streaks: {
     paddingLeft: 10,
@@ -237,6 +248,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     color: 'black',
     fontSize: 20,
+    paddingLeft: 40,
     textAlign: 'center',
     color: 'black',
     fontFamily: 'Abril-Fatface',
@@ -257,14 +269,15 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     shadowColor: 'white',
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingLeft: 10
   },
   innerDrawerContainer: {
     position: 'absolute', 
     bottom: 0, 
     left: 0, 
     marginBottom: 40, 
-    marginLeft: 20
+    // marginLeft: 20
   },
   outerDrawerContainer: {
     height: '100%'

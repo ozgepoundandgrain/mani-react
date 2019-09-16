@@ -78,10 +78,12 @@ class ShowVision extends React.Component {
         leftTitleAction={() => {}}
       />,
       <ScrollView key={2} style={styles.scrollview}>
-        <Image 
-          source={{uri: this.state.image}} 
-          style={styles.image}
-        />
+        <View style={styles.imageContainer}>
+          <Image 
+            source={{uri: this.state.image}} 
+            style={styles.image}
+          />
+        </View>
         <Text style={styles.text}>{this.state.description}</Text>
       </ScrollView>
     ])
@@ -97,6 +99,8 @@ const styles = StyleSheet.create({
     height: width-32, 
     borderRadius: 10, 
     margin: 16,
+  },
+  imageContainer: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -104,7 +108,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   text: {

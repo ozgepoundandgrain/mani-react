@@ -1,5 +1,11 @@
 import React from 'react';
-import { Text, TextInput, View, TouchableHighlight, AsyncStorage, StyleSheet } from 'react-native';
+import { 
+  Text, 
+  TextInput, 
+  View, 
+  TouchableHighlight, 
+  AsyncStorage, 
+  StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
@@ -163,6 +169,8 @@ class LoginForm extends React.Component {
           placeholderTextColor="black"
           onChangeText={(val) => this.setState({ email: val})}
           autoCapitalize = 'none'
+          onSubmitEditing={() => { this.secondTextInput.focus(); }}
+          returnKeyType = { "next" }
         />
         <TextInput 
           onChangeText={(val) => this.setState({ password: val})}
@@ -171,6 +179,9 @@ class LoginForm extends React.Component {
           style={styles.textInput}
           secureTextEntry
           autoCapitalize = 'none'
+          onSubmitEditing={this.login}
+          returnKeyType = { "next" }
+          ref={(input) => { this.secondTextInput = input; }}
         />
         <View style={{height: 57}}/>
 

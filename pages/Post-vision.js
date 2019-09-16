@@ -5,12 +5,14 @@ import {
   TextInput, 
   Dimensions,
   TouchableHighlight,
+  Keyboard,
   ScrollView,
   Text,
   Image } from 'react-native';
   import Header from './components/header'
   import * as ImagePicker from 'expo-image-picker';
 import LoadingModal from './components/loading-modal'
+import CarouselComponent from './components/carousel'
 
 var {width} = Dimensions.get('window')
 
@@ -161,7 +163,7 @@ class PostVision extends React.Component {
           rightTitle="Post"
           rightTitleAction={this.uploadImage} 
           leftTitleAction={() => this.props.navigation.goBack()}
-          showCTA={!!this.state.description && !!this.state.imageURI}
+          CTAactive={!!this.state.description && !!this.state.imageURI}
         />
         <View style={styles.imagecontainer}>
           <View>
@@ -182,8 +184,10 @@ class PostVision extends React.Component {
               placeholderTextColor="grey"
               style={styles.textInput}
               multiline={true}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
+          <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
         </ScrollView>
       </View>,
       <LoadingModal 
@@ -211,8 +215,8 @@ const styles = StyleSheet.create({
     fontWeight: '300'
   },
   image: {
-    height: width/3, 
-    width: width/3,
+    height: width/4, 
+    width: width/4,
     position: 'relative'
   },
   imagecontainer: {
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   overlay: {
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     height: '100%',
     width: '100%'
   },
