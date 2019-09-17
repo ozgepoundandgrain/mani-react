@@ -21,9 +21,12 @@ class PostMantra extends React.Component {
       description: '',
       mantras: [],
       modalVisible: false,
+      descriptionError: false,
+      titleError: false
     }
     this.submitMantra = this.submitMantra.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.submitButton = this.submitButton.bind(this)
   }
 
   redirect(routeName, data) {
@@ -38,6 +41,19 @@ class PostMantra extends React.Component {
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
+  }
+
+
+  submitButton() {
+    if (this.state.description && this.state.title) {
+      this.submitMantra()
+    } else if (!this.state.description && this.state.title) {
+      this.setState({descriptionError: true});
+    } else if (this.state.description && !this.state.title) {
+      this.setState({titleError: true})
+    } else {
+      this.setState({titleError: true, descriptionError: true})
+    }
   }
 
 
@@ -99,23 +115,24 @@ class PostMantra extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return ([
         <View style={styles.overlay} key={0}>
         
           <Header
             leftTitle="Cancel"
             rightTitle="Post"
-            rightTitleAction={this.submitMantra} 
+            rightTitleAction={this.submitButton} 
             leftTitleAction={() => this.props.navigation.goBack()}
-            CTAactive={!!this.state.description && !!this.state.title}
+            CTAactive={true}
           />
           
           <ScrollView style={styles.scrollView}>
             <TextInput 
               placeholder="Affirmation title"
-              onChangeText={(val) => this.setState({ title: val})}
+              onChangeText={(val) => this.setState({titleError: false,  title: val})}
               placeholderTextColor="grey"
-              style={styles.textInputTitle}
+              style={this.state.titleError ? styles.textInputTitleError : styles.textInputTitle}
               multiline={false}
               onSubmitEditing={() => { this.secondTextInput.focus(); }}
               returnKeyType = { "next" }
@@ -123,9 +140,9 @@ class PostMantra extends React.Component {
             <View>
               <TextInput 
                 placeholder="Affirm in detail"
-                onChangeText={(val) => this.setState({ description: val})}
+                onChangeText={(val) => this.setState({descriptionError: false, description: val})}
                 placeholderTextColor="grey"
-                style={styles.textInputDescription}
+                style={this.state.descriptionError ? styles.textInputDescriptionError : styles.textInputDescription}
                 multiline={true}
                 numberOfLines={60}
                 returnKeyType = { "next" }
@@ -168,6 +185,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: (width === 320) ? 200 : 300,
     backgroundColor: 'rgba(255, 255, 255, 1)',
+  },
+  textInputDescriptionError: {
+    fontWeight: '300',
+    padding: 20,
+    color: 'black',
+    fontSize: 15,
+    alignItems: 'center',
+    height: (width === 320) ? 200 : 300,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderColor: 'red',
+    borderWidth: 1
+  },
+  textInputTitleError: {
+    fontWeight: '300',
+    padding: 10,
+    marginBottom: 10,
+    color: 'black',
+    fontSize: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderColor: 'red',
+    borderWidth: 1
   },
   overlay: {
     height: '100%',

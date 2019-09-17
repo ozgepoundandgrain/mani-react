@@ -136,9 +136,9 @@ class DrawerComponent extends React.Component {
     } else if (streaks === 1) {
       return "👀🔮"
     } else if (streaks === 2) {
-      return "👀🔮🔥"
+      return "🔮🔥"
     } else if (streaks === 3) {
-      return "👀🔮💛🔥"
+      return "🔮💛🔥"
     } else if (streaks === 4) {
       return "🔥💛"
     } else if (streaks === 5) {
@@ -208,9 +208,8 @@ class DrawerComponent extends React.Component {
               <Text style={styles.header}>Prana.</Text>
 
               <View style={styles.streaks}>
-                <Text>Streaks:</Text>
-                <Text style={{textAlign: 'center'}}>{this.emojis(this.props.streaks)}</Text>
-                <Text style={{textAlign: 'center'}}>{this.props.streaks} </Text>
+                <Text style={{textAlign: 'center'}} >Streaks</Text>
+                <Text style={{textAlign: 'center', fontSize: 18}}>{this.props.streaks} {this.emojis(this.props.streaks)}</Text>
               </View>
 
               </View>
@@ -234,7 +233,7 @@ const styles = StyleSheet.create({
     // height: 40, 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    marginTop: 30,
+    marginTop: 40,
     // marginBottom: 20,
   },
   streaks: {

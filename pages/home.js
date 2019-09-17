@@ -18,7 +18,6 @@ import { Notifications } from 'expo';
 var {width} = Dimensions.get('window')
 
 
-
 async function getToken() {
   // Remote notifications do not work in simulators, only on device
   if (!Expo.Constants.isDevice) {
@@ -301,7 +300,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   mantraContainer: {

@@ -29,13 +29,15 @@ class PostVision extends React.Component {
       persistedVisions: [],
       animation: null,
       modalVisible: false,
-      showInfo: false
+      showInfo: false,
+      descriptionError: false
     }
 
     this.uploadImage = this.uploadImage.bind(this)
     this.redirect = this.redirect.bind(this)
     this.setModalVisible = this.setModalVisible.bind(this)
     this.toggleInfo = this.toggleInfo.bind(this)
+    this.submitButton = this.submitButton.bind(this)
   }
 
   componentWillUnmount(){
@@ -135,6 +137,14 @@ class PostVision extends React.Component {
 
   };
 
+  submitButton() {
+    if (this.state.description) {
+      this.uploadImage()
+    } else if (!this.state.description) {
+      this.setState({descriptionError: true});
+    }
+  }
+
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -157,14 +167,14 @@ class PostVision extends React.Component {
   render() {
     return ([
         <View style={styles.overlay} key={0}>
+          <Header
+            leftTitle="Cancel"
+            rightTitle="Post"
+            rightTitleAction={this.submitButton} 
+            leftTitleAction={() => this.props.navigation.goBack()}
+            CTAactive={true}
+          />
           <ScrollView style={styles.pageContainer}>
-        <Header
-          leftTitle="Cancel"
-          rightTitle="Post"
-          rightTitleAction={this.uploadImage} 
-          leftTitleAction={() => this.props.navigation.goBack()}
-          CTAactive={!!this.state.description && !!this.state.imageURI}
-        />
         <View style={styles.imagecontainer}>
           <View>
             <TouchableHighlight onPress={this._pickImage}>
@@ -180,9 +190,9 @@ class PostVision extends React.Component {
           <View>
             <TextInput 
               placeholder="Affirm in detail"
-              onChangeText={(val) => this.setState({ description: val})}
+              onChangeText={(val) => this.setState({ descriptionError: false, description: val})}
               placeholderTextColor="grey"
-              style={styles.textInput}
+              style={this.state.descriptionError ? styles.errorTextInput : styles.textInput}
               multiline={true}
               onSubmitEditing={() => Keyboard.dismiss()}
             />
@@ -206,6 +216,17 @@ const styles = StyleSheet.create({
     alignContent: 'center'
   },
   textInput: {
+    padding: 20,
+    color: 'black',
+    fontSize: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.40)',
+    height: (width === 320) ? 240 : 300,
+    width: width,
+    fontWeight: '300'
+  },
+  errorTextInput: {
+    borderColor: 'red',
+    borderWidth: 1,
     padding: 20,
     color: 'black',
     fontSize: 15,

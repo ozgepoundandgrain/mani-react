@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row', 
     justifyContent: 'space-between',
-    height: (width === 320) ? 60 : 100,
+    height: 70,
   },
   actionButton: {
     alignItems: 'center',

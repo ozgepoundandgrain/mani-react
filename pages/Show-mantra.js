@@ -33,7 +33,6 @@ class ShowMantra extends React.Component {
 
 
   render() {
-    console.log('SHOW', this.props)
     return ([
       <Header
         key={1}
