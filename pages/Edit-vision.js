@@ -19,13 +19,15 @@ class EditVision extends React.Component {
       id: this.props.navigation.state.params.visionId,
       visions: [],
       animationModalVisible: false,
-      animation: null
+      animation: null,
+      descriptionError: false
     }
 
     this.submitEdit = this.submitEdit.bind(this)
     this.submitDelete = this.submitDelete.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.submitButton = this.submitButton.bind(this)
   }
 
   setModalVisible(visible) {
@@ -105,6 +107,14 @@ class EditVision extends React.Component {
 
   }
 
+  submitButton() {
+    if (this.state.description) {
+      this.submitEdit(this.state.id)
+    } else {
+      this.setState({descriptionError: true})
+    }
+  }
+
   deleteAction(id){
     this.setModalVisible(!this.state.modalVisible)
     this.submitDelete(id)
@@ -118,9 +128,9 @@ class EditVision extends React.Component {
         key={1}
         leftTitle="Delete"
         rightTitle="Save"
-        rightTitleAction={() => this.submitEdit(this.state.id)} 
+        rightTitleAction={this.submitButton} 
         leftTitleAction={() => this.setModalVisible(true)}
-        showCTA
+        CTAactive
       />,
       <ScrollView key={2} style={styles.scrollview}>
         <Image 
@@ -130,11 +140,11 @@ class EditVision extends React.Component {
         <TextInput
           placeholderTextColor="black"
           editable
-          onChangeText={(description) => {this.setState({description})}}
+          onChangeText={(description) => {this.setState({description, descriptionError: false})}}
           value={this.state.description}
           multiline
           placeholder={this.state.description}
-          style={styles.textInputDescription}
+          style={this.state.descriptionError ? styles.errorState : styles.textInputDescription}
         />
       </ScrollView>,
       <ConfirmationModal
@@ -162,6 +172,18 @@ const styles = StyleSheet.create({
     height: (width === 320) ? 240 : 300,
     width: width - 30,
     fontWeight: '300'
+  },
+  errorState: {
+    marginLeft: 15,
+    marginRight: 15,
+    color: 'black',
+    fontSize: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.40)',
+    height: (width === 320) ? 240 : 300,
+    width: width - 30,
+    fontWeight: '300',
+    borderColor: 'red',
+    borderWidth: 1,
   },
   form: {
     flexDirection: 'row',

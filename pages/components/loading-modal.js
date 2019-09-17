@@ -52,7 +52,7 @@ class LoadingModal extends React.Component {
                 key={index}
                 delay={index*400} 
                 animation="slideInDown" 
-                iterationCount={5} 
+                iterationCount={15} 
                 direction="alternate">
                   <Text 
                     style={[this.state.fontLoaded && {fontFamily: 'Abril-Fatface'}, styles.text]}

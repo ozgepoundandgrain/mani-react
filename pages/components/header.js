@@ -44,7 +44,7 @@ class Header extends React.Component {
             titleColor="rgb(255,255,255)"
             backgroundColor="rgb(29,18,121)"
             borderRadius={4}
-            onPress={this.props.CTAactive ? this.props.rightTitleAction : () => {}}
+            onPress={this.props.rightTitleAction}
           />
         </View>
       </View>

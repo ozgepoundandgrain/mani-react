@@ -76,6 +76,7 @@ class ShowVision extends React.Component {
         rightTitle="Edit"
         rightTitleAction={() => this.redirect('EditVision')}
         leftTitleAction={() => {}}
+        CTAactive={true}
       />,
       <ScrollView key={2} style={styles.scrollview}>
         <View style={styles.imageContainer}>

@@ -24,6 +24,7 @@ class EditMantra extends React.Component {
     this.submitEdit = this.submitEdit.bind(this)
     this.submitDelete = this.submitDelete.bind(this)
     this.deleteAction = this.deleteAction.bind(this)
+    this.submitButton = this.submitButton.bind(this)
   }
 
   setModalVisible(visible) {
@@ -42,6 +43,18 @@ class EditMantra extends React.Component {
         data: this.state.data
       }
     )
+  }
+
+  submitButton() {
+    if (this.state.title && this.state.description) {
+      this.submitEdit(this.state.id)
+    } else if (!this.state.title && this.state.description) {
+      this.setState({titleError: true})
+    } else if (this.state.title && !this.state.description) {
+      this.setState({descriptionError: true})
+    } else {
+      this.setState({descriptionError: true, titleError: true})
+    }
   }
 
 
@@ -102,28 +115,28 @@ class EditMantra extends React.Component {
         <Header
           leftTitle="Delete"
           rightTitle="Save"
-          rightTitleAction={() => this.submitEdit(this.state.id)} 
+          rightTitleAction={this.submitButton} 
           leftTitleAction={() => this.setModalVisible(true)}
-          showCTA
+          CTAactive
         />
           <ScrollView style={styles.scrollview}>
             <TextInput
               placeholderTextColor="black"
               editable
-              onChangeText={(title) => {this.setState({title})}}
+              onChangeText={(title) => {this.setState({title, titleError: false})}}
               value={this.state.title}
               placeholder={this.state.title}
-              style={styles.textInputTitle}
+              style={this.state.titleError ? styles.titleErrorState : styles.textInputTitle}
             />
 
             <TextInput
               placeholderTextColor="black"
-              onChangeText={(description) => {this.setState({description})}}
+              onChangeText={(description) => {this.setState({description, descriptionError: false})}}
               value={this.state.description}
               multiline
               editable
               numberOfLines = {60}
-              style={styles.textInputDescription}
+              style={this.state.descriptionError ? styles.descriptionErrorState: styles.textInputDescription}
               placeholder={this.state.description}
             />
           </ScrollView>
@@ -133,7 +146,6 @@ class EditMantra extends React.Component {
             onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
             onPressDelete={() => this.deleteAction(this.state.id)}
           />
-
         </View>,
         <LoadingModal 
           key={1}
@@ -153,6 +165,29 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingLeft: 20,
     fontWeight: '300'
+  },
+  titleErrorState: {
+    padding: 5,
+    marginBottom: 10,
+    color: 'black',
+    fontSize: 15,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingLeft: 20,
+    fontWeight: '300',
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  descriptionErrorState: {
+    padding: 20,
+    color: 'black',
+    fontSize: 15,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    height: (width === 320) ? 200 : 300,
+    fontWeight: '300',
+    borderColor: 'red',
+    borderWidth: 1,
   },
   textInputDescription: {
     padding: 20,
