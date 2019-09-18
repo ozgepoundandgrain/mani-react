@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'space-between',
     height: 70,
+    backgroundColor: 'white'
   },
   actionButton: {
     alignItems: 'center',

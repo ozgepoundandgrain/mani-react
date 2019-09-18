@@ -93,7 +93,8 @@ class ShowVision extends React.Component {
 
 const styles = StyleSheet.create({
   scrollview: {
-    marginTop: 15,
+    paddingTop: 15,
+    backgroundColor: 'white'
   },
   image: {
     width: width-32, 

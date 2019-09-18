@@ -50,7 +50,7 @@ class ShowMantra extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  scrollview: {padding: 20, marginTop: 15}
+  scrollview: {padding: 20, paddingTop: 15, backgroundColor: 'white'}
 })
 
 export default ShowMantra

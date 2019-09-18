@@ -10,7 +10,6 @@ import {
   AsyncStorage, 
   StyleSheet } from 'react-native';
 import Drawer from 'react-native-drawer'
-import CarouselComponent from './carousel'
 
 const ACCESS_TOKEN = 'authentication_token';
 var {width} = Dimensions.get('window')
@@ -213,8 +212,7 @@ class DrawerComponent extends React.Component {
               </View>
 
               </View>
-
-                  {this.props.children}
+                {this.props.children}
               </View>
 
         </Drawer> 
@@ -230,24 +228,20 @@ const drawerStyles = {
 const styles = StyleSheet.create({
   headerContainer: {
     width: width, 
-    // height: 40, 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    height: 60,
     marginTop: 40,
-    // marginBottom: 20,
+    position: 'relative',
   },
   streaks: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingRight: 5,
     paddingTop: 10,
     paddingBottom: 10,
-    // marginTop: isIphoneXorAbove ? 20 : 0
+    position: 'absolute',
+    right: 0
   },
   header: {
-    backgroundColor: "white",
     color: 'black',
     fontSize: 20,
-    paddingLeft: 40,
     textAlign: 'center',
     color: 'black',
     fontFamily: 'Abril-Fatface',
@@ -264,6 +258,8 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     width: 40,
+    position: 'absolute',
+    left: 0,
     marginTop: isIphoneXorAbove ? 20 : 0
   },
   logoutText: {
@@ -276,7 +272,6 @@ const styles = StyleSheet.create({
     bottom: 0, 
     left: 0, 
     marginBottom: 40, 
-    // marginLeft: 20
   },
   outerDrawerContainer: {
     height: '100%'
