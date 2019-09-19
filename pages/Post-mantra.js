@@ -115,12 +115,10 @@ class PostMantra extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return ([
         <View style={styles.overlay} key={0}>
-        
           <Header
-            leftTitle="Cancel"
+            leftTitle=""
             rightTitle="Post"
             rightTitleAction={this.submitButton} 
             leftTitleAction={() => this.props.navigation.goBack()}
@@ -131,7 +129,7 @@ class PostMantra extends React.Component {
             <TextInput 
               placeholder="Affirmation title"
               onChangeText={(val) => this.setState({titleError: false,  title: val})}
-              placeholderTextColor="grey"
+              placeholderTextColor="black"
               style={this.state.titleError ? styles.textInputTitleError : styles.textInputTitle}
               multiline={false}
               onSubmitEditing={() => { this.secondTextInput.focus(); }}
@@ -139,9 +137,9 @@ class PostMantra extends React.Component {
             />
             <View>
               <TextInput 
-                placeholder="Affirm in detail"
+                placeholder="Affirm in as much detail as possible. Smell it, taste, hear it, feel it."
                 onChangeText={(val) => this.setState({descriptionError: false, description: val})}
-                placeholderTextColor="grey"
+                placeholderTextColor="black"
                 style={this.state.descriptionError ? styles.textInputDescriptionError : styles.textInputDescription}
                 multiline={true}
                 numberOfLines={60}
@@ -154,9 +152,9 @@ class PostMantra extends React.Component {
           </ScrollView>
         </View>,
         <LoadingModal 
-        key={1}
-        visible={this.state.modalVisible}
-      />
+          key={1}
+          visible={this.state.modalVisible}
+        />
     ]);
   }
 }
@@ -168,11 +166,15 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     paddingLeft: 20,
     paddingRight: 20,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   scrollView: {
     marginTop: 15
@@ -181,38 +183,47 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     padding: 20,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    height: (width === 320) ? 200 : 300,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    height: (width === 320) ? 200 : 280,
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   textInputDescriptionError: {
     fontWeight: '300',
     padding: 20,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    height: (width === 320) ? 200 : 300,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    height: (width === 320) ? 200 : 280,
     borderColor: 'red',
-    borderWidth: 1
+    borderWidth: 1,
+    backgroundColor: '#F6F6F6',
+    marginLeft: 15,
+    marginRight: 15,
   },
   textInputTitleError: {
     fontWeight: '300',
     padding: 10,
     marginBottom: 10,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     paddingLeft: 20,
     paddingRight: 20,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
     borderColor: 'red',
-    borderWidth: 1
+    borderWidth: 1,
+    backgroundColor: '#F6F6F6',
+    marginLeft: 15,
+    marginRight: 15,
   },
   overlay: {
     height: '100%',
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'white'
   }
 })
 

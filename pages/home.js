@@ -176,7 +176,7 @@ class Home extends React.Component {
       >
         <View style={styles.mantraContainer}>
           <Text numberOfLines={2} style={{fontSize: 20}}>{item.title}</Text>
-          <Text numberOfLines={6} style={{fontSize: 16, fontWeight: '300'}}>{item.description}</Text>
+          <Text numberOfLines={8} style={{fontSize: 16, fontWeight: '300'}}>{item.description}</Text>
         </View>
       </TouchableHighlight>
   )

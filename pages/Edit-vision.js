@@ -69,7 +69,6 @@ class EditVision extends React.Component {
 
         let res = await response.json();
         if (response.status >= 200 && response.status < 300) {
-          this.setAnimationModalVisible(false)
           this.redirect('Home')
         } else {
             let errors = res;
@@ -122,7 +121,6 @@ class EditVision extends React.Component {
   }
 
   render() {
-    console.log('EDIT', this.state)
     return ([
       <Header
         key={1}
@@ -167,23 +165,27 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     color: 'black',
-    fontSize: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: (width === 320) ? 240 : 300,
+    fontSize: 20,
+    height: (width === 320) ? 240 : 280,
     width: width - 30,
-    fontWeight: '300'
+    fontWeight: '300',
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    padding: 20,
   },
   errorState: {
     marginLeft: 15,
     marginRight: 15,
     color: 'black',
-    fontSize: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: (width === 320) ? 240 : 300,
+    fontSize: 20,
+    backgroundColor: '#F6F6F6',
+    height: (width === 320) ? 240 : 280,
     width: width - 30,
     fontWeight: '300',
     borderColor: 'red',
     borderWidth: 1,
+    padding: 20,
   },
   form: {
     flexDirection: 'row',
@@ -207,7 +209,8 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   scrollview: {
-    marginTop: 15
+    paddingTop: 30,
+    backgroundColor: 'white'
   }
 })
 

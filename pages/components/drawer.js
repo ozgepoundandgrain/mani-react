@@ -191,18 +191,21 @@ class DrawerComponent extends React.Component {
             <View style={styles.overlay}>
             
             <View style={styles.headerContainer}>
-            <Animated.View style={[animatedStyle]}>
+
+            
               <TouchableHighlight
                 underlayColor="transparent"
                 activeOpacity={0}
                 onPress={this.handleDrawer}
+                style={styles.hamburgerContainer}
               >
-                  <View style={styles.hamburgerContainer}>
+                <Animated.View style={[animatedStyle]}>
+                  <View>
                     <View style={styles.hamburger}></View>
                     <View style={styles.hamburger}></View>
                   </View>
+                </Animated.View>
               </TouchableHighlight>
-              </Animated.View>
 
               <Text style={styles.header}>Prana.</Text>
 

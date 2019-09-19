@@ -109,7 +109,6 @@ class EditMantra extends React.Component {
 
 
   render() {
-    console.log(this.state, this.props)
     return ([
         <View style={styles.overlay} key={0}>
         <Header
@@ -160,46 +159,58 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
     paddingLeft: 20,
-    fontWeight: '300'
+    fontWeight: '300',
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   titleErrorState: {
     padding: 5,
     marginBottom: 10,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#F6F6F6',
     paddingLeft: 20,
     fontWeight: '300',
     borderColor: 'red',
     borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   descriptionErrorState: {
     padding: 20,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
-    height: (width === 320) ? 200 : 300,
+    backgroundColor: '#F6F6F6',
+    height: (width === 320) ? 200 : 280,
     fontWeight: '300',
     borderColor: 'red',
     borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   textInputDescription: {
     padding: 20,
     color: 'black',
-    fontSize: 15,
+    fontSize: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
-    height: (width === 320) ? 200 : 300,
-    fontWeight: '300'
+    height: (width === 320) ? 200 : 280,
+    fontWeight: '300',
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   overlay: {
-    backgroundColor: '#f6f8fa',
+    backgroundColor: 'white',
     height: '100%',
     width: '100%'
   },

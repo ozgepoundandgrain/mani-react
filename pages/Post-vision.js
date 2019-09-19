@@ -168,7 +168,7 @@ class PostVision extends React.Component {
     return ([
         <View style={styles.overlay} key={0}>
           <Header
-            leftTitle="Cancel"
+            leftTitle=""
             rightTitle="Post"
             rightTitleAction={this.submitButton} 
             leftTitleAction={() => this.props.navigation.goBack()}
@@ -189,9 +189,9 @@ class PostVision extends React.Component {
 
           <View>
             <TextInput 
-              placeholder="Affirm in detail"
+              placeholder="Affirm in as much detail as possible. Smell it, taste, hear it, feel it."
               onChangeText={(val) => this.setState({ descriptionError: false, description: val})}
-              placeholderTextColor="grey"
+              placeholderTextColor="black"
               style={this.state.descriptionError ? styles.errorTextInput : styles.textInput}
               multiline={true}
               onSubmitEditing={() => Keyboard.dismiss()}
@@ -218,22 +218,28 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 20,
     color: 'black',
-    fontSize: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: (width === 320) ? 240 : 300,
-    width: width,
-    fontWeight: '300'
+    fontSize: 20,
+    height: (width === 320) ? 240 : 280,
+    width: width-30,
+    fontWeight: '300',
+    backgroundColor: '#F6F6F6',
+    borderColor: '#F6F6F6',
+    borderWidth: 1,
+    marginLeft: 15,
+    marginRight: 15,
   },
   errorTextInput: {
     borderColor: 'red',
     borderWidth: 1,
     padding: 20,
     color: 'black',
-    fontSize: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.40)',
-    height: (width === 320) ? 240 : 300,
-    width: width,
-    fontWeight: '300'
+    fontSize: 20,
+    backgroundColor: '#F6F6F6',
+    height: (width === 320) ? 240 : 280,
+    width: width-30,
+    fontWeight: '300',
+    marginLeft: 15,
+    marginRight: 15,
   },
   image: {
     height: width/4, 
@@ -246,7 +252,7 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   overlay: {
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     height: '100%',
     width: '100%'
   },
