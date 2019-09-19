@@ -67,7 +67,7 @@ class EditVision extends React.Component {
             })
         });
 
-        let res = await response.json();
+        let res = await response.text();
         if (response.status >= 200 && response.status < 300) {
           this.redirect('Home')
         } else {
