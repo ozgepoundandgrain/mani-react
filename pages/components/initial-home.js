@@ -68,7 +68,7 @@ class InitialHome extends React.Component {
           title="Add Affirmation"
           titleFontSize={16}
           titleColor="rgb(255,255,255)"
-          backgroundColor="rgb(29,18,121)"
+          backgroundColor="#542B52"
           borderRadius={4}
           onPress={() => this.redirect('PostMantra')} 
         />
@@ -82,7 +82,7 @@ class InitialHome extends React.Component {
           titleFontSize={16}
           // ef={c => (this.loadingButton = c)}
           titleColor="rgb(255,255,255)"
-          backgroundColor="rgb(29,18,121)"
+          backgroundColor="#542B52"
           borderRadius={4}
           onPress={this._pickImage} 
         />

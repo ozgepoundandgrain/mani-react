@@ -12,7 +12,6 @@ import {
   import Header from './components/header'
   import * as ImagePicker from 'expo-image-picker';
 import LoadingModal from './components/loading-modal'
-import CarouselComponent from './components/carousel'
 
 var {width} = Dimensions.get('window')
 
@@ -197,7 +196,6 @@ class PostVision extends React.Component {
               onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
-          <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
         </ScrollView>
       </View>,
       <LoadingModal 

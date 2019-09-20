@@ -4,10 +4,12 @@ import {
   Dimensions, 
   Text,
   TouchableHighlight, 
+  ScrollView,
   Image, 
   AsyncStorage, 
   View, 
   FlatList } from 'react-native';
+import CarouselComponent from './components/carousel'
 import DrawerComponent from './components/drawer.js'
 import InitialHome from './components/initial-home.js'
 import Footer from './components/footer.js'
@@ -258,19 +260,29 @@ class Home extends React.Component {
     return (
       <DrawerComponent {...this.props} streaks={currentStreak}>
         {this.state.mantras.concat(this.state.visions.length) < 1 ? 
+        <ScrollView>
         <InitialHome 
           {...this.props}
           email={this.state.email}
           accessToken={this.state.accessToken}
         />
+        <View style={{marginTop: 50}}>
+          <CarouselComponent style={{marginTop: 50}} sliderWidth={width} itemWidth={width-100}/>
+        </View>
+        </ScrollView>
         :
-        [<FlatList
+        [
+        <ScrollView style={{paddingBottom: 100}}>
+        <FlatList
           key={1}
           keyExtractor={(item, index) => `list-item-${index}`}
-          numColumns={2}
+          numColumns={2} 
           data={list}
           renderItem={this.renderItems}
-        />,
+        />
+        <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
+        </ScrollView>
+        ,
         <Footer 
           key={2}
           email={this.state.email}

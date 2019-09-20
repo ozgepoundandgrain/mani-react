@@ -69,8 +69,8 @@ class CarouselComponent extends React.Component {
         <Text 
           style={styles.text}
           adjustsFontSizeToFit={true}
-          numberOfLines={10}
-          minimumFontScale={0.01}
+          numberOfLines={100}
+          minimumFontScale={0.1}
         >
           {item.copy}
         </Text>
@@ -87,7 +87,7 @@ class CarouselComponent extends React.Component {
         renderItem={this._renderItem}
         sliderWidth={this.props.sliderWidth}
         itemWidth={this.props.itemWidth}
-        layout={"stack"}
+        layout={'default'}
         onSnapToItem={(index) => this.setState({ activeSlide: index }) }
       />
       </View>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    height: 200,
+    height: 350,
     elevation: 5,
     backgroundColor: '#1D8ECE'
   },

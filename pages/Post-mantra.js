@@ -8,7 +8,6 @@ import {
   StyleSheet } from 'react-native';
 import Header from './components/header'
 import LoadingModal from './components/loading-modal'
-import CarouselComponent from './components/carousel'
 
 var {width} = Dimensions.get('window')
 
@@ -148,7 +147,6 @@ class PostMantra extends React.Component {
                 onSubmitEditing={() => Keyboard.dismiss()}
               />
             </View>
-            <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
           </ScrollView>
         </View>,
         <LoadingModal 

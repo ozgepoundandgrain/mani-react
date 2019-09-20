@@ -208,7 +208,7 @@ class RegisterForm extends React.Component {
           title="Register"
           titleFontSize={16}
           titleColor="rgb(255,255,255)"
-          backgroundColor="rgb(29,18,121)"
+          backgroundColor="#542B52"
           borderRadius={4}
           onPress={this.register}
         />

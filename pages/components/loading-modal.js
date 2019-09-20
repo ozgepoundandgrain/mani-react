@@ -1,7 +1,8 @@
 import React from 'react';
-import { Modal, View, StyleSheet, Text } from 'react-native';
+import { Modal, View, StyleSheet, Text, Image } from 'react-native';
 import * as Font from 'expo-font';
 import * as Animatable from 'react-native-animatable';
+import IMAGE from './logo.png'
 
 
 const content = [
@@ -40,9 +41,13 @@ class LoadingModal extends React.Component {
   render() {
     return (
       <Modal
-        transparent
+        // transparent 
         visible={this.props.visible}
       >
+        <Image     
+          source={IMAGE} 
+          style={{width: 100.5, height: 56.25, alignSelf: 'center', marginTop: 70}} 
+        />
         <View style={styles.animationModal}>
         <View style={{ alignContent: 'center' }}>
           {
