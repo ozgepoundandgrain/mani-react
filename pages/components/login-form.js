@@ -166,7 +166,7 @@ class LoginForm extends React.Component {
         <TextInput 
           placeholder="Email"
           style={styles.textInput}
-          placeholderTextColor="black"
+          placeholderTextColor="white"
           onChangeText={(val) => this.setState({ email: val})}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.secondTextInput.focus(); }}
@@ -175,7 +175,7 @@ class LoginForm extends React.Component {
         <TextInput 
           onChangeText={(val) => this.setState({ password: val})}
           placeholder="Password"
-          placeholderTextColor="black"
+          placeholderTextColor="white"
           style={styles.textInput}
           secureTextEntry
           autoCapitalize = 'none'
@@ -191,21 +191,27 @@ class LoginForm extends React.Component {
           height={50}
           title="Login"
           titleFontSize={16}
-          titleColor="rgb(255,255,255)"
-          backgroundColor="#542B52"
-          borderRadius={4}
+          titleColor="#FBCDCF"
+          backgroundColor="white"
+          borderRadius={25}
           onPress={this.login}
         />
       </View>,
-      <TouchableHighlight
+      <View
         key={2}
-        underlayColor="transparent"
-        activeOpacity={0}
         style={styles.redirectButton}
-        onPress={this.props.onPressRedirect}
       >
-        <Text style={styles.underline}>Register</Text>
-      </TouchableHighlight>
+        <AnimateLoadingButton
+          width={240}
+          height={30}
+          title="Don't have an account?"
+          titleFontSize={16}
+          titleColor="#F39D00"
+          backgroundColor="white"
+          borderRadius={25}
+          onPress={this.props.onPressRedirect}
+        />
+      </View>
     ])
   }
 }
@@ -214,12 +220,12 @@ const styles = StyleSheet.create({
   prana: {
     fontSize: 20,
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     fontFamily: 'Abril-Fatface'
   },
   title: {
    fontSize: 30,
-   color: 'black',
+   color: 'white',
    textAlign: 'center',
    paddingBottom: '15%',
    fontFamily: 'Abril-Fatface',
@@ -250,11 +256,11 @@ const styles = StyleSheet.create({
   },
   redirectButton: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
   },
   underline: {
     textDecorationLine: 'underline',
-    color: 'black',
+    color: 'white',
     marginBottom: '10%'
   },
   image: {width: 30, height: 10}

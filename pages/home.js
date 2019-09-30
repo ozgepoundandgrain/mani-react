@@ -272,15 +272,14 @@ class Home extends React.Component {
         </ScrollView>
         :
         [
-        <ScrollView style={{paddingBottom: 100}}>
+        <ScrollView key={0} style={{paddingBottom: 100}}>
         <FlatList
-          key={1}
           keyExtractor={(item, index) => `list-item-${index}`}
           numColumns={2} 
           data={list}
           renderItem={this.renderItems}
         />
-        <CarouselComponent sliderWidth={width} itemWidth={width-100}/>
+        {/* <CarouselComponent sliderWidth={width} itemWidth={width-100}/> */}
         </ScrollView>
         ,
         <Footer 

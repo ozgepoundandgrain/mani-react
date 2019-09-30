@@ -5,7 +5,7 @@ import {
 import LoginForm from './components/login-form'
 import RegisterForm from './components/register-form'
 import LoadingModal from './components/loading-modal';
-
+import { LinearGradient } from 'expo-linear-gradient';
 
 class Authentication extends React.Component {
   constructor(props) {
@@ -33,6 +33,8 @@ class Authentication extends React.Component {
 
   render() {
     return ([
+      
+    <LinearGradient key={2} colors={['#B8BCF1', '#FBCDCF', '#FDE8C3']} style={{height: '100%'}}>
       <ScrollView key={1} contentContainerStyle={styles.OuterContainer} key="0">
       {this.state.showLogin ?
         <LoginForm
@@ -44,12 +46,14 @@ class Authentication extends React.Component {
           {...this.props}
           onPressRedirect={this.changeForm}
         />}
-      </ScrollView>,
+        </ScrollView>
+        </LinearGradient>
+      ,
       <LoadingModal 
         key={3}
         visible={!this.state.loadApp}
       />
-    
+
       ])
   }
 }
@@ -57,10 +61,10 @@ class Authentication extends React.Component {
 const styles = StyleSheet.create({
   OuterContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: '10%'
+    paddingTop: '10%',
+    backgroundColor: 'transparent'
   }
 });
 

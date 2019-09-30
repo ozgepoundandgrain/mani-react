@@ -3,6 +3,7 @@ import { Modal, View, StyleSheet, Text, Image } from 'react-native';
 import * as Font from 'expo-font';
 import * as Animatable from 'react-native-animatable';
 import IMAGE from './logo.png'
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 const content = [
@@ -44,6 +45,7 @@ class LoadingModal extends React.Component {
         // transparent 
         visible={this.props.visible}
       >
+        <LinearGradient key={2} colors={['#B8BCF1', '#FBCDCF', '#FDE8C3']} style={{height: '100%'}}>
         <Image     
           source={IMAGE} 
           style={{width: 100.5, height: 56.25, alignSelf: 'center', marginTop: 70}} 
@@ -70,6 +72,7 @@ class LoadingModal extends React.Component {
           }
         </View>
       </View>
+      </LinearGradient>
     </Modal>
     )
   }
@@ -81,18 +84,14 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 30,
         textAlign: 'center',
-        color: 'black',
+        color: 'white',
         paddingBottom: 40
       },
       animationModal: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 1)',
         justifyContent: 'center',
         alignContent: 'center',
-        textAlign: 'center',
-        height: '100%',
-        width: '100%'
       }
 })
 

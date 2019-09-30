@@ -172,7 +172,7 @@ class RegisterForm extends React.Component {
         <TextInput 
           placeholder="Email"
           onChangeText={(val) => this.setState({ email: val})}
-          placeholderTextColor="black"
+          placeholderTextColor="white"
           style={styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.secondTextInput.focus(); }}
@@ -182,7 +182,7 @@ class RegisterForm extends React.Component {
           placeholder="Password"
           onChangeText={(val) => this.setState({ password: val})}
           secureTextEntry
-          placeholderTextColor="black"
+          placeholderTextColor="white"
           style={styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.thirdTextInput.focus(); }}
@@ -193,7 +193,7 @@ class RegisterForm extends React.Component {
           placeholder="Confirm Password"
           onChangeText={(val) => this.setState({ password_confirmation: val})}
           secureTextEntry
-          placeholderTextColor="black"
+          placeholderTextColor="white"
           style={styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={this.register}
@@ -207,21 +207,27 @@ class RegisterForm extends React.Component {
           height={50}
           title="Register"
           titleFontSize={16}
-          titleColor="rgb(255,255,255)"
-          backgroundColor="#542B52"
-          borderRadius={4}
+          titleColor="#FBCDCF"
+          backgroundColor="white"
+          borderRadius={25}
           onPress={this.register}
         />
       </View>,
-      <TouchableHighlight
+      <View
         key={2}
-        underlayColor="transparent"
-        activeOpacity={0}
         style={styles.redirectButton}
-        onPress={this.props.onPressRedirect}
       >
-        <Text style={styles.underline}>Login</Text>
-      </TouchableHighlight>
+        <AnimateLoadingButton
+          width={240}
+          height={30}
+          title="Already have an account?"
+          titleFontSize={16}
+          titleColor="#F39D00"
+          backgroundColor="white"
+          borderRadius={25}
+          onPress={this.props.onPressRedirect}
+        />
+      </View>
     
     ])
   }
@@ -231,19 +237,19 @@ const styles = StyleSheet.create({
   prana: {
     fontSize: 20,
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     fontFamily: 'Abril-Fatface'
   },
   title: {
    fontSize: 30,
-   color: 'black',
+   color: 'white',
    textAlign: 'center',
    paddingBottom: '15%',
    fontFamily: 'Abril-Fatface'
   },
   textInput: {
     marginBottom: 40,
-    color: 'black',
+    color: 'white',
     alignItems: 'center',
     textAlign: 'center'
   },
@@ -258,7 +264,7 @@ const styles = StyleSheet.create({
     height: 50
   },
   buttonText: {
-    color: 'black'
+    color: 'white'
   },
   error: {
     color: 'red',
@@ -268,17 +274,12 @@ const styles = StyleSheet.create({
   },
   redirect: {
     marginTop: '50%',
-    color: 'black',
+    color: 'white',
     fontSize: 20
   },
   redirectButton: {
     position: 'absolute',
-    bottom: 0
-  },
-  underline: {
-    textDecorationLine: 'underline',
-    color: 'black',
-    marginBottom: '10%'
+    bottom: 20
   },
   image: {width: 30, height: 10},
   errorContainer: {
