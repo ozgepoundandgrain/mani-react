@@ -27,7 +27,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "prana-manifesation-app",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to upload images to your vision board. Your photos will not be shared with third parties"
+        "NSCameraUsageDescription": "Prana requires to access camera for uploading images for your vision board."
       }
     }
   }

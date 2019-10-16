@@ -5,7 +5,6 @@ import * as Animatable from 'react-native-animatable';
 import IMAGE from './logo.png'
 import { LinearGradient } from 'expo-linear-gradient';
 
-
 const content = [
   'Decide',
   'Believe',
@@ -37,34 +36,27 @@ class LoadingModal extends React.Component {
   }
 
 
-
-
   render() {
     return (
-      <Modal
-        // transparent 
-        visible={this.props.visible}
-      >
+      <Modal visible={this.props.visible}>
         <LinearGradient key={2} colors={['#B8BCF1', '#FBCDCF', '#FDE8C3']} style={{height: '100%'}}>
-        <Image     
-          source={IMAGE} 
-          style={{width: 100.5, height: 56.25, alignSelf: 'center', marginTop: 70}} 
+        <Image
+          source={IMAGE}
+          style={{width: 100.5, height: 56.25, alignSelf: 'center', marginTop: 70}}
         />
         <View style={styles.animationModal}>
         <View style={{ alignContent: 'center' }}>
           {
             content.map((cont, index)=> {
               return (
-              <Animatable.Text 
+              <Animatable.Text
                 key={index}
                 delay={index*400} 
                 animation="slideInDown" 
                 iterationCount={15} 
                 direction="alternate">
-                  <Text 
-                    style={[this.state.fontLoaded && {fontFamily: 'Abril-Fatface'}, styles.text]}
-                  >
-                      {cont}
+                  <Text style={[this.state.fontLoaded && {fontFamily: 'Abril-Fatface'}, styles.text]}>
+                    {cont}
                   </Text>
                 </Animatable.Text>
               )
@@ -79,20 +71,20 @@ class LoadingModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    text: {
-        backgroundColor: "transparent",
-        color: 'black',
-        fontSize: 30,
-        textAlign: 'center',
-        color: 'white',
-        paddingBottom: 40
-      },
-      animationModal: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignContent: 'center',
-      }
+  text: {
+    backgroundColor: "transparent",
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'white',
+    paddingBottom: 40
+  },
+  animationModal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+  }
 })
 
 export default LoadingModal
