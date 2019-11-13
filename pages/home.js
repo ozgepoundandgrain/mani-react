@@ -266,9 +266,6 @@ class Home extends React.Component {
           email={this.state.email}
           accessToken={this.state.accessToken}
         />
-        {/* <View style={{marginTop: 50}}>
-          <CarouselComponent style={{marginTop: 50}} sliderWidth={width} itemWidth={width-100}/>
-        </View> */}
         </ScrollView>
         :
         [

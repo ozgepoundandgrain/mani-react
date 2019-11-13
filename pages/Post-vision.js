@@ -29,7 +29,8 @@ class PostVision extends React.Component {
       animation: null,
       modalVisible: false,
       showInfo: false,
-      descriptionError: false
+      descriptionError: false,
+      networkError: ''
     }
 
     this.uploadImage = this.uploadImage.bind(this)
@@ -83,6 +84,7 @@ class PostVision extends React.Component {
           throw error;
         }
     } catch(error) {
+      this.setModalVisible(false)
     }
   }
 
@@ -126,14 +128,17 @@ class PostVision extends React.Component {
         this.fetchVision()
     } else {
       console.log(error)
+      this.redirect('Home')
+      this.setModalVisible(false)
         let errors = res;
         throw errors;
     }
 
     } catch(errors) {
       console.log("error: ", 'ERROR CAUGHT IN UPLOAD')
+      this.setModalVisible(false)
+      this.setState({networkError: "Sorry, we were unable to post your vision due to an error"})
     }
-
   };
 
   submitButton() {
@@ -173,6 +178,7 @@ class PostVision extends React.Component {
             leftTitleAction={() => this.props.navigation.goBack()}
             CTAactive={true}
           />
+          <Text style={styles.networkError}>{this.state.networkError}</Text>
           <ScrollView style={styles.pageContainer}>
         <View style={styles.imagecontainer}>
           <View>
@@ -262,6 +268,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     left: 0
+  },
+  networkError: {
+    color: 'red',
+    padding: 20
   }
 })
 

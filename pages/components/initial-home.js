@@ -65,10 +65,10 @@ class InitialHome extends React.Component {
         <AnimateLoadingButton
           width={200}
           height={50}
-          title="Add Affirmation"
+          title="Add Affirmation 📿"
           titleFontSize={16}
           titleColor="rgb(255,255,255)"
-          backgroundColor='#B8BCF1'
+          backgroundColor='#020024'
           borderRadius={4}
           onPress={() => this.redirect('PostMantra')} 
         />
@@ -78,11 +78,11 @@ class InitialHome extends React.Component {
         <AnimateLoadingButton
           width={200}
           height={50}
-          title="Add Vision"
+          title="Add Vision 🔮"
           titleFontSize={16}
           // ef={c => (this.loadingButton = c)}
           titleColor="rgb(255,255,255)"
-          backgroundColor='#B8BCF1'
+          backgroundColor='#020024'
           borderRadius={4}
           onPress={this._pickImage} 
         />

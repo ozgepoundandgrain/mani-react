@@ -42,7 +42,7 @@ class Header extends React.Component {
             title={this.props.rightTitle}
             titleFontSize={16}
             titleColor="rgb(255,255,255)"
-            backgroundColor='#B8BCF1'
+            backgroundColor='#020024'
             borderRadius={4}
             onPress={this.props.rightTitleAction}
           />

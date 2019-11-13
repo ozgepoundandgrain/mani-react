@@ -140,7 +140,7 @@ class EditMantra extends React.Component {
             />
           </ScrollView>
           <ConfirmationModal
-            title="Delete this mantra?"
+            title="Delete this affirmation?"
             visible={this.state.modalVisible}
             onPressCancel={() => {this.setModalVisible(!this.state.modalVisible)}}
             onPressDelete={() => this.deleteAction(this.state.id)}

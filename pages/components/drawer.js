@@ -26,6 +26,9 @@ const isIphoneXorAbove = () => {
 
 const drawerView = (logout) => (
   <View style={styles.outerDrawerContainer}>
+    <View style={styles.innerDrawerContainerUpper}>
+      <Text style={styles.customize}>Customize Vision board (coming soon)</Text>
+    </View>
     <View style={styles.innerDrawerContainer}>
       <TouchableHighlight 
         onPress={logout} 
@@ -234,6 +237,13 @@ const styles = StyleSheet.create({
     height: 60,
     marginTop: 40,
     position: 'relative',
+    shadowOffset:{  width: 10,  height: 10,  },
+shadowColor: '#d8d8d8',
+shadowOpacity: 1.0,
+  },
+  customize: {
+    color: 'grey',
+    paddingLeft: 10
   },
   streaks: {
     paddingRight: 5,
@@ -276,6 +286,13 @@ const styles = StyleSheet.create({
     left: 0, 
     marginBottom: 40, 
   },
+  innerDrawerContainerUpper: {
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    marginTop: 80, 
+    width: '70%'
+  },
   outerDrawerContainer: {
     height: '100%'
   },
@@ -286,12 +303,18 @@ const styles = StyleSheet.create({
   pageContainer: {
     height: '100%', 
     alignContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    shadowOffset:{  width: 10,  height: 10,  },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
   },
   overlay: {
     backgroundColor: 'white',
     height: '100%',
-    width: '100%'
+    width: '100%',
+    shadowOffset:{  width: 10,  height: 10,  },
+shadowColor: 'black',
+shadowOpacity: 1.0,
   }
 })
 

@@ -5,6 +5,7 @@ import {
   View, 
   TextInput, 
   Dimensions, 
+  Text,
   StyleSheet } from 'react-native';
 import Header from './components/header'
 import LoadingModal from './components/loading-modal'
@@ -21,7 +22,8 @@ class PostMantra extends React.Component {
       mantras: [],
       modalVisible: false,
       descriptionError: false,
-      titleError: false
+      titleError: false,
+      networkError: ''
     }
     this.submitMantra = this.submitMantra.bind(this)
     this.redirect = this.redirect.bind(this)
@@ -106,10 +108,14 @@ class PostMantra extends React.Component {
             this.fetchData()
             // this.redirect('Home')
         } else {
+          this.redirect('Home')
+          this.setModalVisible(false)
             let errors = res;
             throw errors;
         }
     } catch(errors) {
+      this.setModalVisible(false)
+      this.setState({networkError: "Sorry, we were unable to post your vision due to an error"})
     }
   }
 
@@ -123,7 +129,7 @@ class PostMantra extends React.Component {
             leftTitleAction={() => this.props.navigation.goBack()}
             CTAactive={true}
           />
-          
+          <Text style={styles.networkError}>{this.state.networkError}</Text>
           <ScrollView style={styles.scrollView}>
             <TextInput 
               placeholder="Affirmation title"
@@ -222,6 +228,10 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white'
+  },
+  networkError: {
+    color: 'red',
+    padding: 20
   }
 })
 

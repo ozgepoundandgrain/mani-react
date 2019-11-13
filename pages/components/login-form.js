@@ -22,7 +22,9 @@ class LoginForm extends React.Component {
       fontLoaded: false,
       persistedEmail: '',
       persistedToken: '',
-      error: ''
+      error: '',
+      focusedEmailInput: false,
+      focusedPasswordInput: false
     }
 
     this.clearData = this.clearData.bind(this)
@@ -165,8 +167,10 @@ class LoginForm extends React.Component {
         {this.state.fontLoaded && <Text style={styles.title}>Login</Text>}
         <TextInput 
           placeholder="Email"
-          style={styles.textInput}
+          style={this.state.focusedEmailInput ? styles.focused : styles.textInput}
           placeholderTextColor="white"
+          onFocus={() => this.setState({ focusedEmailInput: true})}
+          onBlur={() => this.setState({ focusedEmailInput: false})}
           onChangeText={(val) => this.setState({ email: val})}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.secondTextInput.focus(); }}
@@ -176,7 +180,9 @@ class LoginForm extends React.Component {
           onChangeText={(val) => this.setState({ password: val})}
           placeholder="Password"
           placeholderTextColor="white"
-          style={styles.textInput}
+          onFocus={() => this.setState({ focusedPasswordInput: true})}
+          onBlur={() => this.setState({ focusedPasswordInput: false})}
+          style={this.state.focusedPasswordInput ? styles.focused : styles.textInput}
           secureTextEntry
           autoCapitalize = 'none'
           onSubmitEditing={this.login}
@@ -191,8 +197,8 @@ class LoginForm extends React.Component {
           height={50}
           title="Login"
           titleFontSize={16}
-          titleColor="#FBCDCF"
-          backgroundColor="white"
+          titleColor="#020024"
+          backgroundColor="#e8ee1c"
           borderRadius={25}
           onPress={this.login}
         />
@@ -206,8 +212,8 @@ class LoginForm extends React.Component {
           height={30}
           title="Don't have an account?"
           titleFontSize={16}
-          titleColor="#F39D00"
-          backgroundColor="white"
+          titleColor="#e8ee1c"
+          backgroundColor="transparent"
           borderRadius={25}
           onPress={this.props.onPressRedirect}
         />
@@ -217,6 +223,14 @@ class LoginForm extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  focused: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 40,
+    color: 'white'
+  },
   prana: {
     fontSize: 20,
     textAlign: 'center',
@@ -233,7 +247,10 @@ const styles = StyleSheet.create({
   textInput: {
     alignItems: 'center',
     textAlign: 'center',
-    marginBottom: 40
+    marginBottom: 40,
+    color: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   container: {
     width: '80%',

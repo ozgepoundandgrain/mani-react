@@ -20,7 +20,10 @@ class RegisterForm extends React.Component {
       email: '',
       password: '',
       password_confirmation: '',
-      error: ''
+      error: '',
+      focusedPasswordConfirm: false,
+      focusedEmailInput: false,
+      focusedPassword: false
     }
 
     this.clearData = this.clearData.bind(this)
@@ -172,8 +175,10 @@ class RegisterForm extends React.Component {
         <TextInput 
           placeholder="Email"
           onChangeText={(val) => this.setState({ email: val})}
+          onFocus={() => this.setState({ focusedEmailInput: true})}
+          onBlur={() => this.setState({ focusedEmailInput: false})}
           placeholderTextColor="white"
-          style={styles.textInput}
+          style={this.state.focusedEmailInput ? styles.focused : styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.secondTextInput.focus(); }}
           returnKeyType = { "next" }
@@ -182,8 +187,10 @@ class RegisterForm extends React.Component {
           placeholder="Password"
           onChangeText={(val) => this.setState({ password: val})}
           secureTextEntry
+          onFocus={() => this.setState({ focusedPassword: true})}
+          onBlur={() => this.setState({ focusedPassword: false})}
           placeholderTextColor="white"
-          style={styles.textInput}
+          style={this.state.focusedPassword ? styles.focused : styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={() => { this.thirdTextInput.focus(); }}
           returnKeyType = { "next" }
@@ -193,8 +200,10 @@ class RegisterForm extends React.Component {
           placeholder="Confirm Password"
           onChangeText={(val) => this.setState({ password_confirmation: val})}
           secureTextEntry
+          onFocus={() => this.setState({ focusedPasswordConfirm: true})}
+          onBlur={() => this.setState({ focusedPasswordConfirm: false})}
+          style={this.state.focusedPasswordConfirm ? styles.focused : styles.textInput}
           placeholderTextColor="white"
-          style={styles.textInput}
           autoCapitalize = 'none'
           onSubmitEditing={this.register}
           returnKeyType = { "next" }
@@ -207,8 +216,8 @@ class RegisterForm extends React.Component {
           height={50}
           title="Register"
           titleFontSize={16}
-          titleColor="#FBCDCF"
-          backgroundColor="white"
+          titleColor="#020024"
+          backgroundColor="#e8ee1c"
           borderRadius={25}
           onPress={this.register}
         />
@@ -222,8 +231,8 @@ class RegisterForm extends React.Component {
           height={30}
           title="Already have an account?"
           titleFontSize={16}
-          titleColor="#F39D00"
-          backgroundColor="white"
+          titleColor="#e8ee1c"
+          backgroundColor="transparent"
           borderRadius={25}
           onPress={this.props.onPressRedirect}
         />
@@ -234,6 +243,14 @@ class RegisterForm extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  focused: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 40,
+    color: 'white'
+  },
   prana: {
     fontSize: 20,
     textAlign: 'center',
@@ -248,10 +265,12 @@ const styles = StyleSheet.create({
    fontFamily: 'Abril-Fatface'
   },
   textInput: {
+    alignItems: 'center',
+    textAlign: 'center',
     marginBottom: 40,
     color: 'white',
-    alignItems: 'center',
-    textAlign: 'center'
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   container: {
     width: '80%',

@@ -39,7 +39,7 @@ class LoadingModal extends React.Component {
   render() {
     return (
       <Modal visible={this.props.visible}>
-        <LinearGradient key={2} colors={['#B8BCF1', '#FBCDCF', '#FDE8C3']} style={{height: '100%'}}>
+        <LinearGradient key={2} colors={['#020024', '#191140', '#3a2155']} style={{height: '100%'}}>
         <Image
           source={IMAGE}
           style={{width: 100.5, height: 56.25, alignSelf: 'center', marginTop: 70}}
@@ -51,7 +51,7 @@ class LoadingModal extends React.Component {
               return (
               <Animatable.Text
                 key={index}
-                delay={index*400} 
+                delay={index*600} 
                 animation="slideInDown" 
                 iterationCount={15} 
                 direction="alternate">
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     color: 'white',
-    paddingBottom: 40
+    paddingBottom: 40,
+    fontWeight: '200'
   },
   animationModal: {
     flex: 1,

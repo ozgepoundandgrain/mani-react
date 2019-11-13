@@ -34,7 +34,7 @@ class Authentication extends React.Component {
   render() {
     return ([
       
-    <LinearGradient key={2} colors={['#B8BCF1', '#FBCDCF', '#FDE8C3']} style={{height: '100%'}}>
+    <LinearGradient key={2} colors={['#020024', '#191140', '#3a2155']} style={{height: '100%'}}>
       <ScrollView key={1} contentContainerStyle={styles.OuterContainer} key="0">
       {this.state.showLogin ?
         <LoginForm

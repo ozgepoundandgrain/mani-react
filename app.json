@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "prana-manifestation-app",
-    "description": "Create your vision board and journaling for manifesting.",
+    "name": "Prana - Vision board - manifestation",
+    "description": "Create your vision board",
     "slug": "manifestation-react",
     "privacy": "public",
     "sdkVersion": "34.0.0",
@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.8",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/ICON.png",
     "splash": {
@@ -27,7 +27,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "prana-manifesation-app",
       "infoPlist": {
-        "NSCameraUsageDescription": "Prana requires to access camera for uploading images for your vision board."
+        "NSCameraUsageDescription": "Prana requires to access camera for uploading images for your vision board.",
+        "NSPhotoLibraryUsageDescription": "Prana requires to access camera for uploading images for your vision board.",
+        "NSPhotoLibraryAddUsageDescription": "Prana requires to access camera for uploading images for your vision board."
       }
     }
   }
